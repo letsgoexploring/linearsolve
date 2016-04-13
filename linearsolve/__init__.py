@@ -226,12 +226,14 @@ class klein:
 
         self.irs = irsDict
 
-    def stochSim(self,T=50,dropFirst=100,covMat=None):
+    def stochSim(self,T=50,dropFirst=100,covMat=None,seed=None):
         
         ''' Method for computing a stochastic simulation of the solved model. The simulation period is T 
         periods and the first 'dropFirst' periods aer excluded form the simulation. Shock realizations are
         drawn from the multivariate normal distribution with mean 0 and covariance matrix given. If the 
         covariance matrix is not given, it is set to the nz X nz identity matrix.
+
+        'seed': integersets the seed 
 
         Returns a pandas dataframes with column names given by the names of the endogenous variables.
 
@@ -251,6 +253,9 @@ class klein:
         if covMat == None:
             covMat = 0.01*np.eye(nz)
 
+        if seed!=None and type(seed)==int:
+
+            np.random.seed(seed)
 
         epsSim = np.random.multivariate_normal(mean=np.zeros(nz),cov=covMat,size=[dropFirst+T+1])
         eps= epsSim
