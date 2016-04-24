@@ -1,10 +1,8 @@
 from __future__ import division, print_function
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.linalg as sp
+import scipy.linalg as la
 import pandas as pd
-from cvxopt import matrix, normal
-from cvxopt.lapack import gges
 import sys
 
 ''' This program defines a klein object class and provides functions for solving and creating impulse 
@@ -79,34 +77,15 @@ class klein:
 
         '''Method solves the linear model.'''
 
-        aSchur=matrix(a).T
-        bSchur=matrix(b).T
-        cSchur=matrix(c).T
-        rhoSchur=matrix(rho).T
-
-        sSchur = matrix(aSchur, tc='z')
-        tSchur = matrix(bSchur, tc='z')
-        eiga = matrix(0.0, (len(a),1), 'z')
-        eigb = matrix(0.0, (len(b),1))
-        vlSchur = matrix(0.0, (len(a),len(a)), tc='z')
-        vrSchur = matrix(0.0, (len(b),len(b)), tc='z')
-
-        def F(x,y):
-            if x!=0:
-                return (abs(y)/abs(x)<1)
-            else:
-                return False
-
-        gges(sSchur,tSchur,a=eiga,b=eigb,Vl=vlSchur,Vr=vrSchur,select=F)
-        q=vlSchur.H #[0:4,0:4].H
-        z=vrSchur   #[0:4,0:4]
+        s, t, alpha, beta, q, z = la.ordqz(A=a, B=b, sort='ouc')
+        
         q=np.mat(q)
         z=np.mat(z)
-        s=np.mat(sSchur)
-        t=np.mat(tSchur)
-        a=np.mat(aSchur)
-        b=np.mat(bSchur)
-        c=np.mat(cSchur)
+        s=np.mat(s)
+        t=np.mat(t)
+        a=np.mat(a)
+        b=np.mat(b)
+        c=np.mat(c)
         rho=np.mat(rho)
 
         z11 = z[0:nk,0:nk]
@@ -123,8 +102,8 @@ class klein:
 
         s11 = s[0:nk,0:nk];
         if nk>0:
-            z11i = sp.inv(z11)
-            s11i = sp.inv(s11)
+            z11i = la.inv(z11)
+            s11i = la.inv(s11)
         else:
             z11i = z11
             s11i = s11
@@ -164,7 +143,7 @@ class klein:
                 eig[k] = np.inf
 
         mat1 = np.kron(np.transpose(rho),s22) - np.kron(np.identity(nz),t22)
-        mat1i = sp.inv(mat1)
+        mat1i = la.inv(mat1)
         q2c = q2.dot(c)
         vecq2c = q2c.flatten(1).T
         vecm = mat1i.dot(vecq2c)
@@ -180,7 +159,7 @@ class klein:
         f = np.real(z21.dot(z11i))
         p = np.real(z11.dot(dyn).dot(z11i))
 
-        return f,n,p,l,stab,eig
+        return np.array(f),np.array(n),np.array(p),np.array(l),stab,eig
 
 
     def impulse(self,T=15,t0=1,shock=None):
