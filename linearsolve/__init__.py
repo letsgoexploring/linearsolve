@@ -1,171 +1,243 @@
 from __future__ import division, print_function
 import numpy as np
-import matplotlib.pyplot as plt
 import scipy.linalg as la
+from statsmodels.tools.numdiff import approx_fprime_cs
+from scipy.optimize import root,fsolve,broyden1,broyden2
 import pandas as pd
 import sys
 
-''' This program defines a klein object class and provides functions for solving and creating impulse 
-responses for linear dynamic models in the form of:
-    
-    a*Et[x(t+1)] = b*x(t) + c*z(t)
+class model:
 
-with x(t) = [k(t); u(t)] where k(t) is a vector of predetermined (state) variables and u(t) is a vector 
-of nonpredetermined (forward-looking) variables. z(t) is a vector of exogenous driving variables with 
-autocorrelation matrix rho. The solution to the model is a set of matrices f, n, p, l such that:
+    '''This program defines an object class - linearsolve.model -- with associated methods for solving and 
+    simulating dynamic stochastic general equilibrium (DSGE) models.'''
 
-    u(t)   = f*k(t) + n*z(t)
-    k(t+1) = p*k(t) + l*z(t).
+    def __init__(self,equations=None,nstates=None,varNames=None,shockNames=None,parameters=None,parameterNames=None):
+        
+        '''Initializing an instance linearsolve.model requires values for the following variables:
 
-The solution algorithm is based on Klein (2000) and is based on his solab.m Matlab program.'''
+            1. equations:       A function that represents the equilibirum conditions for a DSGE model. The 
+                                function should accept three arguments:
 
-class klein:
+                                    * vars_fwd:     endogenous variables dated t+1
+                                    * vars_cur:     endogenous variables dated t
+                                    * parameters:   the parameters of the model
 
-    def __init__(self,a,b,c,rho,nk,endoNames=None,exoNames=None): #,shockNames=None):
-        ''' Accepts as inputs the matrices of the linear system a, b, and c, the autocorrelation matrix of
-        the exogenous driving processes, and the number of state variables nk. 
+                                The function should return an n-dimensional array. Each element of the returned
+                                array is a list with the first element equaling the left-hand side of a single
+                                equilibrium condition and the second elemtn equals the right-hand side.
 
-        Upon initialization, the model is solved. The solution matrices f, p, n, and l are returned as 
-        attributes of the klein object. The solution program also gives the klein two other useful
-        attributes:
-            eig:  the eigenvalues from the genearlized Schur decomposition
-            stab: equals 0 when the system has the correct number of stable eigenvalues, -1 when the system 
-                    has too few stable eigenvalues, and 1 when the system has too many.
+
+            2. nstates:         The number of state variables in the model.
+
+            3. varNames:       A list of strings with the names of the endogenous variables. The state
+                                variables must be ordered first.
+
+            4. shockNames:        A list of strings with the names of the exogenous shocks to each state
+                                variable. The order of names must agree with varNames.
+
+            5. parameters:      Either a list of parameter values OR a Pandas Series object with parameter
+                                name strings as the index.
+
+            6. parameterNames:  Optional. If parameters is given as a list, then this list of strings will
+                                be used to save the parameters with names as a Pandas Series object.
+
+        The following attributes are created:
+
+                1. .nvars:      The number of variables in the model.
+
+                2. .nstates:    The number of state variables in the model.
+
+                3. .ncostate:   The number of costate or control variables in the model.
+
+                4. .parameters: A Pandas Series object with parameter name strings as the index. If
+                                parameterNames wasn't supplied, then parameters are labeled 'parameter 1',
+                                parameter2', etc.
+
+                5. .names:      A dictionary with keys 'endo', 'exo', and 'param' that stores the names of
+                                the model's variables and parameters.
+
         '''
         
-        f,n,p,l,stab,eig = self.solve(a,b,c,rho,nk)
-        self.a   = a
-        self.b   = b
-        self.c   = c
-        self.rho = rho
-        self.f   = f
-        self.n   = n
-        self.p   = p
-        self.l   = l
-        self.stab= stab
-        self.eig = eig
-        self.nu = np.shape(self.n)[0]
-        self.nk = np.shape(self.l)[0]
-        self.nz = np.shape(self.l)[1]
+        self.equilibrium_fun= equations
+        self.nvars = len(varNames)
+        self.nstates = nstates
+        self.costates=self.nvars-nstates
 
         names = {}
-        if endoNames == None or len(endoNames) != self.nu+self.nk:
-            endoNames = []
-            for i in range(nk):
-                endoNames.append('state '+str(i+1))
-            for i in range(self.nu):
-                endoNames.append('forward '+str(i+1))
 
-        if exoNames == None or len(exoNames) != self.nz:
-            exoNames = []
-            for i in range(self.nz):
-                exoNames.append('exo '+str(i+1))
+        if shockNames == None:
+            shockNames = []
+            for i in range(self.nstates):
+                shockNames.append('exo '+str(i+1))
 
-        # if shockNames == None or len(shockNames) != np.shape(c)[1]:
-        #     shockNames = []
-        #     for i in range(np.shape(c)[1]):
-        #         shockNames.append('shock '+str(i+1))
+        names['endo'] = varNames
+        names['exo'] = shockNames
 
-        names['endo'] = endoNames
-        names['exo'] = exoNames
-        # names['shocks'] = shockNames
+        if isinstance(parameters,pd.Series):
+            self.parameters = parameters
 
+        else:
+            if parameterNames is None:
+                parameterNames = ['parameter '+str(i+1) for i in range(len(parameters))]
+
+            self.parameters = pd.Series(parameters,index=parameterNames)
+
+        names['param'] = parameterNames
         self.names = names
 
 
-    def solve(self,a,b,c,rho,nk):
 
-        '''Method solves the linear model.'''
+    def compute_ss(self,guess,method='fsolve',options={}):
 
-        s, t, alpha, beta, q, z = la.ordqz(A=a, B=b, sort='ouc')
+        '''This method attempts to solve for the steady state of the model. Arguments are:
+
+            1. guess:   An initial guess for the steady state solution. The result is highly sensisitve to
+                            the intiial guess chosen, so be careful.
+
+            2. method:  The function from the Scipy library to use. Your choices are:
+
+                    a. root
+                    b. fsolve (default)
+                    c. broyden1
+                    d. broyden2
+
+            3. options: A dictionary of optional arguments to pass to the numerical solver. Check out
+                            the Scipy documentation to see the options available for each routine:
+
+                            http://docs.scipy.org/doc/scipy/reference/optimize.html
+
+            Saves the computed steady state as an array in the .ss attribute
+
+            '''
+
+        def ss_fun(variables):
+    
+            equilibrium_left = np.r_[self.equilibrium_fun(variables,variables,self.parameters.values.tolist()).T[0]]
+            equilibrium_right = np.r_[self.equilibrium_fun(variables,variables,self.parameters.values.tolist()).T[1]]
+
+            return equilibrium_left - equilibrium_right
+
+        if method == 'fsolve':
+            steady_state =fsolve(ss_fun,guess,**options)
+
+        elif method == 'root':
+            steady_state =root(ss_fun,guess,**options)['x']
+
+        elif method == 'broyden1':
+            steady_state =broyden1(ss_fun,guess,**options)
+
+        elif method == 'broyden2':
+            steady_state =broyden2(ss_fun,guess,**options)
+
+        self.ss = steady_state
+
+
+
+    def set_ss(self,steady_state):
+
+        '''Sets the steady state .ss attribute if you compute the steady state independently.'''
         
-        q=np.mat(q)
-        z=np.mat(z)
-        s=np.mat(s)
-        t=np.mat(t)
-        a=np.mat(a)
-        b=np.mat(b)
-        c=np.mat(c)
-        rho=np.mat(rho)
+        model.ss = np.array(steady_state)
 
-        z11 = z[0:nk,0:nk]
-        z12 = z[0:nk,nk:]
-        z21 = z[nk:,0:nk]
-        z22 = z[nk:,nk:]
+    
 
-        nu = np.shape(a)[0] - nk                # number of nonpredetermined variables
-        nz = np.shape(c)[1]                     # number of forcing variables
+    def log_linear(self,steady_state=None,islinear=False):
 
-        if nk>0:
-            if np.linalg.matrix_rank(z11)<nk:
-                sys.exit("Invertibility condition violated.")
+        ''' Given a nonlinear rational expectations model in the form:
 
-        s11 = s[0:nk,0:nk];
-        if nk>0:
-            z11i = la.inv(z11)
-            s11i = la.inv(s11)
+                    psi_1[x(t+1),x(t)] = psi_2[x(t+1),x(t)]
+
+            this method returns the matrics a and b such that:
+
+                    a * y(t+1) = b * y(t)
+
+            where y(t) = log x(t) - log x is the log deviation of the vector x from its steady state value.
+
+        '''
+
+        if steady_state is None:
+
+            try:
+                steady_state = self.ss
+            except :
+                raise ValueError('You must specify a steady state for the model before attempting to linearize.')
+
+
+        if islinear:
+
+            def equilibrium(vars_fwd,vars_cur):
+
+                equilibrium_left = np.r_[self.equilibrium_fun(vars_fwd,vars_cur,self.parameters.values.tolist()).T[0]]
+                equilibrium_right = np.r_[self.equilibrium_fun(vars_fwd,vars_cur,self.parameters.values.tolist()).T[1]]
+
+                return equilibrium_left - equilibrium_right
+
+            equilibrium_fwd = lambda fwd: equilibrium(fwd,steady_state)
+            equilibrium_cur = lambda cur: equilibrium(steady_state,cur)
+
+            self.a= approx_fprime_cs(steady_state, equilibrium_fwd)
+            self.b= -approx_fprime_cs(steady_state, equilibrium_cur)
+
+
+
         else:
-            z11i = z11
-            s11i = s11
+
+            def log_equilibrium(log_vars_fwd,log_vars_cur):
+
+                equilibrium_left = np.r_[self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters.values.tolist()).T[0]]
+                equilibrium_right = np.r_[self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters.values.tolist()).T[1]]
+
+                return np.log(equilibrium_left) - np.log(equilibrium_right)
+
+            log_equilibrium_fwd = lambda log_fwd: log_equilibrium(log_fwd,np.log(steady_state))
+            log_equilibrium_cur = lambda log_cur: log_equilibrium(np.log(steady_state),log_cur)
+
+            self.a= approx_fprime_cs(np.log(steady_state), log_equilibrium_fwd)
+            self.b= -approx_fprime_cs(np.log(steady_state), log_equilibrium_cur)
 
 
-        s12 = s[0:nk,nk:]
-        s22 = s[nk:,nk:]
-        t11 = t[0:nk,0:nk]
-        t12 = t[0:nk,nk:]
-        t22 = t[nk:,nk:]
-        q1  = q[0:nk,:]
-        q2  = q[nk:,:]
 
-        # Verify that there are exactly nk stable (inside the unit circle) eigenvalues:
+    def solve_klein(self,a=None,b=None):
 
-        stab = 0
+        '''Method solves a linear rational expectations model of the form:
 
-        if nk>0:
-            if np.abs(t[nk-1,nk-1])>np.abs(s[nk-1,nk-1]):
-                print('Warning: Too few stable eigenvalues.')
-                stab = -1
+                a * x(t+1) = b * x(t) + e(t)
 
-        if np.abs(t[nk,nk])<np.abs(s[nk,nk]):
-            print('Warning: Too many stable eigenvalues.')
-            stab = 1
+        where z(t) is a VAR(1) exogenous forcing process with autocorrelation matrix rho.
 
-        # Compute the generalized eigenvalues
+        The method returns the solution to the law of motion:
 
-        tii = np.diag(t)
-        sii = np.diag(s)
-        eig = np.zeros(np.shape(tii))
+                u(t)   = f*s(t) + e(t)
+                s(t+1) = p*s(t)
 
-        for k in range(len(tii)):
-            if np.abs(sii[k])>0:
-                eig[k] = np.abs(tii[k])/np.abs(sii[k])
-            else:
-                eig[k] = np.inf
+        creates new attributes:
 
-        mat1 = np.kron(np.transpose(rho),s22) - np.kron(np.identity(nz),t22)
-        mat1i = la.inv(mat1)
-        q2c = q2.dot(c)
-        vecq2c = q2c.flatten(1).T
-        vecm = mat1i.dot(vecq2c)
-        m = np.transpose(np.reshape(np.transpose(vecm),(nz,nu)))
-        if nk>0:
-            dyn = np.linalg.solve(s11,t11)
-        else:
-            dyn = np.array([])
+            1. .f and .p:   Solution matrix coeffients on s(t)
+            3. .stab:       Indicates solution stability and uniqueness
+
+                                stab == 1: too many stable eigenvalues
+                                stab == -1: too few stable eigenvalues
+                                stab == 0: just enoughstable eigenvalues
+
+            4. .eig:        The generalized eigenvalues from the Schur decomposition
+
+         '''
+
+        if a is None and b is None:
+            
+            a = self.a
+            b = self.b
+
+        self.f,n,self.p,l,self.stab,self.eig = klein(a=a,b=b,c=None,rho=None,nstates=self.nstates)
 
 
-        n = np.real((z22 - z21.dot(z11i).dot(z12)).dot(m))
-        l = np.real(-z11.dot(s11i).dot(t11).dot(z11i).dot(z12).dot(m) + z11.dot(s11i).dot(t12.dot(m) - s12.dot(m).dot(rho)+q1.dot(c)) + z12.dot(m).dot(rho))
-        f = np.real(z21.dot(z11i))
-        p = np.real(z11.dot(dyn).dot(z11i))
+    def impulse(self,T=21,t0=1,shock=None,percent=False):
 
-        return np.array(f),np.array(n),np.array(p),np.array(l),stab,eig
+        ''' Method for computing impulse responses for shocks to each state variable. arguments:
 
-
-    def impulse(self,T=15,t0=1,shock=None):
-
-        ''' Method for computing impulse responses for shocks arriving at date t0. t0 must be greater than 0.
-        shock is an (nz x 1) list of shock values. If shock==None, then shock is set to a vector of ones.
+                T:      Number of periods to simulate.
+                t0:     Period in which the shocks are realized. May be equal to 0
+                shock:  An (ns x 1) list of shock values. If shock==None, shock is set to a vector of 0.01s.
         
         Returns a dictionary containing pandas dataframes. The dictionary has the form:
 
@@ -175,133 +247,233 @@ class klein:
 
         irsDict = {}
 
-        nu = self.nu
-        nk = self.nk
-        nz = self.nz
-
-        self.names['endo'] = self.names['endo']
-        self.names['exo'] = self.names['exo']        
-
-        # for j in range(nz):
+        ncostates = self.costates
+        nstates = self.nstates
+        
         for j,name in enumerate(self.names['exo']):
-            eps= np.zeros((T+1,nz))
+
+            s0 = np.zeros([1,nstates])
+            eps= np.zeros([T,nstates])
             if shock==None:
-                eps[t0-1][j] = 0.01
+                eps[t0][j] = 0.01
             else:
-                eps[t0-1][j] = shock[j]
-            k  = np.zeros((T+2,nk))
-            z  = np.zeros((T+2,nz))
-            u  = np.zeros((T+2,nu))
+                eps[t0][j] = shock[j]
 
-            x = ir(self.f,self.n,self.p,self.l,self.rho,z,k,u,eps)
-            
-            frameDict = {self.names['exo'][j]:x[j]}
+            x = ir(self.f,self.p,eps,s0)
+
+            frameDict = {self.names['exo'][j]:eps.T[j]}
             for i,endoName in enumerate(self.names['endo']):
-                frameDict[endoName] = x[i+len(self.names['exo'])]
+                frameDict[endoName] = x[i]
 
-            irFrame = pd.DataFrame(frameDict, index = np.arange(T+1))
+            irFrame = pd.DataFrame(frameDict, index = np.arange(T))
+            if percent==True:
+                irFrame = 100*irFrame
+
             irsDict[self.names['exo'][j]] = irFrame
-
 
         self.irs = irsDict
 
-    def stochSim(self,T=50,dropFirst=100,covMat=None,seed=None):
+    def stoch_sim(self,T=51,dropFirst=100,covMat=None,seed=None,percent=False):
         
-        ''' Method for computing a stochastic simulation of the solved model. The simulation period is T 
-        periods and the first 'dropFirst' periods aer excluded form the simulation. Shock realizations are
-        drawn from the multivariate normal distribution with mean 0 and covariance matrix given. If the 
-        covariance matrix is not given, it is set to the nz X nz identity matrix.
+        '''
+        Method for computing impulse responses for shocks to each state variable. Arguments:
 
-        'seed': integersets the seed 
+                T:          Number of periods to simulate.
+                dropFirst:  Number of periods to simulate before saving output
+                covMat:     Covariance matrix shocks. If covMat is None, it's set to eye(nstates)
+                t0:         Period in which the shocks are realized. May be equal to 0
+                'seed':     Integer. sets the seed for the numpy random number generator
+        
+        Returns a dictionary containing pandas dataframes. The dictionary has the form:
 
-        Returns a pandas dataframes with column names given by the names of the endogenous variables.
-
-            self.sims['endog var name']
+            self.simulated['endog var name']
 
         '''
-
         simDict = {}
 
-        nu = self.nu
-        nk = self.nk
-        nz = self.nz
+        ncostates = self.costates
+        nstates = self.nstates
 
-        self.names['endo'] = self.names['endo']
-        self.names['exo'] = self.names['exo']
+        s0 = np.zeros([1,nstates])
 
-        if covMat == None:
-            covMat = 0.01*np.eye(nz)
+        if covMat is None:
+            covMat = np.eye(nstates)
 
-        if seed!=None and type(seed)==int:
+        if seed is not None and type(seed)==int:
 
             np.random.seed(seed)
 
-        epsSim = np.random.multivariate_normal(mean=np.zeros(nz),cov=covMat,size=[dropFirst+T+1])
-        eps= epsSim
-        if nz == 1:
-            k  = np.zeros((dropFirst+T+2,nk))
-            z  = np.zeros((dropFirst+T+2,nz))
-            u  = np.zeros((dropFirst+T+2,nu))
+        eps = np.random.multivariate_normal(mean=np.zeros(nstates),cov=covMat,size=[dropFirst+T])
 
-            x = ir(self.f,self.n,self.p,self.l,self.rho,z,k,u,eps)
+        x = ir(self.f,self.p,eps,s0)
 
-            frameDict = {self.names['exo'][0]:x[0][dropFirst:]}
-            for i,endoName in enumerate(self.names['endo']):
-                frameDict[endoName] = x[i+len(self.names['exo'])][dropFirst:]
+        frameDict = {}
+        for j,exoName in enumerate(self.names['exo']):
+            frameDict[exoName] = eps.T[j][dropFirst:]
+        for i,endoName in enumerate(self.names['endo']):
+            frameDict[endoName] = x[i][dropFirst:]
 
-            simFrame = pd.DataFrame(frameDict, index = np.arange(T+1))
+        simFrame = pd.DataFrame(frameDict, index = np.arange(T))
+        if percent==True:
+            simFrame = 100*simFrame
+        self.simulated = simFrame
 
-        else:
-            k  = np.zeros((dropFirst+T+2,nk))
-            z  = np.zeros((dropFirst+T+2,nz))
-            u  = np.zeros((dropFirst+T+2,nu))
+def ir(f,p,eps,s0=None):
 
-            x = ir(self.f,self.n,self.p,self.l,self.rho,z,k,u,eps)
+    ''' Function for simulating a model in the following form:
 
-            frameDict={}
-            
-            for j,exoName in enumerate(self.names['exo']):
-                frameDict[exoName] = x[j][dropFirst:]
-            for i,endoName in enumerate(self.names['endo']):
-                frameDict[endoName] = x[i+len(self.names['exo'])][dropFirst:]
+            u(t)   = f*s(t) + e(t)
+            s(t+1) = p*s(t)
 
-            simFrame = pd.DataFrame(frameDict, index = np.arange(T+1))
+        where s(t) is an (nstates x 1) vector of state variables, u(t) is an (ncostate x 1) vector of costate
+        variables, and e(t) is an (nstates x 1) vector of structural shocks.
 
-        self.sims = simFrame
+        The arguments of ir() are:
 
+            1. f, p:    matrices of appropriate size
+            3. eps:     (T x nstates) array of exogenous strucural shocks. 
+            2. s0:      (1 x nstates) array of zeros of initial state value. Optional; defaults to zeros.
 
-def ir(f,n,p,l,rho,z,k,u,eps):
-    ''' Simulates a model given matrices and shock processes.
+        returns
 
-    u(t)   = f*k(t) + n*z(t)
-    k(t+1) = p*k(t) + l*z(t)
+            1. s:   states simulated from t = 0, 1, ..., T-1
+            2. u:   costates simulated from t = 0, 1, ..., T-1
 
     '''
+
+    T = np.max(eps.shape)
+    nstates = np.shape(p)[0]
+    ncostates = np.shape(f)[0]
+
+    if s0 is None:
+
+        s0 = np.zeros([1,nstates])
+
+    s = np.array(np.zeros([T+1,nstates]))
+    u = np.array(np.zeros([T,ncostates]))
+
+    s[0]=s0
+
     for i,e in enumerate(eps):
-        rho = np.array(rho)
-        z[i+1] = rho.dot(z[i]) + e
-        k[i+1] = p.dot(k[i]) + l.dot(z[i])
-        u[i]   = f.dot(k[i]) + n.dot(z[i])
-    z = z[0:-1]
-    k = k[0:-1]
-    u = u[0:-1]
-    return np.concatenate((z.T,k.T,u.T))
+        s[i+1] = p.dot(s[i]) + e
+        u[i]   = f.dot(s[i+1])
 
-def shift(series,direction=None):
-    values = series.values
-    if direction=='forward':
-        print('back')
-        newValues = np.append(0,values[0:-1])
-        print(newValues)
-    elif direction=='backward':
-        newValues = np.append(values[1:],np.nan)
-    else:
-        newSeries = pd.Series(newValues,index = series.index)
-    return newValues
+    s = s[1:]
 
-def trim(frame,lengthBegin=0,lengthEnd=0):
-    if lengthBegin==0 and lengthEnd==0:
-        return frame
+    return np.concatenate((s.T,u.T))
+
+
+def klein(a=None,b=None,c=None,rho=None,nstates=None):
+
+    '''This function solves linear dynamic models with the form of:
+    
+                a*Et[x(t+1)] = b*x(t) + c*z(t)
+
+        with x(t) = [s(t); u(t)] where s(t) is a vector of predetermined (state) variables and u(t) is
+        a vector of nonpredetermined costate variables. z(t) is a vector of exogenous driving variables with 
+        autocorrelation matrix rho. The solution to the model is a set of matrices f, n, p, l such that:
+
+                u(t)   = f*s(t) + n*z(t)
+                s(t+1) = p*s(t) + l*z(t).
+
+        The solution algorithm is based on Klein (2000) and is based on his solab.m Matlab program.'''
+
+    s, t, alpha, beta, q, z = la.ordqz(A=a, B=b, sort='ouc')
+    
+    q=np.mat(q)
+    z=np.mat(z)
+    s=np.mat(s)
+    t=np.mat(t)
+    a=np.mat(a)
+    b=np.mat(b)
+    
+
+    forcingVars = False
+    if len(np.shape(c))== 0:
+        nz = 0
+        rho = np.empty([0,0])
     else:
-        frame = frame.iloc[lengthBegin:-lengthEnd]
-    return frame
+        forcingVars = True
+        nz = np.shape(c)[1]
+        
+
+    # Components of the z matrix
+    z11 = z[0:nstates,0:nstates]
+    z12 = z[0:nstates,nstates:]
+    z21 = z[nstates:,0:nstates]
+    z22 = z[nstates:,nstates:]
+
+    # number of nonpredetermined variables
+    ncostates = np.shape(a)[0] - nstates
+    
+    if nstates>0:
+        if np.linalg.matrix_rank(z11)<nstates:
+            sys.exit("Invertibility condition violated.")
+
+    s11 = s[0:nstates,0:nstates];
+    if nstates>0:
+        z11i = la.inv(z11)
+        s11i = la.inv(s11)
+    else:
+        z11i = z11
+        s11i = s11
+
+    # Components of the s, t, and q matrices
+    s12 = s[0:nstates,nstates:]
+    s22 = s[nstates:,nstates:]
+    t11 = t[0:nstates,0:nstates]
+    t12 = t[0:nstates,nstates:]
+    t22 = t[nstates:,nstates:]
+    q1  = q[0:nstates,:]
+    q2  = q[nstates:,:]
+
+    # Verify that there are exactly nstates stable (inside the unit circle) eigenvalues:
+    stab = 0
+
+    if nstates>0:
+        if np.abs(t[nstates-1,nstates-1])>np.abs(s[nstates-1,nstates-1]):
+            print('Warning: Too few stable eigenvalues.')
+            stab = -1
+
+    if np.abs(t[nstates,nstates])<np.abs(s[nstates,nstates]):
+        print('Warning: Too many stable eigenvalues.')
+        stab = 1
+
+    # Compute the generalized eigenvalues
+    tii = np.diag(t)
+    sii = np.diag(s)
+    eig = np.zeros(np.shape(tii))
+
+    for k in range(len(tii)):
+        if np.abs(sii[k])>0:
+            eig[k] = np.abs(tii[k])/np.abs(sii[k])
+        else:
+            eig[k] = np.inf
+
+
+    # Solution matrix coefficients on the endogenous state
+    if nstates>0:
+            dyn = np.linalg.solve(s11,t11)
+    else:
+        dyn = np.array([])
+
+    f = np.real(z21.dot(z11i))
+    p = np.real(z11.dot(dyn).dot(z11i))
+
+    # Solution matrix coefficients on the exogenous state
+    if not forcingVars:
+        n = np.empty([ncostates,0])
+        l = np.empty([nstates,0])
+    else:
+        mat1 = np.kron(np.transpose(rho),s22) - np.kron(np.identity(nz),t22)
+        mat1i = la.inv(mat1)
+        q2c = q2.dot(c)
+        vecq2c = q2c.flatten(1).T
+        vecm = mat1i.dot(vecq2c)
+        m = np.transpose(np.reshape(np.transpose(vecm),(nz,ncostates)))
+        
+        n = np.real((z22 - z21.dot(z11i).dot(z12)).dot(m))
+        l = np.real(-z11.dot(s11i).dot(t11).dot(z11i).dot(z12).dot(m) + z11.dot(s11i).dot(t12.dot(m) - s12.dot(m).dot(rho)+q1.dot(c)) + z12.dot(m).dot(rho))
+
+
+    return f,n,p,l,stab,eig
