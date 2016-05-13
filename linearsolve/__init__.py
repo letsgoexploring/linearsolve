@@ -53,7 +53,7 @@ class model:
                                 parameterNames wasn't supplied, then parameters are labeled 'parameter 1',
                                 parameter2', etc.
 
-                5. .names:      A dictionary with keys 'endo', 'exo', and 'param' that stores the names of
+                5. .names:      A dictionary with keys 'variables', 'shocks', and 'param' that stores the names of
                                 the model's variables and parameters.
 
         '''
@@ -70,8 +70,8 @@ class model:
             for i in range(self.nstates):
                 shockNames.append('exo '+str(i+1))
 
-        names['endo'] = varNames
-        names['exo'] = shockNames
+        names['variables'] = varNames
+        names['shocks'] = shockNames
 
         if isinstance(parameters,pd.Series):
             self.parameters = parameters
@@ -112,8 +112,8 @@ class model:
 
         def ss_fun(variables):
     
-            equilibrium_left = np.r_[self.equilibrium_fun(variables,variables,self.parameters.values.tolist()).T[0]]
-            equilibrium_right = np.r_[self.equilibrium_fun(variables,variables,self.parameters.values.tolist()).T[1]]
+            equilibrium_left = np.r_[self.equilibrium_fun(variables,variables,self.parameters).T[0]]
+            equilibrium_right = np.r_[self.equilibrium_fun(variables,variables,self.parameters).T[1]]
 
             return equilibrium_left - equilibrium_right
 
@@ -167,8 +167,8 @@ class model:
 
             def equilibrium(vars_fwd,vars_cur):
 
-                equilibrium_left = np.r_[self.equilibrium_fun(vars_fwd,vars_cur,self.parameters.values.tolist()).T[0]]
-                equilibrium_right = np.r_[self.equilibrium_fun(vars_fwd,vars_cur,self.parameters.values.tolist()).T[1]]
+                equilibrium_left = np.r_[self.equilibrium_fun(vars_fwd,vars_cur,self.parameters).T[0]]
+                equilibrium_right = np.r_[self.equilibrium_fun(vars_fwd,vars_cur,self.parameters).T[1]]
 
                 return equilibrium_left - equilibrium_right
 
@@ -184,8 +184,8 @@ class model:
 
             def log_equilibrium(log_vars_fwd,log_vars_cur):
 
-                equilibrium_left = np.r_[self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters.values.tolist()).T[0]]
-                equilibrium_right = np.r_[self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters.values.tolist()).T[1]]
+                equilibrium_left = np.r_[self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters).T[0]]
+                equilibrium_right = np.r_[self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters).T[1]]
 
                 return np.log(equilibrium_left) - np.log(equilibrium_right)
 
@@ -250,7 +250,7 @@ class model:
         ncostates = self.costates
         nstates = self.nstates
         
-        for j,name in enumerate(self.names['exo']):
+        for j,name in enumerate(self.names['shocks']):
 
             s0 = np.zeros([1,nstates])
             eps= np.zeros([T,nstates])
@@ -261,15 +261,15 @@ class model:
 
             x = ir(self.f,self.p,eps,s0)
 
-            frameDict = {self.names['exo'][j]:eps.T[j]}
-            for i,endoName in enumerate(self.names['endo']):
+            frameDict = {self.names['shocks'][j]:eps.T[j]}
+            for i,endoName in enumerate(self.names['variables']):
                 frameDict[endoName] = x[i]
 
             irFrame = pd.DataFrame(frameDict, index = np.arange(T))
             if percent==True:
                 irFrame = 100*irFrame
 
-            irsDict[self.names['exo'][j]] = irFrame
+            irsDict[self.names['shocks'][j]] = irFrame
 
         self.irs = irsDict
 
@@ -308,9 +308,9 @@ class model:
         x = ir(self.f,self.p,eps,s0)
 
         frameDict = {}
-        for j,exoName in enumerate(self.names['exo']):
+        for j,exoName in enumerate(self.names['shocks']):
             frameDict[exoName] = eps.T[j][dropFirst:]
-        for i,endoName in enumerate(self.names['endo']):
+        for i,endoName in enumerate(self.names['variables']):
             frameDict[endoName] = x[i][dropFirst:]
 
         simFrame = pd.DataFrame(frameDict, index = np.arange(T))
