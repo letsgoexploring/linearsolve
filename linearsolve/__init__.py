@@ -111,11 +111,10 @@ class model:
             '''
 
         def ss_fun(variables):
-    
-            equilibrium_left = np.r_[self.equilibrium_fun(variables,variables,self.parameters).T[0]]
-            equilibrium_right = np.r_[self.equilibrium_fun(variables,variables,self.parameters).T[1]]
 
-            return equilibrium_left - equilibrium_right
+            variables = pd.Series(variables,index = self.names['variables'])
+
+            return self.equilibrium_fun(variables,variables,self.parameters)
 
         if method == 'fsolve':
             steady_state =fsolve(ss_fun,guess,**options)
@@ -129,7 +128,7 @@ class model:
         elif method == 'broyden2':
             steady_state =broyden2(ss_fun,guess,**options)
 
-        self.ss = steady_state
+        self.ss = pd.Series(steady_state,index=self.names['variables'])
 
 
 
@@ -167,16 +166,22 @@ class model:
 
             def equilibrium(vars_fwd,vars_cur):
 
-                equilibrium_left = np.r_[self.equilibrium_fun(vars_fwd,vars_cur,self.parameters).T[0]]
-                equilibrium_right = np.r_[self.equilibrium_fun(vars_fwd,vars_cur,self.parameters).T[1]]
+                vars_fwd = pd.Series(vars_fwd,index = self.names['variables'])
+                vars_cur = pd.Series(vars_cur,index = self.names['variables'])
+
+                # equilibrium_left = self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters)+1
+                # equilibrium_right = np.ones(len(self.names['variables']))
+
+                equilibrium_left = self.equilibrium_fun(vars_fwd,vars_cur,self.parameters)
+                equilibrium_right = np.ones(len(self.names['variables']))
 
                 return equilibrium_left - equilibrium_right
 
             equilibrium_fwd = lambda fwd: equilibrium(fwd,steady_state)
             equilibrium_cur = lambda cur: equilibrium(steady_state,cur)
 
-            self.a= approx_fprime_cs(steady_state, equilibrium_fwd)
-            self.b= -approx_fprime_cs(steady_state, equilibrium_cur)
+            self.a= approx_fprime_cs(steady_state.ravel(), equilibrium_fwd)
+            self.b= -approx_fprime_cs(steady_state.ravel(), equilibrium_cur)
 
 
 
@@ -184,16 +189,19 @@ class model:
 
             def log_equilibrium(log_vars_fwd,log_vars_cur):
 
-                equilibrium_left = np.r_[self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters).T[0]]
-                equilibrium_right = np.r_[self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters).T[1]]
+                log_vars_fwd = pd.Series(log_vars_fwd,index = self.names['variables'])
+                log_vars_cur = pd.Series(log_vars_cur,index = self.names['variables'])
+
+                equilibrium_left = self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters)+1
+                equilibrium_right = np.ones(len(self.names['variables']))
 
                 return np.log(equilibrium_left) - np.log(equilibrium_right)
 
             log_equilibrium_fwd = lambda log_fwd: log_equilibrium(log_fwd,np.log(steady_state))
             log_equilibrium_cur = lambda log_cur: log_equilibrium(np.log(steady_state),log_cur)
 
-            self.a= approx_fprime_cs(np.log(steady_state), log_equilibrium_fwd)
-            self.b= -approx_fprime_cs(np.log(steady_state), log_equilibrium_cur)
+            self.a= approx_fprime_cs(np.log(steady_state).ravel(), log_equilibrium_fwd)
+            self.b= -approx_fprime_cs(np.log(steady_state).ravel(), log_equilibrium_cur)
 
 
 
