@@ -169,9 +169,6 @@ class model:
                 vars_fwd = pd.Series(vars_fwd,index = self.names['variables'])
                 vars_cur = pd.Series(vars_cur,index = self.names['variables'])
 
-                # equilibrium_left = self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters)+1
-                # equilibrium_right = np.ones(len(self.names['variables']))
-
                 equilibrium_left = self.equilibrium_fun(vars_fwd,vars_cur,self.parameters)
                 equilibrium_right = np.ones(len(self.names['variables']))
 
