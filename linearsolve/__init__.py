@@ -29,10 +29,10 @@ class model:
 
             2. nstates:         The number of state variables in the model.
 
-            3. varNames:       A list of strings with the names of the endogenous variables. The state
+            3. varNames:        A list of strings with the names of the endogenous variables. The state
                                 variables must be ordered first.
 
-            4. shockNames:        A list of strings with the names of the exogenous shocks to each state
+            4. shockNames:      A list of strings with the names of the exogenous shocks to each state
                                 variable. The order of names must agree with varNames.
 
             5. parameters:      Either a list of parameter values OR a Pandas Series object with parameter
@@ -84,10 +84,11 @@ class model:
 
         names['param'] = parameterNames
         self.names = names
+        self.ss = None
 
 
 
-    def compute_ss(self,guess,method='fsolve',options={}):
+    def compute_ss(self,guess=None,method='fsolve',options={}):
 
         '''This method attempts to solve for the steady state of the model. Arguments are:
 
@@ -109,6 +110,9 @@ class model:
             Saves the computed steady state as an array in the .ss attribute
 
             '''
+
+        if guess is None:
+                guess = np.ones(self.nvars)
 
         def ss_fun(variables):
 
@@ -136,7 +140,7 @@ class model:
 
         '''Sets the steady state .ss attribute if you compute the steady state independently.'''
         
-        model.ss = np.array(steady_state)
+        self.ss = np.array(steady_state)
 
     
 
@@ -280,8 +284,7 @@ class model:
 
     def stoch_sim(self,T=51,dropFirst=100,covMat=None,seed=None,percent=False):
         
-        '''
-        Method for computing impulse responses for shocks to each state variable. Arguments:
+        ''' Method for computing impulse responses for shocks to each state variable. Arguments:
 
                 T:          Number of periods to simulate.
                 dropFirst:  Number of periods to simulate before saving output
@@ -322,6 +325,42 @@ class model:
         if percent==True:
             simFrame = 100*simFrame
         self.simulated = simFrame
+
+
+    def approx_and_solve(self,steady_state=None,guess=None,method='fsolve',options={},islinear=False):
+    def approx_and_solve(self,islinear=False):
+
+        '''Method approximates and solves a dynamic stochastic general equilibrium (DSGE) model. The
+        method computes the steady state if it hasn't already been set or supplied as an argument,
+        constructs the log-linear approximation (if the model isn't log-linear), and solves the model
+        using Klein's (2000) method. Arguments:
+
+            1. islinear:        (bool) False if the model is nonlinear
+
+
+        Returns attributes:
+                                    
+            1. .a and .b    Matrix of coefficients for the log-linearized model. See documentation
+                                .log_linear()
+            2. .f and .p:   Solution matrix coeffients on s(t). See documentation for .solve_klein()
+                                
+            3. .stab:       Indicates solution stability and uniqueness
+
+                                stab == 1: too many stable eigenvalues
+                                stab == -1: too few stable eigenvalues
+                                stab == 0: just enoughstable eigenvalues
+
+                                See documentation for .solve_klein()
+
+            4. .eig:        The generalized eigenvalues from the Schur decomposition. See documentation 
+                                for .solve_klein()
+
+        '''
+
+        self.log_linear(islinear=islinear)
+        self.solve_klein(self.a,self.b)
+
+
 
 def ir(f,p,eps,s0=None):
 
