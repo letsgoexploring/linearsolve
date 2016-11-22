@@ -475,9 +475,10 @@ def klein(a=None,b=None,c=None,rho=None,nstates=None):
             print('Warning: Too few stable eigenvalues.')
             stab = -1
 
-    if np.abs(t[nstates,nstates])<np.abs(s[nstates,nstates]):
-        print('Warning: Too many stable eigenvalues.')
-        stab = 1
+    if nstates<nstates+ncostates:
+        if np.abs(t[nstates,nstates])<np.abs(s[nstates,nstates]):
+            print('Warning: Too many stable eigenvalues.')
+            stab = 1
 
     # Compute the generalized eigenvalues
     tii = np.diag(t)
