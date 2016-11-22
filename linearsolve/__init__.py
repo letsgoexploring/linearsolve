@@ -326,13 +326,10 @@ class model:
             simFrame = 100*simFrame
         self.simulated = simFrame
 
-
-    def approx_and_solve(self,steady_state=None,guess=None,method='fsolve',options={},islinear=False):
     def approx_and_solve(self,islinear=False):
 
-        '''Method approximates and solves a dynamic stochastic general equilibrium (DSGE) model. The
-        method computes the steady state if it hasn't already been set or supplied as an argument,
-        constructs the log-linear approximation (if the model isn't log-linear), and solves the model
+        '''Method approximates and solves a dynamic stochastic general equilibrium (DSGE) model by 
+        constructing the log-linear approximation (if the model isn't log-linear) and solving the model
         using Klein's (2000) method. Arguments:
 
             1. islinear:        (bool) False if the model is nonlinear
@@ -359,7 +356,6 @@ class model:
 
         self.log_linear(islinear=islinear)
         self.solve_klein(self.a,self.b)
-
 
 
 def ir(f,p,eps,s0=None):
