@@ -8,7 +8,7 @@ import sys
 
 class model:
 
-    '''This program defines an object class - linearsolve.model -- with associated methods for solving and 
+    '''This program defines a class - linearsolve.model -- with associated methods for solving and 
     simulating dynamic stochastic general equilibrium (DSGE) models.'''
 
     def __init__(self,equations=None,nstates=None,varNames=None,shockNames=None,parameters=None,parameterNames=None):
@@ -65,12 +65,13 @@ class model:
 
         names = {}
 
+        names['variables'] = varNames
+
         if shockNames == None:
             shockNames = []
             for i in range(self.nstates):
-                shockNames.append('exo '+str(i+1))
+                shockNames.append('e_'+varNames[i])
 
-        names['variables'] = varNames
         names['shocks'] = shockNames
 
         if isinstance(parameters,pd.Series):
@@ -356,6 +357,230 @@ class model:
 
         self.log_linear(islinear=islinear)
         self.solve_klein(self.a,self.b)
+
+    def loglinear_equations(self,round=True,precision=4):
+
+        '''Returns a string containing the log-linear approximation to the equilibrium conditions
+
+        Arguments:
+
+            1. round:       (bool) Whether to round the coefficents in the linear equations
+            2. precisions:  (int) Number of decimals to round the solutions
+
+        Returns:
+
+            String with the log-linear approximation to the equilibrium conditions.
+
+        '''
+
+        if round is True:
+            a = np.round(self.a,precision)
+            b = np.round(self.b,precision)
+
+            
+        leftsides =  []
+        rightsides = []
+        lines ='Log-linear equilibrium conditions:\n\n'
+
+        left_length = 1
+
+
+        for i in range(self.nvars):
+            
+            left = ''
+            right = ''
+            
+            left_plus_flag = 0
+            right_plus_flag = 0
+            if all(np.isclose(0,a[i])):
+                left += '0'
+            else:
+                for j in range(self.nvars):
+
+                    if not np.isclose(0,a[i][j]):
+
+                        name = self.names['variables'][j]
+
+                        if j >self.nstates-1:
+                            name +='[t+1|t]'
+
+                        else:
+                            name +='[t+1]'
+
+                        if np.isclose(1,a[i][j]):
+                            coeff = ''
+
+                        elif np.isclose(-1,a[i][j]):
+                            coeff = '-'
+
+                        else:
+                            coeff = str(a[i][j])+'·'
+
+                        if left_plus_flag == 0:
+                            left += coeff+name
+                            left_plus_flag+=1
+
+                        else:
+                            if a[i][j] > 0:
+                                left += '+'+coeff+name
+                            else:
+                                left += coeff+name
+            
+            if all(np.isclose(0,b[i])):
+                right += '0'
+            else:
+                for j in range(self.nvars):
+
+                    if not np.isclose(0,b[i][j]):
+
+                        name = self.names['variables'][j]+'[t]'
+
+                        if np.isclose(1,b[i][j]):
+                            coeff = ''
+
+                        elif np.isclose(-1,b[i][j]):
+                            coeff = '-'
+
+                        else:
+                            coeff = str(b[i][j])+'·'
+
+                        if right_plus_flag == 0:
+                            right += coeff+name
+                            right_plus_flag+=1
+
+                        else:
+                            if b[i][j] > 0:
+                                right += '+'+coeff+name
+                            else:
+                                right += coeff+name
+                                
+                        
+            leftsides.append(left)
+            rightsides.append(right)
+            
+            if len(left)>left_length:
+                left_length = len(left)
+                
+
+        for i in range(self.nvars):
+            leftsides[i] = leftsides[i].rjust(left_length)
+            lines+=leftsides[i]+' = '+rightsides[i]+'\n\n'
+
+        lines = lines[:-2]
+
+        return lines
+
+    def solution_equations(self,round=True,precision=4):
+
+        '''Returns a string containing the solution to the log-linear system
+
+        Arguments:
+
+            1. round:       (bool) Whether to round the coefficents in the solution equations
+            2. precisions:  (int) Number of decimals to round the solutions
+
+        Returns:
+
+            String with the solution equations.
+
+        '''
+
+        if round is True:
+            f = np.round(self.f,precision)
+            p = np.round(self.p,precision)
+
+            
+        leftsides =  []
+        rightsides = []
+        lines ='Solution to the log-linear system:\n\n'
+
+        left_length = 1
+
+
+        for i in range(self.nstates):
+            
+            left = ''
+            right = ''
+            right_plus_flag = 0
+
+            left+= self.names['variables'][i]+'[t+1]'
+            
+            if all(np.isclose(0,p[i])):
+                right += self.names['shocks'][i]+'[t+1]'
+            else:
+                for j in range(self.nstates):
+
+                    if not np.isclose(0,p[i][j]):
+
+                        if right_plus_flag == 0:
+                            right += str(p[i][j])+'·'+self.names['variables'][j]+'[t]'
+                            right_plus_flag+=1
+
+                        else:
+                            if p[i][j] > 0:
+                                right += '+'+str(p[i][j])+'·'+self.names['variables'][j]+'[t]'
+
+                            else:
+                                right += str(p[i][j])+'·'+self.names['variables'][j]+'[t]'
+                right+='+'+self.names['shocks'][i]+'[t+1]'  
+            leftsides.append(left)
+            rightsides.append(right)
+                            
+                        
+            if len(left)>left_length:
+                left_length = len(left)
+
+                
+        for i in range(self.nvars-self.nstates):
+            
+            left = ''
+            right = ''
+            right_plus_flag = 0
+            
+            left+= self.names['variables'][self.nstates+i]+'[t]'
+            
+            if all(np.isclose(0,f[i])):
+                right += '0'
+            else:
+                for j in range(self.nstates):
+                    if not np.isclose(0,f[i][j]):
+
+                        name = self.names['variables'][j]+'[t]'
+
+                        if np.isclose(1,f[i][j]):
+                            coeff = ''
+
+                        elif np.isclose(-1,f[i][j]):
+                            coeff = '-'
+
+                        else:
+                            coeff = str(f[i][j])+'·'
+
+                        if right_plus_flag == 0:
+                            right += coeff+name
+                            right_plus_flag+=1
+
+                        else:
+                            if f[i][j] > 0:
+                                right += '+'+coeff+name
+                            else:
+                                right += coeff+name
+                                
+            leftsides.append(left)
+            rightsides.append(right)
+                            
+                        
+            if len(left)>left_length:
+                left_length = len(left)
+                
+                
+        for i in range(self.nvars):
+            leftsides[i] = leftsides[i].rjust(left_length)
+            lines+=leftsides[i]+' = '+rightsides[i]+'\n\n'
+        lines = lines[:-2]
+                    
+
+        return lines
 
 
 def ir(f,p,eps,s0=None):
