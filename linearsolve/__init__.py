@@ -145,7 +145,7 @@ class model:
 
     
 
-    def log_linear(self,steady_state=None,islinear=False):
+    def log_linear_approximation(self,steady_state=None,isloglinear=False):
 
         ''' Given a nonlinear rational expectations model in the form:
 
@@ -167,7 +167,7 @@ class model:
                 raise ValueError('You must specify a steady state for the model before attempting to linearize.')
 
 
-        if islinear:
+        if isloglinear:
 
             def equilibrium(vars_fwd,vars_cur):
 
@@ -327,19 +327,19 @@ class model:
             simFrame = 100*simFrame
         self.simulated = simFrame
 
-    def approx_and_solve(self,islinear=False):
+    def approximate_and_solve(self,isloglinear=False):
 
         '''Method approximates and solves a dynamic stochastic general equilibrium (DSGE) model by 
         constructing the log-linear approximation (if the model isn't log-linear) and solving the model
         using Klein's (2000) method. Arguments:
 
-            1. islinear:        (bool) False if the model is nonlinear
+            1. isloglinear:        (bool) False if the model is nonlinear
 
 
         Returns attributes:
                                     
             1. .a and .b    Matrix of coefficients for the log-linearized model. See documentation
-                                .log_linear()
+                                .log_linear_approximation()
             2. .f and .p:   Solution matrix coeffients on s(t). See documentation for .solve_klein()
                                 
             3. .stab:       Indicates solution stability and uniqueness
@@ -355,10 +355,10 @@ class model:
 
         '''
 
-        self.log_linear(islinear=islinear)
+        self.log_linear_approximation(isloglinear=isloglinear)
         self.solve_klein(self.a,self.b)
 
-    def loglinear_equations(self,round=True,precision=4):
+    def approximated(self,round=True,precision=4):
 
         '''Returns a string containing the log-linear approximation to the equilibrium conditions
 
@@ -470,7 +470,7 @@ class model:
 
         return lines
 
-    def solution_equations(self,round=True,precision=4):
+    def solved(self,round=True,precision=4):
 
         '''Returns a string containing the solution to the log-linear system
 
