@@ -1,0 +1,13 @@
+
+Additional ``fredpy`` Functions
+==================================
+
+
+
+
+.. math::
+
+  \Gamma(E_t z_{t+1}, z_t, v_{t+1}) = 0
+  :label: euler
+  
+Blah blah

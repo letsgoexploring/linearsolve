@@ -7,7 +7,7 @@ About ``linearsolve``
 =====================
 
 
-``linearsolve`` is a Python package for retrieving and working with data from Federal Reserve Economic Data (FRED). The package makes it easy to download specific data series and provides a set of tools for transforming the data in order to construct plots and do statistical analysis. The ``linearsolve`` package is useful for anyone doing empirical research using data from FRED and for anyone, e.g. economics teachers, students, and journalists, that will benefit from having an efficient and flexible way to access FRED with Python. ``linearsolve`` is compatible with Python 2 and 3.
+``linearsolve`` is a Python package for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models. ``linearsolve`` is compatible with Python 2 and 3.
 
 
 Installation
@@ -19,7 +19,7 @@ Install ``linearsolve`` from PyPI with the shell command::
 	pip install linearsolve
 
 
-Or download the source here: https://github.com/letsgoexploring/linearsolve-package/raw/gh-pages/dist/linearsolve-2.0.2.tar.gz
+.. Or download the source here: https://github.com/letsgoexploring/linearsolve-package/raw/gh-pages/dist/linearsolve-2.0.2.tar.gz
 
 Contents:
 ==================
@@ -27,9 +27,9 @@ Contents:
 .. toctree::
    :maxdepth: 2
    
-   series_class.rst
-   additional_functions.rst
-   fredpy_examples.ipynb
+   examples.ipynb
+   howLinearsolveWorks.ipynb
+   
 
 
 Indices and tables
