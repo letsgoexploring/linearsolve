@@ -13,32 +13,6 @@
     "raw_mimetype": "text/restructuredtext"
    },
    "source": [
-    "\n",
-    "\n",
-    ".. math:: \\Gamma(E_t z_{t+1}, z_t, v_{t+1}) &= 0 \\\\\n",
-    "              &=  a^2 + 2ab + b^2\n",
-    "   :label: eulers\n",
-    "  \n",
-    "Blah blah\n",
-    "\n",
-    ".. math:: \n",
-    "   e^{i\\pi} + 1 = 0\n",
-    "   :label: euler\n",
-    "\n",
-    "Euler's identity, equation :eq:`euler`, was elected one of the most\n",
-    "beautiful mathematical formulas.\n",
-    "\n",
-    ".. math::\n",
-    "\n",
-    "   \\Gamma(E_t z_{t+1}, z_t, v_{t+1})  &=  (a + b)(a + b) "
-   ]
-  },
-  {
-   "cell_type": "raw",
-   "metadata": {
-    "raw_mimetype": "text/restructuredtext"
-   },
-   "source": [
     "The ``linearsolve.model`` class\n",
     "-------------------------------\n",
     "\n",
@@ -59,10 +33,7 @@
     "where the vector :math:`x_{t}` denotes the log deviation of the variables in :math:`X_t` from their steady state values. The variables in :math:`x_t` are grouped in a specific way: :math:`x_t = [s_t; u_t]` where :math:`s_t` is an :math:`n_s \\times 1` vector of predetermined (state) variables and :math:`u_t` is an :math:`n_u \\times 1` vector of nonpredetermined (forward-looking) variables. :math:`\\epsilon_{t+1}` is an :math:`n_s\\times 1` vector of i.i.d. shocks to the state variables :math:`s_{t+1}`.  :math:`\\epsilon_{t+1}` has mean 0 and diagonal covariance matrix :math:`\\Sigma`. The solution to the model is a pair of matrices :math:`F` and :math:`P` such that:\n",
     "\n",
     ".. math::\n",
-    "   u_t = Fs_t,\n",
-    "   :label:\n",
-    "   \n",
-    "and:\n",
+    "   s_{t+1} &= Ps_t + \\epsilon_{t+1}\\\\\n",
     "\n",
     ".. math::\n",
     "   s_{t+1} = Ps_t + \\epsilon_{t+1}.\n",
@@ -86,6 +57,15 @@
     "\n",
     "In this notebook, I demonstrate how to use the module to simulate two basic business cycle models: an real business cycle (RBC) model and a new-Keynesian business cycle model."
    ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
   },
   {
    "cell_type": "code",

@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  17 FEB 2017 13:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  28 FEB 2017 07:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**fredpy.tex
-(./fredpy.tex
+**linearsolve.tex
+(./linearsolve.tex
 LaTeX2e <2015/01/01>
 Babel <3.9l> and hyphenation patterns for 79 languages loaded.
 (./sphinxmanual.cls
@@ -371,7 +371,8 @@ File: babel.def 2014/09/25 3.9l Babel common definitions
 ))
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/times.sty
 Package: times 2005/04/12 PSNFSS-v9.2a (SPQR) 
-) (./fncychap.sty
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/fncychap/fncychap.sty
 Package: fncychap 2007/07/30 v1.34 LaTeX package (Revised chapters)
 \RW=\skip46
 \mylen=\skip47
@@ -382,7 +383,8 @@ Package: fncychap 2007/07/30 v1.34 LaTeX package (Revised chapters)
 \pxx=\skip52
 \c@AlphaCnt=\count104
 \c@AlphaDecCnt=\count105
-) (/usr/local/texlive/2015/texmf-dist/tex/latex/tools/longtable.sty
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/tools/longtable.sty
 Package: longtable 2014/10/28 v4.11 Multi-page Table package (DPC)
 \LTleft=\skip53
 \LTright=\skip54
@@ -610,9 +612,10 @@ Package: titlesec 2011/12/15 v2.10.0 Sectioning titles
 \titlewidthlast=\dimen127
 \titlewidthfirst=\dimen128
 )
-(./tabulary.sty
-Package: tabulary 2008/12/01 v0.9 tabulary package (DPC)
- (/usr/local/texlive/2015/texmf-dist/tex/latex/tools/array.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/tabulary/tabulary.sty
+Package: tabulary 2014/06/11 v0.10 tabulary package (DPC)
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/tools/array.sty
 Package: array 2014/10/28 v2.4c Tabular extension package (FMi)
 \col@sep=\dimen129
 \extrarowheight=\dimen130
@@ -625,7 +628,8 @@ Package: array 2014/10/28 v2.4c Tabular extension package (FMi)
 \tymin=\dimen132
 \tymax=\dimen133
 \TY@tablewidth=\dimen134
-) (/usr/local/texlive/2015/texmf-dist/tex/latex/base/makeidx.sty
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/makeidx.sty
 Package: makeidx 2014/09/29 v1.0m Standard LaTeX package
 )
 (/usr/local/texlive/2015/texmf-dist/tex/latex/framed/framed.sty
@@ -891,12 +895,12 @@ Package: enumitem 2011/09/28 v3.5.2 Customized lists
 \enitdp@description=\count129
 )
 \@indexfile=\write4
-\openout4 = `fredpy.idx'.
+\openout4 = `linearsolve.idx'.
 
 
-Writing index file fredpy.idx
-(./fredpy.aux)
-\openout1 = `fredpy.aux'.
+Writing index file linearsolve.idx
+(./linearsolve.aux)
+\openout1 = `linearsolve.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 73.
 LaTeX Font Info:    ... okay on input line 73.
@@ -912,7 +916,8 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 73.
 LaTeX Font Info:    ... okay on input line 73.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 73.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 73.
- (/usr/local/texlive/2015/texmf-dist/tex/latex/base/ts1cmr.fd
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 73.
@@ -1002,9 +1007,9 @@ LaTeX Info: Redefining \ref on input line 73.
 LaTeX Info: Redefining \pageref on input line 73.
 LaTeX Info: Redefining \nameref on input line 73.
 
-(./fredpy.out) (./fredpy.out)
+(./linearsolve.out) (./linearsolve.out)
 \@outlinefile=\write5
-\openout5 = `fredpy.out'.
+\openout5 = `linearsolve.out'.
 
 Package hyperref Info: Option `pageanchor' set `false' on input line 76.
 LaTeX Font Info:    Try loading font information for T1+phv on input line 76.
@@ -1048,15 +1053,16 @@ less on input line 76.
 
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 76.
-(./fredpy.toc
+(./linearsolve.toc
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 2.
 LaTeX Font Info:    Try loading font information for T1+pcr on input line 1.
- (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/t1pcr.fd
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 ))
 \tf@toc=\write6
-\openout6 = `fredpy.toc'.
+\openout6 = `linearsolve.toc'.
 
 
 
@@ -1085,206 +1091,200 @@ less on input line 76.
 Chapter 1.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 94.
+less on input line 92.
 
 [2
 
 ]
 Chapter 2.
+LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 95.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/pcr/b/n' tried instead on input line 1.
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\sphinxstyleliteralintitle' on input line 9
-7.
+(hyperref)                removing `\sphinxstyleliteralintitle' on input line 1
+04.
 
+LaTeX Font Info:    Try loading font information for TS1+pcr on input line 1.
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ts1pcr.fd
+File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
+)
+
+Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
+less on input line 164.
+
+[3
+
+]
+LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 212.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <10> not available
 (Font)              Font shape `T1/pcr/b/n' tried instead on input line 1.
-LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <10> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 1.
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 160.
+LaTeX Info: Active space character found while output routine is active 
+            This may be a bug in a package file you are using.
+ [4] <examples_3_1.png, id=96, 725.5908pt x 257.2812pt>
+File: examples_3_1.png Graphic file (type png)
+
+<use examples_3_1.png>
+Package pdftex.def Info: examples_3_1.png used on input line 278.
+(pdftex.def)             Requested size: 469.75502pt x 166.57126pt.
+ [5 <./examples_3_1.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1--328
+[]\T1/pcr/m/n/10 production_function = technology_current*capital_current**alph
+a -
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1--335
+[]\T1/pcr/m/n/10 production_function = 1 - output_curent/technology_current/
+ []
+
+[6]
+LaTeX Info: Active space character found while output routine is active 
+            This may be a bug in a package file you are using.
+ [7]
+LaTeX Info: Active space character found while output routine is active 
+            This may be a bug in a package file you are using.
+ [8]
+LaTeX Info: Active space character found while output routine is active 
+            This may be a bug in a package file you are using.
+ [9] <examples_21_1.png, id=159, 376.5267pt x 257.2812pt>
+File: examples_21_1.png Graphic file (type png)
+
+<use examples_21_1.png>
+Package pdftex.def Info: examples_21_1.png used on input line 582.
+(pdftex.def)             Requested size: 376.52577pt x 257.28058pt.
+ <examples_21_2.png, id=160, 376.5267pt x 257.2812pt>
+File: examples_21_2.png Graphic file (type png)
+
+<use examples_21_2.png>
+Package pdftex.def Info: examples_21_2.png used on input line 584.
+(pdftex.def)             Requested size: 376.52577pt x 257.28058pt.
+ [10 <./examples_21_1.png>]
+<examples_23_1.png, id=166, 385.1991pt x 257.2812pt>
+File: examples_23_1.png Graphic file (type png)
+ <use examples_23_1.png>
+Package pdftex.def Info: examples_23_1.png used on input line 608.
+(pdftex.def)             Requested size: 385.19815pt x 257.28058pt.
+
+[11 <./examples_21_2.png>]
+<examples_23_2.png, id=174, 378.6948pt x 257.2812pt>
+File: examples_23_2.png Graphic file (type png)
+ <use examples_23_2.png>
+Package pdftex.def Info: examples_23_2.png used on input line 610.
+(pdftex.def)             Requested size: 378.69386pt x 257.28058pt.
+
+<examples_23_3.png, id=175, 388.0899pt x 257.2812pt>
+File: examples_23_3.png Graphic file (type png)
+ <use examples_23_3.png>
+Package pdftex.def Info: examples_23_3.png used on input line 612.
+(pdftex.def)             Requested size: 388.08894pt x 257.28058pt.
+
+[12 <./examples_23_1.png> <./examples_23_2.png>]
+LaTeX Info: Active space character found while output routine is active 
+            This may be a bug in a package file you are using.
+ [13 <./examples_23_3.png>]
+LaTeX Font Info:    Font shape `TS1/pcr/m/it' in size <9> not available
+(Font)              Font shape `TS1/pcr/m/sl' tried instead on input line 659.
+LaTeX Info: Active space character found while output routine is active 
+            This may be a bug in a package file you are using.
+
+[14] <examples_26_1.png, id=200, 733.5405pt x 715.473pt>
+File: examples_26_1.png Graphic file (type png)
+
+<use examples_26_1.png>
+Package pdftex.def Info: examples_26_1.png used on input line 746.
+(pdftex.def)             Requested size: 469.75502pt x 458.18501pt.
+ [15]
+<examples_27_1.png, id=205, 721.2546pt x 491.436pt>
+File: examples_27_1.png Graphic file (type png)
+ <use examples_27_1.png>
+Package pdftex.def Info: examples_27_1.png used on input line 765.
+(pdftex.def)             Requested size: 469.75502pt x 320.0745pt.
+
+[16 <./examples_26_1.png>]
+<examples_28_1.png, id=211, 385.1991pt x 252.2223pt>
+File: examples_28_1.png Graphic file (type png)
+ <use examples_28_1.png>
+Package pdftex.def Info: examples_28_1.png used on input line 777.
+(pdftex.def)             Requested size: 385.19815pt x 252.22168pt.
+
+<examples_28_2.png, id=212, 385.1991pt x 257.2812pt>
+File: examples_28_2.png Graphic file (type png)
+ <use examples_28_2.png>
+Package pdftex.def Info: examples_28_2.png used on input line 779.
+(pdftex.def)             Requested size: 385.19815pt x 257.28058pt.
+
+[17 <./examples_27_1.png> <./examples_28_1.png>]
+<examples_28_3.png, id=220, 385.1991pt x 257.2812pt>
+File: examples_28_3.png Graphic file (type png)
+ <use examples_28_3.png>
+Package pdftex.def Info: examples_28_3.png used on input line 781.
+(pdftex.def)             Requested size: 385.19815pt x 257.28058pt.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\sphinxstyleliteralintitle' on input line 7
+84.
+
+LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <12> not available
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 1.
+[18 <./examples_28_2.png> <./examples_28_3.png>] [19]
+Chapter 3.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 851.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
+(./linearsolve.ind)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 863.
+
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 180.
+less on input line 863.
 
-[3
-
-] [4] [5]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\sphinxstyleliteralintitle' on input line 5
-69.
-
-[6]
-LaTeX Font Info:    Try loading font information for TS1+pcr on input line 1.
- (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ts1pcr.fd
-File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
-) [7]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\sphinxstyleliteralintitle' on input line 7
-66.
-
-LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 769.
-<fredpy_examples_3_0.png, id=229, 366.36874pt x 256.96pt>
-File: fredpy_examples_3_0.png Graphic file (type png)
-
-<use fredpy_examples_3_0.png>
-Package pdftex.def Info: fredpy_examples_3_0.png used on input line 788.
-(pdftex.def)             Requested size: 366.36784pt x 256.95937pt.
- [8]
-LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <12> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 1.
-LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 798.
-LaTeX Font Info:    Font shape `TS1/pcr/m/it' in size <9> not available
-(Font)              Font shape `TS1/pcr/m/sl' tried instead on input line 798.
- [9 <./fredpy_examples_3_0.png>]
-<fredpy_examples_9_1.png, id=250, 401.5pt x 266.9975pt>
-File: fredpy_examples_9_1.png Graphic file (type png)
-
-<use fredpy_examples_9_1.png>
-Package pdftex.def Info: fredpy_examples_9_1.png used on input line 900.
-(pdftex.def)             Requested size: 401.49901pt x 266.99683pt.
- [10] [11 <./fredpy_examples_9_1.png>]
-<fredpy_examples_11_0.png, id=264, 401.5pt x 266.9975pt>
-File: fredpy_examples_11_0.png Graphic file (type png)
-
-<use fredpy_examples_11_0.png>
-Package pdftex.def Info: fredpy_examples_11_0.png used on input line 994.
-(pdftex.def)             Requested size: 401.49901pt x 266.99683pt.
-LaTeX Info: Active space character found while output routine is active 
-            This may be a bug in a package file you are using.
- [12 <./fredpy_examples_11_0.png>]
-<fredpy_examples_12_0.png, id=271, 390.45876pt x 266.9975pt>
-File: fredpy_examples_12_0.png Graphic file (type png)
-
-<use fredpy_examples_12_0.png>
-Package pdftex.def Info: fredpy_examples_12_0.png used on input line 1012.
-(pdftex.def)             Requested size: 390.4578pt x 266.99683pt.
-
-<fredpy_examples_13_0.png, id=272, 391.4625pt x 266.9975pt>
-File: fredpy_examples_13_0.png Graphic file (type png)
-
-<use fredpy_examples_13_0.png>
-Package pdftex.def Info: fredpy_examples_13_0.png used on input line 1027.
-(pdftex.def)             Requested size: 391.46153pt x 266.99683pt.
- [13 <./fredpy_examples_12_0.png>]
-<fredpy_examples_16_1.png, id=278, 724.7075pt x 266.9975pt>
-File: fredpy_examples_16_1.png Graphic file (type png)
-
-<use fredpy_examples_16_1.png>
-Package pdftex.def Info: fredpy_examples_16_1.png used on input line 1066.
-(pdftex.def)             Requested size: 469.75502pt x 173.06964pt.
- [14 <./fredpy_examples_13_0.png>]
-<fredpy_examples_19_0.png, id=286, 383.4325pt x 266.9975pt>
-File: fredpy_examples_19_0.png Graphic file (type png)
-
-<use fredpy_examples_19_0.png>
-Package pdftex.def Info: fredpy_examples_19_0.png used on input line 1106.
-(pdftex.def)             Requested size: 383.43156pt x 266.99683pt.
- [15 <./fredpy_examples_16_1.png>]
-LaTeX Info: Active space character found while output routine is active 
-            This may be a bug in a package file you are using.
- [16 <./fredpy_examples_19_0.png>] <fredpy_examples_25_0.png, id=299, 425.59pt 
-x 283.0575pt>
-File: fredpy_examples_25_0.png Graphic file (type png)
-
-<use fredpy_examples_25_0.png>
-Package pdftex.def Info: fredpy_examples_25_0.png used on input line 1180.
-(pdftex.def)             Requested size: 425.58894pt x 283.0568pt.
-LaTeX Info: Active space character found while output routine is active 
-            This may be a bug in a package file you are using.
- [17 <./fredpy_examples_25_0.png>]
-<fredpy_examples_28_0.png, id=307, 425.59pt x 572.1375pt>
-File: fredpy_examples_28_0.png Graphic file (type png)
-
-<use fredpy_examples_28_0.png>
-Package pdftex.def Info: fredpy_examples_28_0.png used on input line 1212.
-(pdftex.def)             Requested size: 425.58894pt x 572.1361pt.
- [18] [19 <./fredpy_examples_28_0.png>]
-<fredpy_examples_30_0.png, id=318, 368.37625pt x 256.96pt>
-File: fredpy_examples_30_0.png Graphic file (type png)
-
-<use fredpy_examples_30_0.png>
-Package pdftex.def Info: fredpy_examples_30_0.png used on input line 1250.
-(pdftex.def)             Requested size: 368.37534pt x 256.95937pt.
-LaTeX Info: Active space character found while output routine is active 
-            This may be a bug in a package file you are using.
- [20 <./fredpy_examples_30_0.png>]
-<fredpy_examples_31_0.png, id=324, 391.4625pt x 282.05376pt>
-File: fredpy_examples_31_0.png Graphic file (type png)
-
-<use fredpy_examples_31_0.png>
-Package pdftex.def Info: fredpy_examples_31_0.png used on input line 1268.
-(pdftex.def)             Requested size: 391.46153pt x 282.05305pt.
-
-<fredpy_examples_32_0.png, id=325, 387.4475pt x 282.05376pt>
-File: fredpy_examples_32_0.png Graphic file (type png)
-
-<use fredpy_examples_32_0.png>
-Package pdftex.def Info: fredpy_examples_32_0.png used on input line 1286.
-(pdftex.def)             Requested size: 387.44655pt x 282.05305pt.
- [21 <./fredpy_examples_31_0.png>] [22 <./fredpy_examples_32_0.png>]
-Chapter 3.
-(./fredpy.ind
-
-Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 1.
-
-[23
+[20
 
 ]
-
-Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 37.
-
-[24
-
-
-])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1334.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1334.
- (./fredpy.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1334.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1334.
-
-Package rerunfilecheck Info: File `fredpy.out' has not changed.
-(rerunfilecheck)             Checksum: 272D53869B25AC2157BC091EE349A0ED;809.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1334.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 863.
+ (./linearsolve.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 863.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 863.
+Package rerunfilecheck Info: File `linearsolve.out' has not changed.
+(rerunfilecheck)             Checksum: 03CDC5AFEED61E419D5692255ECFE78F;690.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 863.
  ) 
 Here is how much of TeX's memory you used:
- 14059 strings out of 493089
- 197029 string characters out of 6134842
- 292804 words of memory out of 5000000
- 17123 multiletter control sequences out of 15000+600000
- 53796 words of font info for 82 fonts, out of 8000000 for 9000
+ 14075 strings out of 493089
+ 196964 string characters out of 6134842
+ 293040 words of memory out of 5000000
+ 17107 multiletter control sequences out of 15000+600000
+ 51905 words of font info for 79 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
- 37i,12n,45p,642b,758s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,21n,45p,1118b,556s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/te
-xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texl
-ive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texliv
-e/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2
-015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/20
-15/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2015
-/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/local/texlive/2015/texmf-d
-ist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2015/texmf-dist/font
-s/type1/urw/courier/ucrro8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1
-/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/he
-lvetic/uhvbo8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/helvetic
-/uhvr8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/times/utmb8a.pf
-b></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/lo
-cal/texlive/2015/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on fredpy.pdf (26 pages, 484253 bytes).
+exlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/te
+xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/tex
+live/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texli
+ve/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive
+/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2
+015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2015
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2015/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2015/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2015/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2015/texmf-d
+ist/fonts/type1/urw/courier/ucrb8a.pfb></usr/local/texlive/2015/texmf-dist/font
+s/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/
+urw/courier/ucrro8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/hel
+vetic/uhvb8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/helvetic/u
+hvbo8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/times/utmb8a.pfb
+></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/loc
+al/texlive/2015/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on linearsolve.pdf (22 pages, 817743 bytes).
 PDF statistics:
- 447 PDF objects out of 1000 (max. 8388607)
- 371 compressed objects within 4 object streams
- 75 named destinations out of 1000 (max. 500000)
- 129 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 339 PDF objects out of 1000 (max. 8388607)
+ 267 compressed objects within 3 object streams
+ 109 named destinations out of 1000 (max. 500000)
+ 116 words of extra memory for PDF output out of 10000 (max. 10000000)
 

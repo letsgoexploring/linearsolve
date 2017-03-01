@@ -329,7 +329,7 @@ div.nboutput div.output_area.stderr {
 approximating, solving, and simulating dynamic stochastic general
 equilibrium (DSGE) models. The equilibrium conditions for most DSGE
 models can be expressed as a vector function <span class="math">\(F\)</span>:</p>
-<div class="math">
+<div class="math" id="equation-examples:0">
 \begin{align}
 f(E_t X_{t+1}, X_t, \epsilon_{t+1}) = 0,
 \end{align}</div><p>where 0 is an <span class="math">\(n\times 1\)</span> vector of zeros, <span class="math">\(X_t\)</span> is an
@@ -347,7 +347,7 @@ equilibirum of the model by working directly with the function
 approximation to the equilibrium conditions around a non-stochastic
 steady state. In many cases, the log-linear approximation can be written
 in the following form:</p>
-<div class="math">
+<div class="math" id="equation-examples:1">
 \begin{align}
 A E_t\left[ x_{t+1} \right] &amp; = B x_t + \left[ \begin{array}{c} \epsilon_{t+1} \\ 0 \end{array} \right],
 \end{align}</div><p>where the vector <span class="math">\(x_{t}\)</span> denotes the log deviation of the
@@ -360,7 +360,7 @@ an <span class="math">\(n_s\times 1\)</span> vector of i.i.d. shocks to the stat
 <span class="math">\(s_{t+1}\)</span>. <span class="math">\(\epsilon_{t+1}\)</span> has mean 0 and diagonal
 covariance matrix <span class="math">\(\Sigma\)</span>. The solution to the model is a pair of
 matrices <span class="math">\(F\)</span> and <span class="math">\(P\)</span> such that:</p>
-<div class="math">
+<div class="math" id="equation-examples:2">
 \begin{align}
 u_t  &amp;  = Fs_t\\
 s_{t+1} &amp; = Ps_t + \epsilon_{t+1}.
@@ -399,7 +399,7 @@ new-Keynesian business cycle model.</p>
 <p>Here I demonstrate how how relatively straightforward it is to
 appoximate, solve, and simulate a DSGE model using <code class="docutils literal"><span class="pre">linearsolve</span></code>. In
 the example that follows, I describe the procedure more carefully.</p>
-<div class="math">
+<div class="math" id="equation-examples:3">
 \begin{align}
 C_t^{-\sigma} &amp; = \beta E_t \left[C_{t+1}^{-\sigma}(\alpha A_{t+1} K_{t+1}^{\alpha-1} + 1 - \delta)\right]\\
 C_t + K_{t+1} &amp; = A_t K_t^{\alpha} + (1-\delta)K_t\\
@@ -498,7 +498,7 @@ shock to technology <span class="math">\(A_t\)</span>.</p>
 <div class="section" id="Example-2:-A-slightly-more-elaborate-model-with-explanation">
 <h2>Example 2: A slightly more elaborate model with explanation<a class="headerlink" href="#Example-2:-A-slightly-more-elaborate-model-with-explanation" title="Permalink to this headline">¶</a></h2>
 <p>Consider the equilibrium conditions for a basic RBC model without labor:</p>
-<div class="math">
+<div class="math" id="equation-examples:4">
 \begin{align}
 C_t^{-\sigma} &amp; = \beta E_t \left[C_{t+1}^{-\sigma}(\alpha A_{t+1} K_{t+1}^{\alpha-1} + 1 - \delta)\right]\\
 Y_t &amp; = A_t K_t^{\alpha}\\
@@ -506,7 +506,7 @@ I_t &amp; = K_{t+1} - (1-\delta)K_t\\
 Y_t &amp; = C_t + I_t\\
 \log A_t &amp; = \rho_a \log A_{t-1} + \epsilon_t
 \end{align}</div><p>In the nonstochastic steady state, we have:</p>
-<div class="math">
+<div class="math" id="equation-examples:5">
 \begin{align}
 K &amp; = \left(\frac{\alpha A}{1/\beta+\delta-1}\right)^{\frac{1}{1-\alpha}}\\
 Y &amp; = AK^{\alpha}\\
@@ -552,12 +552,12 @@ this way:</p>
 <p>One more thing to consider: the natural log in the equation describing
 the evolution of total factor productivity will create problems for the
 solution routine later on. So rewrite the equation as:</p>
-<div class="math">
+<div class="math" id="equation-examples:6">
 \begin{align}
 A_{t+1} &amp; =  A_{t}^{\rho_a}e^{\epsilon_{t+1}}\\
 \end{align}</div><p>So the complete system of equations that we enter into the program looks
 like:</p>
-<div class="math">
+<div class="math" id="equation-examples:7">
 \begin{align}
 C_t^{-\sigma} &amp; = \beta E_t \left[C_{t+1}^{-\sigma}(\alpha Y_{t+1} /K_{t+1}+ 1 - \delta)\right]\\
 Y_t &amp; = A_t K_t^{\alpha}\\
@@ -710,7 +710,7 @@ appxoximation to the model&#8217;s equilibrium conditions. That is, we&#8217;ll
 transform the nonlinear model into a linear model in which all variables
 are expressed as log-deviations from the steady state. Specifically,
 we&#8217;ll compute the matrices <span class="math">\(A\)</span> and <span class="math">\(B\)</span> that satisfy:</p>
-<div class="math">
+<div class="math" id="equation-examples:8">
 \begin{align}
 A E_t\left[ x_{t+1} \right] &amp; = B x_t + \left[ \begin{array}{c} \epsilon_{t+1} \\ 0 \end{array} \right],
 \end{align}</div><p>where the vector <span class="math">\(x_{t}\)</span> denotes the log deviation of the
@@ -763,7 +763,7 @@ function of the previous values of the state variables <span class="math">\(s_t\
 and the future realisation of the exogenous shock process
 <span class="math">\(\epsilon_{t+1}\)</span>.</li>
 </ol>
-<div class="math">
+<div class="math" id="equation-examples:9">
 \begin{align}
 u_t  &amp;  = Fs_t\\
 s_{t+1} &amp; = Ps_t + \epsilon_{t+1}.
@@ -934,7 +934,7 @@ model. The seed for the numpy random number generator is set to 0.</p>
 <h2>Example 3: A New-Keynesian business cycle model<a class="headerlink" href="#Example-3:-A-New-Keynesian-business-cycle-model" title="Permalink to this headline">¶</a></h2>
 <p>Consider the new-Keynesian model from Walsh (2010), chapter 8 expressed
 in log-linear terms:</p>
-<div class="math">
+<div class="math" id="equation-examples:10">
 \begin{align}
 y_t &amp; = E_ty_{t+1} - \sigma^{-1} (i_t - E_t\pi_{t+1}) + g_t\\
 \pi_t &amp; = \beta  E_t\pi_{t+1} + \kappa  y_t + u_t\\

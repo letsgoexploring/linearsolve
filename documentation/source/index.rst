@@ -28,7 +28,7 @@ Contents:
    :maxdepth: 2
    
    examples.ipynb
-   howLinearsolveWorks.ipynb
+..   howLinearsolveWorks.ipynb
    
 
 

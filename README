@@ -1,2 +1,3 @@
 # linearsolve-package
-A package for solving dynamic stochastic general equilibrium (DSGE) models
+
+A package for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models.

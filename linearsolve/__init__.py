@@ -245,9 +245,10 @@ class model:
 
         ''' Method for computing impulse responses for shocks to each state variable. arguments:
 
-                T:      Number of periods to simulate.
-                t0:     Period in which the shocks are realized. May be equal to 0
-                shock:  An (ns x 1) list of shock values. If shock==None, shock is set to a vector of 0.01s.
+                T:          Number of periods to simulate. Default: 51
+                t0:         Period in which the shocks are realized. May be equal to 0. Default: 1
+                shock:      An (ns x 1) list of shock values. If shock==None, shock is set to a vector of 0.01s. Default = None
+                percent:    Bool. Whether to multiply simulated values by 100. Default: False
         
         Returns a dictionary containing pandas dataframes. The dictionary has the form:
 
@@ -287,11 +288,11 @@ class model:
         
         ''' Method for computing impulse responses for shocks to each state variable. Arguments:
 
-                T:          Number of periods to simulate.
-                dropFirst:  Number of periods to simulate before saving output
-                covMat:     Covariance matrix shocks. If covMat is None, it's set to eye(nstates)
-                t0:         Period in which the shocks are realized. May be equal to 0
-                'seed':     Integer. sets the seed for the numpy random number generator
+                T:          Number of periods to simulate. Default: 51
+                dropFirst:  Number of periods to simulate before saving output. Default: 100
+                covMat:     Covariance matrix shocks. If covMat is None, it's set to eye(nstates). Default: None
+                'seed':     Integer. sets the seed for the numpy random number generator. Default: None
+                percent:    Bool. Whether to multiply simulated values by 100. Default: False
         
         Returns a dictionary containing pandas dataframes. The dictionary has the form:
 

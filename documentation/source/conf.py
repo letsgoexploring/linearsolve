@@ -128,6 +128,10 @@ pygments_style = 'sphinx'
 todo_include_todos = True
 
 
+
+
+math_number_all = True
+
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
