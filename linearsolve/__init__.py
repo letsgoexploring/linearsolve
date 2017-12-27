@@ -8,7 +8,7 @@ import sys
 
 class model:
 
-    '''This program defines a class - linearsolve.model -- with associated methods for solving and 
+    '''This program defines a class -- linearsolve.model -- with associated methods for solving and 
     simulating dynamic stochastic general equilibrium (DSGE) models.'''
 
     def __init__(self,equations=None,nstates=None,varNames=None,shockNames=None,parameters=None,parameterNames=None):
@@ -143,21 +143,24 @@ class model:
         
         self.ss = np.array(steady_state)
 
-    
-
-    def log_linear_approximation(self,steady_state=None,isloglinear=False):
+    def linear_approximation(self,steady_state=None):
 
         ''' Given a nonlinear rational expectations model in the form:
 
                     psi_1[x(t+1),x(t)] = psi_2[x(t+1),x(t)]
 
-            this method returns the matrics a and b such that:
+            this method returns the linear approximation of the model with matrices a and b such that:
 
                     a * y(t+1) = b * y(t)
 
-            where y(t) = log x(t) - log x is the log deviation of the vector x from its steady state value.
+            where y(t) = x(t) - x is the log deviation of the vector x from its steady state value.
 
+            Returns attribute:
+
+                .loglinear = False
         '''
+
+        self.loglinear=False
 
         if steady_state is None:
 
@@ -167,44 +170,64 @@ class model:
                 raise ValueError('You must specify a steady state for the model before attempting to linearize.')
 
 
-        if isloglinear:
+        def equilibrium(vars_fwd,vars_cur):
 
-            def equilibrium(vars_fwd,vars_cur):
+            vars_fwd = pd.Series(vars_fwd,index = self.names['variables'])
+            vars_cur = pd.Series(vars_cur,index = self.names['variables'])
 
-                vars_fwd = pd.Series(vars_fwd,index = self.names['variables'])
-                vars_cur = pd.Series(vars_cur,index = self.names['variables'])
+            equilibrium_left = self.equilibrium_fun(vars_fwd,vars_cur,self.parameters)
+            equilibrium_right = np.ones(len(self.names['variables']))
 
-                equilibrium_left = self.equilibrium_fun(vars_fwd,vars_cur,self.parameters)
-                equilibrium_right = np.ones(len(self.names['variables']))
+            return equilibrium_left - equilibrium_right
 
-                return equilibrium_left - equilibrium_right
+        equilibrium_fwd = lambda fwd: equilibrium(fwd,steady_state)
+        equilibrium_cur = lambda cur: equilibrium(steady_state,cur)
 
-            equilibrium_fwd = lambda fwd: equilibrium(fwd,steady_state)
-            equilibrium_cur = lambda cur: equilibrium(steady_state,cur)
-
-            self.a= approx_fprime_cs(steady_state.ravel(), equilibrium_fwd)
-            self.b= -approx_fprime_cs(steady_state.ravel(), equilibrium_cur)
+        self.a= approx_fprime_cs(steady_state.ravel(), equilibrium_fwd)
+        self.b= -approx_fprime_cs(steady_state.ravel(), equilibrium_cur)
 
 
+    def log_linear_approximation(self,steady_state=None):
 
-        else:
+        ''' Given a nonlinear rational expectations model in the form:
 
-            def log_equilibrium(log_vars_fwd,log_vars_cur):
+                    psi_1[x(t+1),x(t)] = psi_2[x(t+1),x(t)]
 
-                log_vars_fwd = pd.Series(log_vars_fwd,index = self.names['variables'])
-                log_vars_cur = pd.Series(log_vars_cur,index = self.names['variables'])
+            this method returns the log-linear approximation of the model with matrices a and b such that:
 
-                equilibrium_left = self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters)+1
-                equilibrium_right = np.ones(len(self.names['variables']))
+                    a * y(t+1) = b * y(t)
 
-                return np.log(equilibrium_left) - np.log(equilibrium_right)
+            where y(t) = log x(t) - log x is the log deviation of the vector x from its steady state value.
 
-            log_equilibrium_fwd = lambda log_fwd: log_equilibrium(log_fwd,np.log(steady_state))
-            log_equilibrium_cur = lambda log_cur: log_equilibrium(np.log(steady_state),log_cur)
+            Returns attribute:
 
-            self.a= approx_fprime_cs(np.log(steady_state).ravel(), log_equilibrium_fwd)
-            self.b= -approx_fprime_cs(np.log(steady_state).ravel(), log_equilibrium_cur)
+                .loglinear = True
 
+        '''
+        self.loglinear=True
+
+        if steady_state is None:
+
+            try:
+                steady_state = self.ss
+            except :
+                raise ValueError('You must specify a steady state for the model before attempting to linearize.')
+
+        def log_equilibrium(log_vars_fwd,log_vars_cur):
+
+            log_vars_fwd = pd.Series(log_vars_fwd,index = self.names['variables'])
+            log_vars_cur = pd.Series(log_vars_cur,index = self.names['variables'])
+
+            equilibrium_left = self.equilibrium_fun(np.exp(log_vars_fwd),np.exp(log_vars_cur),self.parameters)+1
+            equilibrium_right = np.ones(len(self.names['variables']))
+
+            return np.log(equilibrium_left) - np.log(equilibrium_right)
+
+        log_equilibrium_fwd = lambda log_fwd: log_equilibrium(log_fwd,np.log(steady_state))
+        log_equilibrium_cur = lambda log_cur: log_equilibrium(np.log(steady_state),log_cur)
+
+        self.a= approx_fprime_cs(np.log(steady_state).ravel(), log_equilibrium_fwd)
+        self.b= -approx_fprime_cs(np.log(steady_state).ravel(), log_equilibrium_cur)
 
 
     def solve_klein(self,a=None,b=None):
@@ -241,14 +264,15 @@ class model:
         self.f,n,self.p,l,self.stab,self.eig = klein(a=a,b=b,c=None,rho=None,nstates=self.nstates)
 
 
-    def impulse(self,T=21,t0=1,shock=None,percent=False):
+    def impulse(self,T=21,t0=1,shock=None,percent=False,diff=True):
 
         ''' Method for computing impulse responses for shocks to each state variable. arguments:
 
-                T:          Number of periods to simulate. Default: 51
-                t0:         Period in which the shocks are realized. May be equal to 0. Default: 1
-                shock:      An (ns x 1) list of shock values. If shock==None, shock is set to a vector of 0.01s. Default = None
-                percent:    Bool. Whether to multiply simulated values by 100. Default: False
+                T:            Number of periods to simulate. Default: 51
+                t0:           Period in which the shocks are realized. May be equal to 0. Default: 1
+                shock:        An (ns x 1) list of shock values. If shock==None, shock is set to a vector of 0.01s. Default = None
+                percent:      Bool. Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
+                diff:  Bool. Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
         
         Returns a dictionary containing pandas dataframes. The dictionary has the form:
 
@@ -266,7 +290,10 @@ class model:
             s0 = np.zeros([1,nstates])
             eps= np.zeros([T,nstates])
             if shock==None:
-                eps[t0][j] = 0.01
+                if self.loglinear:
+                    eps[t0][j] = 0.01
+                else:
+                    eps[t0][j] = 1
             else:
                 eps[t0][j] = shock[j]
 
@@ -274,31 +301,40 @@ class model:
 
             frameDict = {self.names['shocks'][j]:eps.T[j]}
             for i,endoName in enumerate(self.names['variables']):
-                frameDict[endoName] = x[i]
+                if diff:
+                    frameDict[endoName] = x[i]
+                else:
+                    if not self.loglinear:
+                        frameDict[endoName] = x[i] + self.ss[endoName]
+                    else:
+                        frameDict[endoName] = x[i] + np.log(self.ss[endoName])
 
             irFrame = pd.DataFrame(frameDict, index = np.arange(T))
-            if percent==True:
+
+            if percent==True and self.loglinear:
                 irFrame = 100*irFrame
 
             irsDict[self.names['shocks'][j]] = irFrame
 
         self.irs = irsDict
 
-    def stoch_sim(self,T=51,dropFirst=100,covMat=None,seed=None,percent=False):
+    def stoch_sim(self,T=51,dropFirst=100,covMat=None,seed=None,percent=False,diff=True):
         
         ''' Method for computing impulse responses for shocks to each state variable. Arguments:
 
-                T:          Number of periods to simulate. Default: 51
-                dropFirst:  Number of periods to simulate before saving output. Default: 100
-                covMat:     Covariance matrix shocks. If covMat is None, it's set to eye(nstates). Default: None
-                'seed':     Integer. sets the seed for the numpy random number generator. Default: None
-                percent:    Bool. Whether to multiply simulated values by 100. Default: False
+                T:            Number of periods to simulate. Default: 51
+                dropFirst:    Number of periods to simulate before saving output. Default: 100
+                covMat:       Covariance matrix shocks. If covMat is None, it's set to eye(nstates). Default: None
+                'seed':       Integer. sets the seed for the numpy random number generator. Default: None
+                percent:      Bool. Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
+                diff:  Bool. Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
         
         Returns a dictionary containing pandas dataframes. The dictionary has the form:
 
             self.simulated['endog var name']
 
         '''
+
         simDict = {}
 
         ncostates = self.costates
@@ -321,20 +357,23 @@ class model:
         for j,exoName in enumerate(self.names['shocks']):
             frameDict[exoName] = eps.T[j][dropFirst:]
         for i,endoName in enumerate(self.names['variables']):
-            frameDict[endoName] = x[i][dropFirst:]
+            if diff:
+                frameDict[endoName] = x[i][dropFirst:]
+            else:
+                frameDict[endoName] = x[i][dropFirst:] + self.ss[endoName]
 
         simFrame = pd.DataFrame(frameDict, index = np.arange(T))
         if percent==True:
             simFrame = 100*simFrame
         self.simulated = simFrame
 
-    def approximate_and_solve(self,isloglinear=False):
+    def approximate_and_solve(self,loglinear=True):
 
         '''Method approximates and solves a dynamic stochastic general equilibrium (DSGE) model by 
         constructing the log-linear approximation (if the model isn't log-linear) and solving the model
         using Klein's (2000) method. Arguments:
 
-            1. isloglinear:        (bool) False if the model is nonlinear
+            1. loglinear:        (bool) whether to compute log-linear or linear approximation. Default: True
 
 
         Returns attributes:
@@ -356,7 +395,10 @@ class model:
 
         '''
 
-        self.log_linear_approximation(isloglinear=isloglinear)
+        if loglinear == True:
+            self.log_linear_approximation()
+        else:
+            self.linear_approximation()
         self.solve_klein(self.a,self.b)
 
     def approximated(self,round=True,precision=4):
