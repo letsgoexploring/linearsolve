@@ -1,0 +1,12 @@
+Metadata-Version: 1.0
+Name: linearsolve
+Version: 3.2.0
+Summary: A package for solving dynamic stochastic general equilibrium (DSGE) models
+Home-page: https://github.com/letsgoexploring/linearsolve-package
+Author: Brian C. Jenkins
+Author-email: bcjenkin@uci.edu
+License: UNKNOWN
+Description-Content-Type: UNKNOWN
+Description: UNKNOWN
+Keywords: economics,solution,dsge,schur,macroconomics,rbc,new keynesian,business cycles
+Platform: UNKNOWN
