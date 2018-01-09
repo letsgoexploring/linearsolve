@@ -93,8 +93,10 @@ class model:
 
         '''This method attempts to solve for the steady state of the model. Arguments are:
 
-            1. guess:   An initial guess for the steady state solution. The result is highly sensisitve to
-                            the intiial guess chosen, so be careful.
+            1. guess:   (Pandas.Series, Numpy.ndarray, or list) An initial guess for the 
+                        steady state solution. The result is highly sensisitve to the intial 
+                        guess chosen, so be careful. If the guess is a Numpy ndarray or a list
+                        then the elements must be ordered to conform with self.names['variables'].
 
             2. method:  The function from the Scipy library to use. Your choices are:
 
@@ -108,12 +110,19 @@ class model:
 
                             http://docs.scipy.org/doc/scipy/reference/optimize.html
 
-            Saves the computed steady state as an array in the .ss attribute
+            Saves the computed steady state as a Pandas series in the .ss attribute
 
             '''
 
         if guess is None:
-                guess = np.ones(self.nvars)
+            guess = np.ones(self.nvars)
+        else:
+            try:
+                guess = guess[self.names['variables']]
+            except:
+                pass
+
+
 
         def ss_fun(variables):
 
@@ -140,8 +149,11 @@ class model:
     def set_ss(self,steady_state):
 
         '''Sets the steady state .ss attribute if you compute the steady state independently.'''
-        
-        self.ss = np.array(steady_state)
+        try:
+            self.ss = steady_state[self.names['variables']]
+        except:
+
+            self.ss = pd.Series(steady_state,index=self.names['variables'])
 
     def linear_approximation(self,steady_state=None):
 
@@ -268,13 +280,13 @@ class model:
 
         ''' Method for computing impulse responses for shocks to each state variable. arguments:
 
-                T:            Number of periods to simulate. Default: 51
-                t0:           Period in which the shocks are realized. May be equal to 0. Default: 1
-                shock:        An (ns x 1) list of shock values. If shock==None, shock is set to a vector of 0.01s. Default = None
-                percent:      Bool. Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
-                diff:  Bool. Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
+                T:            (int) Number of periods to simulate. Default: 51
+                t0:           (int) Period in which the shocks are realized. May be equal to 0. Default: 1
+                shock:        (list or Numpy.ndarray)An (ns x 1) list of shock values. If shock==None, shock is set to a vector of 0.01s. Default = None
+                percent:      (bool) Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
+                diff:         (bool) Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
         
-        Returns a dictionary containing pandas dataframes. The dictionary has the form:
+        Returns a dictionary containing Pandas dataframes. The dictionary has the form:
 
             self.irs['shock name']['endog var name']
 
@@ -322,14 +334,14 @@ class model:
         
         ''' Method for computing impulse responses for shocks to each state variable. Arguments:
 
-                T:            Number of periods to simulate. Default: 51
-                dropFirst:    Number of periods to simulate before saving output. Default: 100
-                covMat:       Covariance matrix shocks. If covMat is None, it's set to eye(nstates). Default: None
-                'seed':       Integer. sets the seed for the numpy random number generator. Default: None
-                percent:      Bool. Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
-                diff:  Bool. Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
+                T:            (int) Number of periods to simulate. Default: 51
+                dropFirst:    (int) Number of periods to simulate before saving output. Default: 100
+                covMat:       (list or Numpy.ndarray) Covariance matrix shocks. If covMat is None, it's set to eye(nstates). Default: None
+                'seed':       (int) sets the seed for the Numpy random number generator. Default: None
+                percent:      (bool) Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
+                diff:         (bool) Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
         
-        Returns a dictionary containing pandas dataframes. The dictionary has the form:
+        Returns a dictionary containing Pandas dataframes. The dictionary has the form:
 
             self.simulated['endog var name']
 
@@ -423,7 +435,11 @@ class model:
             
         leftsides =  []
         rightsides = []
-        lines ='Log-linear equilibrium conditions:\n\n'
+        if self.loglinear==True:
+            lines ='Log-linear equilibrium conditions:\n\n'
+        else:
+            lines ='Linear equilibrium conditions:\n\n'
+
 
         left_length = 1
 
@@ -535,7 +551,10 @@ class model:
             
         leftsides =  []
         rightsides = []
-        lines ='Solution to the log-linear system:\n\n'
+        if self.loglinear==True:
+            lines ='Solution to the log-linear system:\n\n'
+        else:
+            lines ='Solution to the linear system:\n\n'
 
         left_length = 1
 
