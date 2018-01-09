@@ -276,13 +276,13 @@ class model:
         self.f,n,self.p,l,self.stab,self.eig = klein(a=a,b=b,c=None,rho=None,nstates=self.nstates)
 
 
-    def impulse(self,T=21,t0=1,shock=None,percent=False,diff=True):
+    def impulse(self,T=21,t0=1,shocks=None,percent=False,diff=True):
 
         ''' Method for computing impulse responses for shocks to each state variable. arguments:
 
                 T:            (int) Number of periods to simulate. Default: 51
                 t0:           (int) Period in which the shocks are realized. May be equal to 0. Default: 1
-                shock:        (list or Numpy.ndarray)An (ns x 1) list of shock values. If shock==None, shock is set to a vector of 0.01s. Default = None
+                shocks:        (list or Numpy.ndarray)An (ns x 1) list of shock values. If shocks==None, shocks is set to a vector of 0.01s. Default = None
                 percent:      (bool) Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
                 diff:         (bool) Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
         
@@ -301,13 +301,23 @@ class model:
 
             s0 = np.zeros([1,nstates])
             eps= np.zeros([T,nstates])
-            if shock==None:
+            if shocks is not None:
+                try:
+                    eps[t0][j] = shocks[name]
+                except:
+                    try:
+                        eps[t0][j] = shocks[j]
+                    except:
+                        if self.loglinear:
+                            eps[t0][j] = 0.01
+                        else:
+                            eps[t0][j] = 1
+
+            else:
                 if self.loglinear:
                     eps[t0][j] = 0.01
                 else:
                     eps[t0][j] = 1
-            else:
-                eps[t0][j] = shock[j]
 
             x = ir(self.f,self.p,eps,s0)
 
