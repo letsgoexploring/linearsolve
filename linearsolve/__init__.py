@@ -1,4 +1,4 @@
-from __future__ import division, print_function
+from __future__ import division,print_function
 import numpy as np
 import scipy.linalg as la
 from statsmodels.tools.numdiff import approx_fprime_cs
@@ -15,46 +15,39 @@ class model:
         
         '''Initializing an instance linearsolve.model requires values for the following variables:
 
-            1. equations:       A function that represents the equilibirum conditions for a DSGE model. The 
-                                function should accept three arguments:
-
+        Args:
+            equations:       (fun) A function that represents the equilibirum conditions for a DSGE model.
+                                The function should accept three arguments:
                                     * vars_fwd:     endogenous variables dated t+1
                                     * vars_cur:     endogenous variables dated t
                                     * parameters:   the parameters of the model
-
                                 The function should return an n-dimensional array. Each element of the returned
                                 array is a list with the first element equaling the left-hand side of a single
                                 equilibrium condition and the second elemtn equals the right-hand side.
-
-
-            2. nstates:         The number of state variables in the model.
-
-            3. varNames:        A list of strings with the names of the endogenous variables. The state
+            nstates:         (int) The number of state variables in the model.
+            varNames:        (list) A list of strings with the names of the endogenous variables. The state
                                 variables must be ordered first.
-
-            4. shockNames:      A list of strings with the names of the exogenous shocks to each state
+            shockNames:      (list) A list of strings with the names of the exogenous shocks to each state
                                 variable. The order of names must agree with varNames.
-
-            5. parameters:      Either a list of parameter values OR a Pandas Series object with parameter
-                                name strings as the index.
-
-            6. parameterNames:  Optional. If parameters is given as a list, then this list of strings will
+            parameters:      (list or Pandas Series) Either a list of parameter values OR a Pandas Series object
+                                with parameter name strings as the index.
+            parameterNames:  (list) Optional. If parameters is given as a list,then this list of strings will
                                 be used to save the parameters with names as a Pandas Series object.
 
-        The following attributes are created:
+        Returns:
+            None
 
-                1. .nvars:      The number of variables in the model.
-
-                2. .nstates:    The number of state variables in the model.
-
-                3. .ncostate:   The number of costate or control variables in the model.
-
-                4. .parameters: A Pandas Series object with parameter name strings as the index. If
-                                parameterNames wasn't supplied, then parameters are labeled 'parameter 1',
-                                parameter2', etc.
-
-                5. .names:      A dictionary with keys 'variables', 'shocks', and 'param' that stores the names of
-                                the model's variables and parameters.
+        Attributes:
+            nvars:              (int) The number of variables in the model.
+            nstates:            (int) The number of state variables in the model.
+            ncostates:          (int) The number of costate or control variables in the model.
+            parameters:         (Pandas Seris) A Pandas Series with parameter name strings as the 
+                                    index. If parameterNames wasn't supplied,then parameters are labeled 
+                                    'parameter 1',parameter2',etc.
+            names:              (dict) A dictionary with keys 'variables','shocks',and 'param' that
+                                    stores the names of the model's variables and parameters.
+            equilibrium_fun:    (fun) Function that returns the equilibrium comditions of the model
+            ss:                 (None)
 
         '''
         
@@ -67,7 +60,18 @@ class model:
 
         names['variables'] = varNames
 
-        if shockNames == None:
+        if shockNames is not None:
+            if len(shockNames)<self.nstates:
+                shockNames_temp = []
+                for i in range(self.nstates):
+                    try:
+                        shockNames_temp.append(shockNames[i])
+                    except:
+                        shockNames_temp.append('e_'+varNames[i])
+                shockNames = shockNames_temp
+
+        
+        else:
             shockNames = []
             for i in range(self.nstates):
                 shockNames.append('e_'+varNames[i])
@@ -85,32 +89,33 @@ class model:
 
         names['param'] = parameterNames
         self.names = names
-        self.ss = None
+        self.steady_state = None
 
 
 
     def compute_ss(self,guess=None,method='fsolve',options={}):
 
-        '''This method attempts to solve for the steady state of the model. Arguments are:
+        '''This method attempts to solve for the steady state of the model.
 
-            1. guess:   (Pandas.Series, Numpy.ndarray, or list) An initial guess for the 
-                        steady state solution. The result is highly sensisitve to the intial 
-                        guess chosen, so be careful. If the guess is a Numpy ndarray or a list
-                        then the elements must be ordered to conform with self.names['variables'].
+        Args:
+            guess:      (Pandas Series,Numpy array,or list) An initial guess for the 
+                            steady state solution. The result is highly sensisitve to the intial 
+                            guess chosen,so be careful. If the guess is a Numpy ndarray or a list
+                            then the elements must be ordered to conform with self.names['variables'].
+            method:     (str) The function from the Scipy library to use. Your choices are:
+                        a. root
+                        b. fsolve (default)
+                        c. broyden1
+                        d. broyden2
+            options:    (dict) A dictionary of optional arguments to pass to the numerical solver.
+                            Check out the Scipy documentation to see the options available for each routine:
+                                http://docs.scipy.org/doc/scipy/reference/optimize.html
 
-            2. method:  The function from the Scipy library to use. Your choices are:
+        Returns:
+            None
 
-                    a. root
-                    b. fsolve (default)
-                    c. broyden1
-                    d. broyden2
-
-            3. options: A dictionary of optional arguments to pass to the numerical solver. Check out
-                            the Scipy documentation to see the options available for each routine:
-
-                            http://docs.scipy.org/doc/scipy/reference/optimize.html
-
-            Saves the computed steady state as a Pandas series in the .ss attribute
+        Attributes:
+            ss: (Pandas Series) Steady state values of endogenous variables
 
             '''
 
@@ -123,7 +128,7 @@ class model:
                 pass
 
 
-
+        # Create function for nonlinear solver
         def ss_fun(variables):
 
             variables = pd.Series(variables,index = self.names['variables'])
@@ -142,18 +147,53 @@ class model:
         elif method == 'broyden2':
             steady_state =broyden2(ss_fun,guess,**options)
 
+        # Add ss attribute
         self.ss = pd.Series(steady_state,index=self.names['variables'])
 
 
 
     def set_ss(self,steady_state):
 
-        '''Sets the steady state .ss attribute if you compute the steady state independently.'''
+        '''This method allows the user to directly set the steady state of the model Uses Numpy.isclose()
+        to print whether each steady state equilibrium condition evaluates to something close to zero.
+
+        Args:
+            steady_state:   (Pandas Series,Numpy array,or list)
+
+        Returns:
+            None
+
+        Attributes:
+            ss: (Pandas Series) Steady state values of endogenous variables
+
+        '''
+
         try:
             self.ss = steady_state[self.names['variables']]
         except:
 
             self.ss = pd.Series(steady_state,index=self.names['variables'])
+
+
+    def check_ss(self):
+
+        '''This method allows the user to directly set the steady state of the model.
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        Attributes:
+            None
+
+        '''
+
+        try:
+            print(np.isclose(self.equilibrium_fun(self.ss,self.ss,self.parameters),0))
+        except:
+            print('Set the steady state first.')
 
     def linear_approximation(self,steady_state=None):
 
@@ -167,13 +207,23 @@ class model:
 
             where y(t) = x(t) - x is the log deviation of the vector x from its steady state value.
 
-            Returns attribute:
+        Args:
+            steady_state:   (Pandas Series or numpy array)
 
-                .loglinear = False
+        Returns:
+            None
+
+        Attributes:
+            loglinear:      (bool) Whether the model is loglinear. Sets to False.
+            a:              (Numpy ndarray)
+            b:              (Numpy ndarray)
+
         '''
 
+        # Set loglinear attribute
         self.loglinear=False
 
+        # Warn if steady state attribute ss has not been assigned
         if steady_state is None:
 
             try:
@@ -181,7 +231,7 @@ class model:
             except :
                 raise ValueError('You must specify a steady state for the model before attempting to linearize.')
 
-
+        # Compute approximation
         def equilibrium(vars_fwd,vars_cur):
 
             vars_fwd = pd.Series(vars_fwd,index = self.names['variables'])
@@ -195,8 +245,9 @@ class model:
         equilibrium_fwd = lambda fwd: equilibrium(fwd,steady_state)
         equilibrium_cur = lambda cur: equilibrium(steady_state,cur)
 
-        self.a= approx_fprime_cs(steady_state.ravel(), equilibrium_fwd)
-        self.b= -approx_fprime_cs(steady_state.ravel(), equilibrium_cur)
+        # Assign attributes
+        self.a= approx_fprime_cs(steady_state.ravel(),equilibrium_fwd)
+        self.b= -approx_fprime_cs(steady_state.ravel(),equilibrium_cur)
 
 
     def log_linear_approximation(self,steady_state=None):
@@ -211,13 +262,23 @@ class model:
 
             where y(t) = log x(t) - log x is the log deviation of the vector x from its steady state value.
 
-            Returns attribute:
+        Args:
+            steady_state:   (Pandas Series or numpy array)
 
-                .loglinear = True
+        Returns:
+            None
+
+        Attributes:
+            loglinear:      (bool) Whether the model is loglinear. Sets to True.
+            a:              (Numpy ndarray)
+            b:              (Numpy ndarray)
 
         '''
+
+        # Set loglinear attribute
         self.loglinear=True
 
+        # Warn if steady state attribute ss has not been assigned
         if steady_state is None:
 
             try:
@@ -225,6 +286,7 @@ class model:
             except :
                 raise ValueError('You must specify a steady state for the model before attempting to linearize.')
 
+        # Compute approximation
         def log_equilibrium(log_vars_fwd,log_vars_cur):
 
             log_vars_fwd = pd.Series(log_vars_fwd,index = self.names['variables'])
@@ -238,8 +300,9 @@ class model:
         log_equilibrium_fwd = lambda log_fwd: log_equilibrium(log_fwd,np.log(steady_state))
         log_equilibrium_cur = lambda log_cur: log_equilibrium(np.log(steady_state),log_cur)
 
-        self.a= approx_fprime_cs(np.log(steady_state).ravel(), log_equilibrium_fwd)
-        self.b= -approx_fprime_cs(np.log(steady_state).ravel(), log_equilibrium_cur)
+        # Assign attributes
+        self.a= approx_fprime_cs(np.log(steady_state).ravel(),log_equilibrium_fwd)
+        self.b= -approx_fprime_cs(np.log(steady_state).ravel(),log_equilibrium_cur)
 
 
     def solve_klein(self,a=None,b=None):
@@ -255,16 +318,21 @@ class model:
                 u(t)   = f*s(t) + e(t)
                 s(t+1) = p*s(t)
 
-        creates new attributes:
+        Args:
+            a:  (Numpy ndarray) coefficient matrix
+            b:  (Numpy ndarray) coefficient matrix
 
-            1. .f and .p:   Solution matrix coeffients on s(t)
-            3. .stab:       Indicates solution stability and uniqueness
+        Returns:
+            None
 
-                                stab == 1: too many stable eigenvalues
-                                stab == -1: too few stable eigenvalues
-                                stab == 0: just enoughstable eigenvalues
-
-            4. .eig:        The generalized eigenvalues from the Schur decomposition
+        Attributes:
+            f:      (Numpy ndarray) Solution matrix coeffients on s(t)
+            p:      (Numpy ndarray) Solution matrix coeffients on s(t)
+            stab:   (int) Indicates solution stability and uniqueness
+                        stab == 1: too many stable eigenvalues
+                        stab == -1: too few stable eigenvalues
+                        stab == 0: just enoughstable eigenvalues
+            eig:    The generalized eigenvalues from the Schur decomposition
 
          '''
 
@@ -276,27 +344,33 @@ class model:
         self.f,n,self.p,l,self.stab,self.eig = klein(a=a,b=b,c=None,rho=None,nstates=self.nstates)
 
 
-    def impulse(self,T=21,t0=1,shocks=None,percent=False,diff=True):
+    def impulse(self,T=51,t0=1,shocks=None,percent=False,diff=True):
 
-        ''' Method for computing impulse responses for shocks to each state variable. arguments:
+        ''' Method for computing impulse responses for shocks to each state variable.
 
-                T:            (int) Number of periods to simulate. Default: 51
-                t0:           (int) Period in which the shocks are realized. May be equal to 0. Default: 1
-                shocks:        (list or Numpy.ndarray)An (ns x 1) list of shock values. If shocks==None, shocks is set to a vector of 0.01s. Default = None
-                percent:      (bool) Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
-                diff:         (bool) Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
+        Arguments:
+                T:          (int) Number of periods to simulate. Default: 51
+                t0:         (int) Period in which the shocks are realized. May be equal to 0. Default: 1
+                shocks:     (list or Numpy array) An (ns x 1) list of shock values. If shocks==None,shocks is set to a vector of 0.01s. Default = None
+                percent:    (bool) Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
+                diff:       (bool) Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
         
-        Returns a dictionary containing Pandas dataframes. The dictionary has the form:
+        Returns
+            None
 
-            self.irs['shock name']['endog var name']
+        Attributes:
+            irs:    (dict) A dictionary containing Pandas DataFrames. Has the form: self.irs['shock name']['endog var name']
 
         '''
 
+        # Initialize dictionary
         irsDict = {}
 
+        # Set numbers of costate and state variables
         ncostates = self.costates
         nstates = self.nstates
         
+        # iterate over all shocks, compute impulse responses, and add results to dictionary
         for j,name in enumerate(self.names['shocks']):
 
             s0 = np.zeros([1,nstates])
@@ -331,50 +405,61 @@ class model:
                     else:
                         frameDict[endoName] = x[i] + np.log(self.ss[endoName])
 
-            irFrame = pd.DataFrame(frameDict, index = np.arange(T))
+            irFrame = pd.DataFrame(frameDict,index = np.arange(T))
 
             if percent==True and self.loglinear:
                 irFrame = 100*irFrame
 
-            irsDict[self.names['shocks'][j]] = irFrame
+            if shocks is None or len(shocks)>j:
+                irsDict[self.names['shocks'][j]] = irFrame
 
+        # Set attribute
         self.irs = irsDict
 
-    def stoch_sim(self,T=51,dropFirst=100,covMat=None,seed=None,percent=False,diff=True):
+    def stoch_sim(self,T=51,dropFirst=300,covMat=None,seed=None,percent=False,diff=True):
         
-        ''' Method for computing impulse responses for shocks to each state variable. Arguments:
+        ''' Method for computing impulse responses for shocks to each state variable.
 
-                T:            (int) Number of periods to simulate. Default: 51
-                dropFirst:    (int) Number of periods to simulate before saving output. Default: 100
-                covMat:       (list or Numpy.ndarray) Covariance matrix shocks. If covMat is None, it's set to eye(nstates). Default: None
-                'seed':       (int) sets the seed for the Numpy random number generator. Default: None
-                percent:      (bool) Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
-                diff:         (bool) Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
+        Arguments:
+                T:          (int) Number of periods to simulate. Default: 51
+                dropFirst:  (int) Number of periods to simulate before saving output. Default: 300
+                covMat:     (list or Numpy.ndarray) Covariance matrix shocks. If covMat is None,it's set to eye(nstates). Default: None
+                seed:       (int) Sets the seed for the Numpy random number generator. Default: None
+                percent:    (bool) Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
+                diff:       (bool) Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
         
-        Returns a dictionary containing Pandas dataframes. The dictionary has the form:
+        Returns
+            None
 
-            self.simulated['endog var name']
+        Attributes:
+            simulated:    (Pandas DataFrame)
 
         '''
 
-        simDict = {}
-
+        # Set numbers of costate and state variables
         ncostates = self.costates
         nstates = self.nstates
 
+        # Initialize states
         s0 = np.zeros([1,nstates])
 
+        # Set covMat if not given
         if covMat is None:
             covMat = np.eye(nstates)
 
+        # Set seed for the Numpy random number generator
         if seed is not None and type(seed)==int:
 
             np.random.seed(seed)
 
-        eps = np.random.multivariate_normal(mean=np.zeros(nstates),cov=covMat,size=[dropFirst+T])
+        # Simulate shocks
+        eps = np.zeros([dropFirst+T,nstates])
+        eps[:,:len(covMat)] = np.random.multivariate_normal(mean=np.zeros(len(covMat)),cov=covMat,size=[dropFirst+T])
 
+        # Compute impulse responses given shocks
         x = ir(self.f,self.p,eps,s0)
 
+        # Construct DataFrame
         frameDict = {}
         for j,exoName in enumerate(self.names['shocks']):
             frameDict[exoName] = eps.T[j][dropFirst:]
@@ -384,9 +469,11 @@ class model:
             else:
                 frameDict[endoName] = x[i][dropFirst:] + self.ss[endoName]
 
-        simFrame = pd.DataFrame(frameDict, index = np.arange(T))
+        simFrame = pd.DataFrame(frameDict,index = np.arange(T))
         if percent==True:
             simFrame = 100*simFrame
+
+        # Assign attribute
         self.simulated = simFrame
 
     def approximate_and_solve(self,loglinear=True):
@@ -395,46 +482,51 @@ class model:
         constructing the log-linear approximation (if the model isn't log-linear) and solving the model
         using Klein's (2000) method. Arguments:
 
-            1. loglinear:        (bool) whether to compute log-linear or linear approximation. Default: True
+        Args:
+            loglinear:  (bool) whether to compute log-linear or linear approximation. Default: True
 
+        Returns:
+            None
 
-        Returns attributes:
-                                    
-            1. .a and .b    Matrix of coefficients for the log-linearized model. See documentation
-                                .log_linear_approximation()
-            2. .f and .p:   Solution matrix coeffients on s(t). See documentation for .solve_klein()
-                                
-            3. .stab:       Indicates solution stability and uniqueness
-
-                                stab == 1: too many stable eigenvalues
-                                stab == -1: too few stable eigenvalues
-                                stab == 0: just enoughstable eigenvalues
-
-                                See documentation for .solve_klein()
-
-            4. .eig:        The generalized eigenvalues from the Schur decomposition. See documentation 
-                                for .solve_klein()
+        Attributes:
+            a:          (Numpy ndarray)
+            b:          (Numpy ndarray)
+            f:          (Numpy ndarray) Solution matrix coeffients on s(t)
+            p:          (Numpy ndarray) Solution matrix coeffients on s(t)
+            stab:       (int) Indicates solution stability and uniqueness
+                            stab == 1: too many stable eigenvalues
+                            stab == -1: too few stable eigenvalues
+                            stab == 0: just enoughstable eigenvalues
+            eig:        The generalized eigenvalues from the Schur decomposition
+            loglinear:  (bool) Whether the model is loglinear. Sets to loglinear.
 
         '''
 
+        # Set attribute
+        self.loglinear = loglinear
+
+        # Approximate
         if loglinear == True:
             self.log_linear_approximation()
         else:
             self.linear_approximation()
+
+        # Solve the model
         self.solve_klein(self.a,self.b)
 
     def approximated(self,round=True,precision=4):
 
         '''Returns a string containing the log-linear approximation to the equilibrium conditions
 
-        Arguments:
-
-            1. round:       (bool) Whether to round the coefficents in the linear equations
-            2. precisions:  (int) Number of decimals to round the solutions
+        Args:
+            round:       (bool) Whether to round the coefficents in the linear equations. Default: True
+            precisions:  (int) Number of decimals to round the coefficients. Default: 4
 
         Returns:
-
             String with the log-linear approximation to the equilibrium conditions.
+
+        Attributes:
+            None
 
         '''
 
@@ -543,14 +635,15 @@ class model:
 
         '''Returns a string containing the solution to the log-linear system
 
-        Arguments:
-
-            1. round:       (bool) Whether to round the coefficents in the solution equations
-            2. precisions:  (int) Number of decimals to round the solutions
+        Args:
+            round:       (bool) Whether to round the coefficents in the solution equations. Default: True
+            precisions:  (int) Number of decimals to round the coefficients. Default: 4
 
         Returns:
+            String with the log-linear approximation to the equilibrium conditions.
 
-            String with the solution equations.
+        Attributes:
+            None
 
         '''
 
@@ -662,19 +755,18 @@ def ir(f,p,eps,s0=None):
             u(t)   = f*s(t) + e(t)
             s(t+1) = p*s(t)
 
-        where s(t) is an (nstates x 1) vector of state variables, u(t) is an (ncostate x 1) vector of costate
-        variables, and e(t) is an (nstates x 1) vector of structural shocks.
+    where s(t) is an (nstates x 1) vector of state variables,u(t) is an (ncostate x 1) vector of costate
+    variables,and e(t) is an (nstates x 1) vector of structural shocks.
 
-        The arguments of ir() are:
+    Args:
+        f:      (Numpy ndarray) matrix of appropriate size 
+        p:      (Numpy ndarray) matrix of appropriate size
+        eps:    (Numpy ndarray) T x nstates array of exogenous strucural shocks. 
+        s0:     (Numpy ndarray) 1 x nstates array of zeros of initial state value. Optional; Default: 0.
 
-            1. f, p:    matrices of appropriate size
-            3. eps:     (T x nstates) array of exogenous strucural shocks. 
-            2. s0:      (1 x nstates) array of zeros of initial state value. Optional; defaults to zeros.
-
-        returns
-
-            1. s:   states simulated from t = 0, 1, ..., T-1
-            2. u:   costates simulated from t = 0, 1, ..., T-1
+    Returns
+        s:   (Numpy ndarray) states simulated from t = 0,1,...,T-1
+        u:   (Numpy ndarray) costates simulated from t = 0,1,...,T-1
 
     '''
 
@@ -708,14 +800,34 @@ def klein(a=None,b=None,c=None,rho=None,nstates=None):
 
         with x(t) = [s(t); u(t)] where s(t) is a vector of predetermined (state) variables and u(t) is
         a vector of nonpredetermined costate variables. z(t) is a vector of exogenous driving variables with 
-        autocorrelation matrix rho. The solution to the model is a set of matrices f, n, p, l such that:
+        autocorrelation matrix rho. The solution to the model is a set of matrices f,n,p,l such that:
 
                 u(t)   = f*s(t) + n*z(t)
                 s(t+1) = p*s(t) + l*z(t).
 
-        The solution algorithm is based on Klein (2000) and is based on his solab.m Matlab program.'''
+        The solution algorithm is based on Klein (2000) and is based on his solab.m Matlab program.
 
-    s, t, alpha, beta, q, z = la.ordqz(A=a, B=b, sort='ouc')
+    Args:
+        a:          (Numpy ndarray) coefficient matrix
+        b:          (Numpy ndarray) coefficient matrix
+        c:          (Numpy ndarray) coefficient matrix
+        rho:        (Numpy ndarray) autocorrelation of exogenous forcing variables
+        nstates:    (int) number of state variables
+
+    Returns:
+        f:          (Numpy ndarray) Solution matrix coeffients on s(t)
+        p:          (Numpy ndarray) Solution matrix coeffients on s(t)
+        n:          (Numpy ndarray) Solution matrix coeffients on z(t)
+        l:          (Numpy ndarray) Solution matrix coeffients on z(t)
+        stab:       (int) Indicates solution stability and uniqueness
+                        stab == 1: too many stable eigenvalues
+                        stab == -1: too few stable eigenvalues
+                        stab == 0: just enoughstable eigenvalues
+        eig:        The generalized eigenvalues from the Schur decomposition
+
+    '''
+
+    s,t,alpha,beta,q,z = la.ordqz(A=a,B=b,sort='ouc')
     
     q=np.mat(q)
     z=np.mat(z)
@@ -755,7 +867,7 @@ def klein(a=None,b=None,c=None,rho=None,nstates=None):
         z11i = z11
         s11i = s11
 
-    # Components of the s, t, and q matrices
+    # Components of the s,t,and q matrices
     s12 = s[0:nstates,nstates:]
     s22 = s[nstates:,nstates:]
     t11 = t[0:nstates,0:nstates]
