@@ -351,7 +351,7 @@ class model:
         Arguments:
                 T:          (int) Number of periods to simulate. Default: 51
                 t0:         (int) Period in which the shocks are realized. May be equal to 0. Default: 1
-                shocks:     (list or Numpy array) An (ns x 1) list of shock values. If shocks==None,shocks is set to a vector of 0.01s. Default = None
+                shocks:     (list or Numpy array) An (ns x 1) list of shock values. If shocks==None,shocks and loglinear==True, is set to a vector of 0.01s. If shocks==None,shocks and loglinear==False, is set to a vector of 1s. Default = None
                 percent:    (bool) Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
                 diff:       (bool) Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True
         
@@ -418,7 +418,7 @@ class model:
 
     def stoch_sim(self,T=51,dropFirst=300,covMat=None,seed=None,percent=False,diff=True):
         
-        ''' Method for computing impulse responses for shocks to each state variable.
+        ''' Method for computing stohcasti simulation of the model.
 
         Arguments:
                 T:          (int) Number of periods to simulate. Default: 51
