@@ -4,4 +4,4 @@ A module for approximating, solving, and simulating dynamic stochastic general e
 
 ```pip install linearsolve```
 
-Documentation for fredpy: https://www.briancjenkins.com/linearsolve/docs/build/html/index.html
+Documentation for linearsolve: https://www.briancjenkins.com/linearsolve/docs/build/html/index.html
