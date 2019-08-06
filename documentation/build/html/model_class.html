@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>linearsolve.model class &#8212; linearsolve 3.4.5 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          linearsolve</a>
+        <span class="navbar-text navbar-version pull-left"><b>3.4</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code> class</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/model_class.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="linearsolve-model-class">
+<h1><code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code> class<a class="headerlink" href="#linearsolve-model-class" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="linearsolve.model">
+<em class="property">class </em><code class="sig-prename descclassname">linearsolve.</code><code class="sig-name descname">model</code><span class="sig-paren">(</span><em class="sig-param">equations=None</em>, <em class="sig-param">n_states=None</em>, <em class="sig-param">var_names=None</em>, <em class="sig-param">shock_names=None</em>, <em class="sig-param">parameters=None</em>, <em class="sig-param">parameter_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance of <a class="reference internal" href="#linearsolve.model" title="linearsolve.model"><code class="xref py py-class docutils literal notranslate"><span class="pre">linearsolve.model</span></code></a> that stores equilibrium conditions for a DSGE model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>equations</strong> (<em>function</em>) – <p>A function that represents the equilibirum conditions for a DSGE model. The function should return an n-dimensional array with each element of the returned array being equaling an equilibrium condition of the model solved for zero. The function should accept three arguments:</p>
+<ul>
+<li><p><strong>variables_forward</strong>: Endogenous variables dated t+1.</p></li>
+<li><p><strong>variables_current</strong>: Endogenous variables dated t.</p></li>
+<li><p><strong>parameters</strong>: The parameters of the model.</p></li>
+</ul>
+</p></li>
+<li><p><strong>n_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The number of state variables in the model.</p></li>
+<li><p><strong>var_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – A list of strings with the names of the endogenous variables. The state variables must be ordered first.</p></li>
+<li><p><strong>shock_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – A list of strings with the names of the exogenous shocks to each state variable. The order of names must agree with var_names.</p></li>
+<li><p><strong>parameters</strong> (<em>Pandas.Series</em><em> or </em><em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – Either a Pandas Series object with parameter name strings as the index OR a list or an array of parameter values.</p></li>
+<li><p><strong>parameter_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – (Optional) If parameters is given as a list,then this list of strings will be used to save the parameters with names as a Pandas Series object.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Attributes:</strong></p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">equilibrium_fun</dt>
+<dd class="field-odd"><p>(<code class="xref py py-obj docutils literal notranslate"><span class="pre">function</span></code>) – Function input with the <strong>equations</strong> parameter.</p>
+</dd>
+<dt class="field-even">n_vars</dt>
+<dd class="field-even"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>) – Number of endogenous variables.</p>
+</dd>
+<dt class="field-odd">n_states</dt>
+<dd class="field-odd"><p>(<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) – Number of state variables.</p>
+</dd>
+<dt class="field-even">n_costates</dt>
+<dd class="field-even"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>) – Number of control or costate variables.</p>
+</dd>
+<dt class="field-odd">names</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>) – A dictionary with keys ‘variables’,’shocks’,and ‘param’ that stores the names of the model’s variables, shocks, and parameters.</p>
+</dd>
+<dt class="field-even">parameters</dt>
+<dd class="field-even"><p>(<code class="xref py py-obj docutils literal notranslate"><span class="pre">Pandas.Series</span></code>) – A Pandas Series with parameter name strings as the index. If <strong>parameter_names</strong> wasn’t supplied,then parameters are labeled ‘parameter 1’,parameter2’,etc.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Methods:</strong></p>
+<blockquote>
+<div><dl class="function">
+<dt id="linearsolve.model.approximate_and_solve">
+<code class="sig-name descname">approximate_and_solve</code><span class="sig-paren">(</span><em class="sig-param">log_linear=True</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model.approximate_and_solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method approximates and solves a dynamic stochastic general equilibrium (DSGE) model by constructing the log-linear approximation (if the model isn’t log-linear) and solving the model using Klein’s (2000) method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>percent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to compute log-linear or linear approximation. Default: True</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>a</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on forward-dated variables.</p></li>
+<li><p><strong>b</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on current-dated variables.</p></li>
+<li><p><strong>f</strong> (<em>Numpy.ndarray</em>) – Solution matrix coeffients on s(t) in control equation.</p></li>
+<li><p><strong>p</strong> (<em>Numpy.ndarray</em>) – Solution matrix coeffients on u(t) in state equation.</p></li>
+<li><p><strong>stab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Indicates solution stability and uniqueness. stab =1: too many stable eigenvalues, stab = -1: too few stable eigenvalues, stab = 0: just enough stable eigenvalues</p></li>
+<li><p><strong>eig</strong> (<em>Numpy.ndarray</em>) – Generalized eigenvalues from the Schur decomposition</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.model.approximated">
+<code class="sig-name descname">approximated</code><span class="sig-paren">(</span><em class="sig-param">round=True</em>, <em class="sig-param">precision=4</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model.approximated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string containing the log-linear approximation to the equilibrium conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>round</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to round the coefficents in the linear equations. Default: True</p></li>
+<li><p><strong>precision</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of decimals to round the coefficients. Default: 4</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string containing the log-linear approximation to the equilibrium conditions</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.model.check_ss">
+<code class="sig-name descname">check_ss</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model.check_ss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses Numpy.isclose() to print whether each steady state equilibrium condition evaluates to something close to zero.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Numpy.ndarry of booleans indicating whether the stored staeady state satisfies each equilibrium condition</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.model.compute_ss">
+<code class="sig-name descname">compute_ss</code><span class="sig-paren">(</span><em class="sig-param">guess=None</em>, <em class="sig-param">method='fsolve'</em>, <em class="sig-param">options={}</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model.compute_ss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to solve for the steady state of the model. Stores results as <strong>ss</strong> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>guess</strong> (<em>Pandas.Series</em><em> or </em><em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – An initial guess for the steady state solution. The result is highly sensisitve to the intial guess chosen,so be careful. If the guess is a Numpy ndarray or a list then the elements must be ordered to conform with self.names[‘variables’].</p></li>
+<li><p><strong>method</strong> (<em>string</em>) – The function from the Scipy library to use. Your choices are: ‘root’, ‘fsolve’ (default), broyden1, broyden2.</p></li>
+<li><p><strong>options</strong> (<em>dictionary</em>) – A dictionary of optional arguments to pass to the numerical solver. Check out the Scipy documentation to see the options available for each routine: <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/optimize.html">http://docs.scipy.org/doc/scipy/reference/optimize.html</a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>ss</strong> (<em>Pandas.Series</em>) – The steady state of the model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.model.impulse">
+<code class="sig-name descname">impulse</code><span class="sig-paren">(</span><em class="sig-param">T=51</em>, <em class="sig-param">t0=1</em>, <em class="sig-param">shocks=None</em>, <em class="sig-param">percent=False</em>, <em class="sig-param">diff=True</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model.impulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes impulse responses for shocks to each state variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of periods to simulate. Default: 1</p></li>
+<li><p><strong>t0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Period in which the shocks are to be realized. Must be greater than or equal to 0. default: 1</p></li>
+<li><p><strong>shocks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em> or </em><em>Numpy.ndaray</em>) – An array of shock values with length equal to the number of shocks. If shocks=None,shocks and log_linear=True, is set to a vector of 0.01s. If shocks=None,shocks and log_linear=False, is set to a vector of 1s. Default: None</p></li>
+<li><p><strong>percent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False</p></li>
+<li><p><strong>diff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>irs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A dictionary containing Pandas DataFrames. Has the form: self.irs[‘shock name’][‘endog var name’]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.model.linear_approximation">
+<code class="sig-name descname">linear_approximation</code><span class="sig-paren">(</span><em class="sig-param">steady_state=None</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model.linear_approximation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a nonlinear rational expectations model in the form:</p>
+<div class="math notranslate nohighlight" id="equation-model-class-0">
+<span class="eqno">(1)<a class="headerlink" href="#equation-model-class-0" title="Permalink to this equation">¶</a></span>\[\psi_1[x_{t+1},x_t] = \psi_2[x_{t+1},x_t]\]</div>
+<p>this method returns the linear approximation of the model with matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> such that:</p>
+<div class="math notranslate nohighlight" id="equation-model-class-1">
+<span class="eqno">(2)<a class="headerlink" href="#equation-model-class-1" title="Permalink to this equation">¶</a></span>\[A y_{t+1} = B y_t\]</div>
+<p>where <span class="math notranslate nohighlight">\(y_t = x_t - x\)</span> is the log deviation of the vector <span class="math notranslate nohighlight">\(x\)</span> from its steady state value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>steady_state</strong> (<em>Pandas.Series</em>) – Coefficient matrix on forward-dated variables.</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>a</strong> (<em>Numpy.ndaray</em>) – Coefficient matrix on forward-dated variables.</p></li>
+<li><p><strong>b</strong> (<em>Numpy.ndaray</em>) – Coefficient matrix on current-dated variables.</p></li>
+<li><p><strong>log_linear</strong> – Whether the model is log-linear. Sets to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.model.log_linear_approximation">
+<code class="sig-name descname">log_linear_approximation</code><span class="sig-paren">(</span><em class="sig-param">steady_state=None</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model.log_linear_approximation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a nonlinear rational expectations model in the form:</p>
+<div class="math notranslate nohighlight" id="equation-model-class-2">
+<span class="eqno">(3)<a class="headerlink" href="#equation-model-class-2" title="Permalink to this equation">¶</a></span>\[\psi_1[x_{t+1},x_t] = \psi_2[x_{t+1},x_t]\]</div>
+<p>this method returns the log-linear approximation of the model with matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> such that:</p>
+<div class="math notranslate nohighlight" id="equation-model-class-3">
+<span class="eqno">(4)<a class="headerlink" href="#equation-model-class-3" title="Permalink to this equation">¶</a></span>\[A y_{t+1} = B y_t\]</div>
+<p>where <span class="math notranslate nohighlight">\(y_t = \log x_t - \log x\)</span> is the log-deviation of the vector <span class="math notranslate nohighlight">\(x\)</span> from its steady state value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>steady_state</strong> (<em>Pandas.Series</em>) – Coefficient matrix on forward-dated variables.</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>a</strong> (<em>Numpy.ndaray</em>) – Coefficient matrix on forward-dated variables.</p></li>
+<li><p><strong>b</strong> (<em>Numpy.ndaray</em>) – Coefficient matrix on current-dated variables.</p></li>
+<li><p><strong>log_linear</strong> – Whether the model is log-linear. Sets to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.model.set_ss">
+<code class="sig-name descname">set_ss</code><span class="sig-paren">(</span><em class="sig-param">steady_state</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model.set_ss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Directly set the steady state of the model. Stores results as <strong>ss</strong> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>steady_state</strong> (<em>Pandas.Series</em><em> or </em><em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The steady state of the model.</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>ss</strong> (<em>Pandas.Series</em>) – The steady state of the model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.model.solve_klein">
+<code class="sig-name descname">solve_klein</code><span class="sig-paren">(</span><em class="sig-param">a=None</em>, <em class="sig-param">b=None</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model.solve_klein" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves a linear rational expectations model of the form:</p>
+<div class="math notranslate nohighlight" id="equation-model-class-4">
+<span class="eqno">(5)<a class="headerlink" href="#equation-model-class-4" title="Permalink to this equation">¶</a></span>\[A x_{t+1} = B x_t\]</div>
+<p>this method computes the log-linear approximation of the model with matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> such that:</p>
+<div class="math notranslate nohighlight" id="equation-model-class-5">
+<span class="eqno">(6)<a class="headerlink" href="#equation-model-class-5" title="Permalink to this equation">¶</a></span>\[\begin{split}u_t  &amp;= fs_t + \epsilon_t\\\end{split}\]</div>
+<p>and:</p>
+<div class="math notranslate nohighlight" id="equation-model-class-6">
+<span class="eqno">(7)<a class="headerlink" href="#equation-model-class-6" title="Permalink to this equation">¶</a></span>\[\begin{split}s_{t+1}  &amp;= ps_t\\\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(s_t\)</span> denotes the vector of state variables and <span class="math notranslate nohighlight">\(f_t\)</span> denotes the vector of forward-looking variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>Numpy.ndaray</em>) – Coefficient matrix on forward-dated variables.</p></li>
+<li><p><strong>b</strong> (<em>Numpy.ndaray</em>) – Coefficient matrix on current-dated variables.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>f</strong> (<em>Numpy.ndarray</em>) – coeficient matrix.</p></li>
+<li><p><strong>p</strong> (<em>Numpy.ndarray</em>) – coeficient matrix.</p></li>
+<li><p><strong>stab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Indicates solution stability and uniqueness. stab =1: too many stable eigenvalues, stab = -1: too few stable eigenvalues, stab = 0: just enough stable eigenvalues</p></li>
+<li><p><strong>eig</strong> (<em>Numpy.ndarray</em>) – Generalized eigenvalues from the Schur decomposition</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.model.solved">
+<code class="sig-name descname">solved</code><span class="sig-paren">(</span><em class="sig-param">round=True</em>, <em class="sig-param">precision=4</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model.solved" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string containing the solution to the linear system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>round</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to round the coefficents in the linear equations. Default: True</p></li>
+<li><p><strong>precision</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of decimals to round the coefficients. Default: 4</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string containing the solution to linear system</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.model.stoch_sim">
+<code class="sig-name descname">stoch_sim</code><span class="sig-paren">(</span><em class="sig-param">T=51</em>, <em class="sig-param">drop_first=300</em>, <em class="sig-param">cov_mat=None</em>, <em class="sig-param">seed=None</em>, <em class="sig-param">percent=False</em>, <em class="sig-param">diff=True</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.model.stoch_sim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a stohcastic simulation of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of periods to simulate. Default: 1</p></li>
+<li><p><strong>drop_first</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of periods to simulate before generating the simulated periods. Default: 300</p></li>
+<li><p><strong>cov_mat</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em> or </em><em>Numpy.ndarray</em>) – Covariance matrix shocks. If cov_mat is None, it’s set to Numpy.eye(n_states). Default: None</p></li>
+<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Sets the seed for the Numpy random number generator. Default: None</p></li>
+<li><p><strong>percent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False</p></li>
+<li><p><strong>diff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>simulated</strong> (<em>Pandas.DataFrame</em>) – A DataFrame with a column for each variable.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div></blockquote>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Brian C. Jenkins.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

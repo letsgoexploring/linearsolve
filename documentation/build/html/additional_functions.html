@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Additional linearsolve Functions &#8212; linearsolve 3.4.5 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          linearsolve</a>
+        <span class="navbar-text navbar-version pull-left"><b>3.4</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/additional_functions.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="additional-linearsolve-functions">
+<h1>Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions<a class="headerlink" href="#additional-linearsolve-functions" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="linearsolve.ar1">
+<code class="sig-prename descclassname">linearsolve.</code><code class="sig-name descname">ar1</code><span class="sig-paren">(</span><em class="sig-param">mu=0</em>, <em class="sig-param">rho=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.ar1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiates an AR(1) model in linearsolve. Model has the form:</p>
+<div class="math notranslate nohighlight" id="equation-additional-functions-0">
+<span class="eqno">(1)<a class="headerlink" href="#equation-additional-functions-0" title="Permalink to this equation">¶</a></span>\[\begin{split}x_{t+1} &amp;= (1-\rho)\mu \rho x_t + \epsilon_{t+1}\\\end{split}\]</div>
+<p>Computes the steady state, and solves the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Mean of the process</p></li>
+<li><p><strong>rho</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Autoregressive coeficcient of the process</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><a class="reference internal" href="model_class.html#linearsolve.model" title="linearsolve.model"><code class="xref py py-class docutils literal notranslate"><span class="pre">linearsolve.model</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.ir">
+<code class="sig-prename descclassname">linearsolve.</code><code class="sig-name descname">ir</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">p</em>, <em class="sig-param">eps</em>, <em class="sig-param">s0=None</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.ir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulates a model in the following form:</p>
+<div class="math notranslate nohighlight" id="equation-additional-functions-1">
+<span class="eqno">(2)<a class="headerlink" href="#equation-additional-functions-1" title="Permalink to this equation">¶</a></span>\[\begin{split}u_t   &amp;= fs_t + \epsilon_{t}  \\\end{split}\]</div>
+<div class="math notranslate nohighlight" id="equation-additional-functions-2">
+<span class="eqno">(3)<a class="headerlink" href="#equation-additional-functions-2" title="Permalink to this equation">¶</a></span>\[\begin{split}s_{t+1} &amp;= ps_t \\\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(s_t\)</span> is an (n_states x 1) vector of state variables, <span class="math notranslate nohighlight">\(u_t\)</span> is an (n_costates x 1) vector of costate variables, and <span class="math notranslate nohighlight">\(\epsilon_t\)</span> is an (n_states x 1) vector of exogenous shocks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>Numpy.ndarray</em>) – Coefficnent matrix of appropriate size</p></li>
+<li><p><strong>p</strong> (<em>Numpy.ndarray</em>) – Coefficnent matrix of appropriate size</p></li>
+<li><p><strong>eps</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – T x n_states array of exogenous shocks.</p></li>
+<li><p><strong>s0</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – 1 x n_states array of zeros of initial state value. Optional; Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array containing two arrays: one corresponding to simulated <span class="math notranslate nohighlight">\(u_t\)</span> values and the other to simulated <span class="math notranslate nohighlight">\(s_t\)</span> values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="linearsolve.klein">
+<code class="sig-prename descclassname">linearsolve.</code><code class="sig-name descname">klein</code><span class="sig-paren">(</span><em class="sig-param">a=None</em>, <em class="sig-param">b=None</em>, <em class="sig-param">c=None</em>, <em class="sig-param">phi=None</em>, <em class="sig-param">n_states=None</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.klein" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves linear dynamic models with the form of:</p>
+<div class="math notranslate nohighlight" id="equation-additional-functions-3">
+<span class="eqno">(4)<a class="headerlink" href="#equation-additional-functions-3" title="Permalink to this equation">¶</a></span>\[A E_tx_{t+1} = Bx_t + Cz_t\]</div>
+<p>with <span class="math notranslate nohighlight">\(x_t = [s_t; u_t]\)</span> where <span class="math notranslate nohighlight">\(s_t\)</span> is a vector of predetermined (state) variables and <span class="math notranslate nohighlight">\(u_t\)</span> is a vector of nonpredetermined costate variables. <span class="math notranslate nohighlight">\(z_t\)</span> is a vector of exogenous forcing variables with autocorrelation matrix <span class="math notranslate nohighlight">\(\Phi\)</span>. The solution to the model is a set of matrices <span class="math notranslate nohighlight">\(f,n,p,l\)</span> such that:</p>
+<div class="math notranslate nohighlight" id="equation-additional-functions-4">
+<span class="eqno">(5)<a class="headerlink" href="#equation-additional-functions-4" title="Permalink to this equation">¶</a></span>\[u_t   = fs_t + nz_t\]</div>
+<div class="math notranslate nohighlight" id="equation-additional-functions-5">
+<span class="eqno">(6)<a class="headerlink" href="#equation-additional-functions-5" title="Permalink to this equation">¶</a></span>\[s_{t+1} = ps_t + lz_t.\]</div>
+<p>The solution algorithm is based on Klein (2000) and his solab.m Matlab program.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on future-dated variables</p></li>
+<li><p><strong>b</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on current-dated variables</p></li>
+<li><p><strong>p</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on exogenous forcing variables</p></li>
+<li><p><strong>phi</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – Autocorrelation of exogenous forcing variables</p></li>
+<li><p><strong>n_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of state variables</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>f</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Coefficient matrix on state vector in control equation</p></li>
+<li><p><strong>p</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Coefficient matrix on state vector in state equation</p></li>
+<li><p><strong>n</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Coefficient matrix on forcing vector in control equation</p></li>
+<li><p><strong>l</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Coefficient matrix on forcing vector in state equation</p></li>
+<li><p><strong>stab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) - Indicates solution stability and uniqueness. stab =1: too many stable eigenvalues, stab = -1: too few stable eigenvalues, stab = 0: just enough stable eigenvalues</p></li>
+<li><p><strong>eig</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Generalized eigenvalues from the Schur decomposition</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Brian C. Jenkins.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
