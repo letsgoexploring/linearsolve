@@ -62,7 +62,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'linearsolve'
-copyright = '2018, Brian C. Jenkins'
+copyright = '2019, Brian C. Jenkins'
 author = 'Brian C. Jenkins'
 
 # The version info for the project you're documenting, acts as replacement for

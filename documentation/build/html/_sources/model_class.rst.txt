@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-``linearsolve.model`` class
+``linearsolve.model``
 ==================================
 
 
@@ -47,8 +47,8 @@
 			Method approximates and solves a dynamic stochastic general equilibrium (DSGE) model by constructing the log-linear approximation (if the model isn't log-linear) and solving the model using Klein's (2000) method.
 
 
-			:param percent: Whether to compute log-linear or linear approximation. Default: True
-   			:type percent: bool
+			:param log_linear: Whether to compute log-linear or linear approximation. Default: True
+   			:type log_linear: bool
 
    			:var a: Coefficient matrix on forward-dated variables.
 			:vartype a: Numpy.ndarray
