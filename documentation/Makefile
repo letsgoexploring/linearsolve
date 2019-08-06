@@ -91,9 +91,9 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/fredpy.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/linearsolve.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/fredpy.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/linearsolve.qhc"
 
 .PHONY: applehelp
 applehelp:
@@ -110,8 +110,8 @@ devhelp:
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/fredpy"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/fredpy"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/linearsolve"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/linearsolve"
 	@echo "# devhelp"
 
 .PHONY: epub
