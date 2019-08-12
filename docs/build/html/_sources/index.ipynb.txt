@@ -27,7 +27,7 @@
     "\tpip install linearsolve\n",
     "\n",
     "\n",
-    "Or download the source here: https://github.com/letsgoexploring/linearsolve/raw/master/dist/linearsolve-3.4.7.tar.gz\n",
+    "Or download the source here: https://github.com/letsgoexploring/linearsolve/blob/gh-pages/dist/linearsolve-3.4.7.tar.gz\n",
     "\n",
     "Contents:\n",
     "==================\n",
