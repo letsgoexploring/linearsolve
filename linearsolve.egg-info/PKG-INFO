@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: linearsolve
-Version: 3.4.5
+Version: 3.4.7
 Summary: A module for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models
 Home-page: https://github.com/letsgoexploring/linearsolve-package
 Author: Brian C. Jenkins

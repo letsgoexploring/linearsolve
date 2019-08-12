@@ -25,7 +25,7 @@
 	:param list shock_names: A list of strings with the names of the exogenous shocks to each state variable. The order of names must agree with var_names.
 	:param parameters: Either a Pandas Series object with parameter name strings as the index OR a list or an array of parameter values.
 	:type parameters: Pandas.Series or Numpy.ndarray or list
-	:param list parameter_names: (Optional) If parameters is given as a list,then this list of strings will be used to save the parameters with names as a Pandas Series object.
+	:param list parameter_names: (Optional) If parameters is given as a list, then this list of strings will be used to save the parameters with names as a Pandas Series object.
 
 
 	**Attributes:**
@@ -35,8 +35,8 @@
 		:n_vars: (:py:obj:`int`) -- Number of endogenous variables.
 		:n_states: (:py:obj:`Numpy.ndarray`) -- Number of state variables.
 		:n_costates: (:py:obj:`int`) -- Number of control or costate variables.
-		:names: (:py:obj:`dict`) -- A dictionary with keys 'variables','shocks',and 'param' that stores the names of the model's variables, shocks, and parameters.
-		:parameters: (:py:obj:`Pandas.Series`) -- A Pandas Series with parameter name strings as the index. If **parameter_names** wasn't supplied,then parameters are labeled 'parameter 1',parameter2',etc.
+		:names: (:py:obj:`dict`) -- A dictionary with keys 'variables', 'shocks', and 'param' that stores the names of the model's variables, shocks, and parameters.
+		:parameters: (:py:obj:`Pandas.Series`) -- A Pandas Series with parameter name strings as the index. If **parameter_names** wasn't supplied, then parameters are labeled 'parameter 1', 'parameter2', etc.
 
 		
 	**Methods:**
@@ -102,7 +102,7 @@
 
 			Attempts to solve for the steady state of the model. Stores results as **ss** attribute.
 
-			:param guess: An initial guess for the steady state solution. The result is highly sensisitve to the intial guess chosen,so be careful. If the guess is a Numpy ndarray or a list then the elements must be ordered to conform with self.names['variables'].
+			:param guess: An initial guess for the steady state solution. The result is highly sensisitve to the intial guess chosen, so be careful. If the guess is a Numpy ndarray or a list then the elements must be ordered to conform with self.names['variables'].
    			:type guess: Pandas.Series or Numpy.ndarray or list
 
 			:param string method: The function from the Scipy library to use. Your choices are: 'root', 'fsolve' (default), broyden1, broyden2.
@@ -123,7 +123,7 @@
    			:param t0: Period in which the shocks are to be realized. Must be greater than or equal to 0. default: 1
    			:type t0: int
 
-   			:param shocks: An array of shock values with length equal to the number of shocks. If shocks=None,shocks and log_linear=True, is set to a vector of 0.01s. If shocks=None,shocks and log_linear=False, is set to a vector of 1s. Default: None
+   			:param shocks: An array of shock values with length equal to the number of shocks. If shocks=None and log_linear=True, shocks is set to a vector of 0.01s. If shocks=None and log_linear=False, shocks is set to a vector of 1s. Default: None
    			:type shocks: list or Numpy.ndaray
 
 			:param percent: Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False

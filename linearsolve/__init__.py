@@ -31,7 +31,7 @@ class model:
                                     variable. The order of names must agree with var_names.
             parameters:         (list or Pandas Series) Either a list of parameter values OR a Pandas Series 
                                     object with parameter name strings as the index.
-            parameter_names:    (list) Optional. If parameters is given as a list,then this list of strings 
+            parameter_names:    (list) Optional. If parameters is given as a list, then this list of strings 
                                     will be used to save the parameters with names as a Pandas Series object.
 
         Returns:
@@ -42,11 +42,11 @@ class model:
             n_vars:             (int) The number of variables in the model.
             n_states:           (int) The number of state variables in the model.
             n_costates:         (int) The number of costate or control variables in the model.
-            names:              (dict) A dictionary with keys 'variables','shocks',and 'param' that
+            names:              (dict) A dictionary with keys 'variables', 'shocks', and 'param' that
                                     stores the names of the model's variables, shocks, and parameters.
             parameters:         (Pandas Series) A Pandas Series with parameter name strings as the 
-                                    index. If parameter_names wasn't supplied,then parameters are labeled 
-                                    'parameter 1',parameter2',etc.
+                                    index. If parameter_names wasn't supplied, then parameters are labeled 
+                                    'parameter 1', 'parameter2', etc.
         '''
         
         self.equilibrium_fun= equations
@@ -112,7 +112,7 @@ class model:
                             stab == -1: too few stable eigenvalues
                             stab == 0: just enoughstable eigenvalues
             eig:        The generalized eigenvalues from the Schur decomposition
-            log_linear:  (bool) Whether the model is log-linear. Sets to log-linear.
+            log_linear: (bool) Whether the model is log-linear. Sets to log-linear.
 
         '''
 
@@ -273,9 +273,9 @@ class model:
         '''Attempts to solve for the steady state of the model.
 
         Args:
-            guess:      (Pandas Series,Numpy array,or list) An initial guess for the 
+            guess:      (Pandas Series, Numpy array, or list) An initial guess for the 
                             steady state solution. The result is highly sensisitve to the intial 
-                            guess chosen,so be careful. If the guess is a Numpy ndarray or a list
+                            guess chosen, so be careful. If the guess is a Numpy ndarray or a list
                             then the elements must be ordered to conform with self.names['variables'].
             method:     (str) The function from the Scipy library to use. Your choices are:
                         a. root
@@ -297,10 +297,8 @@ class model:
         if guess is None:
             guess = np.ones(self.n_vars)
         else:
-            try:
+            if isinstance(guess, pd.Series):
                 guess = guess[self.names['variables']]
-            except:
-                pass
 
 
         # Create function for nonlinear solver
@@ -334,9 +332,9 @@ class model:
                 T:          (int) Number of periods to simulate. Default: 51
                 t0:         (int) Period in which the shocks are realized. Must be greater than or equal to 
                                 0. Default: 1
-                shocks:     (list or Numpy array) An (ns x 1) array of shock values. If shocks==None,shocks 
-                                and log_linear==True, is set to a vector of 0.01s. If shocks==None,shocks and 
-                                log_linear==False, is set to a vector of 1s. Default = None
+                shocks:     (list or Numpy array) An (ns x 1) array of shock values. If shocks==None, and 
+                                log_linear==True, shocks is set to a vector of 0.01s. If shocks==None and
+                                log_linear==False, shocks is set to a vector of 1s. Default = None
                 percent:    (bool) Whether to multiply simulated values by 100. Only works for log-linear 
                                 approximations. Default: False
                 diff:       (bool) Subtract steady state for linear approximations (or log steady state for 
@@ -520,7 +518,7 @@ class model:
         '''Directly set the steady state of the model. 
 
         Args:
-            steady_state:   (Pandas Series,Numpy array,or list)
+            steady_state:   (Pandas Series, Numpy array, or list)
 
         Returns:
             None
@@ -761,61 +759,6 @@ class model:
 ### End of model class ####################################################################################
 
 
-def ar1(mu=0,rho=0.5):
-
-    '''Initiates an AR(1) model in linearsolve, computes the steady state, and solves the 
-        model.
-
-        Args:
-            mu:             (float) Mean of the process.
-            rho:            (float) Autoregressive coefficient of the process.
-
-        Returns:
-            linersolve.model
-
-        Attributes:
-
-            '''
-
-    # Input model parameters
-    parameters = pd.Series()
-    parameters['mu'] = mu
-    parameters['rho'] = rho
-
-    # Funtion that evaluates the equilibrium conditions
-    def equilibrium_equations(variables_forward,variables_current,parameters):
-        
-        # Parameters 
-        p = parameters
-        
-        # Variables
-        fwd = variables_forward
-        cur = variables_current
-        
-        # Law of motion
-        eqn_x = (1-p.phi)*p.mu + p.phi*cur.x - fwd.x
-        
-        # Stack equilibrium conditions into a numpy array
-        return np.array([
-                eqn_x
-            ])
-
-    # Initialize the model
-    ar1_model = model(equations = equilibrium_equations,
-                        n_states=1,
-                        var_names=['x'],
-                        shock_names=['e_x'],
-                        parameters = parameters)
-
-    # Compute steady state
-    ar1_model.compute_ss([mu])
-
-    # Solve the model
-    ar1_model.approximate_and_solve(log_linear = False)
-
-    return ar1_model
-
-
 def ir(f,p,eps,s0=None):
 
     '''Simulates a model in the following form:
@@ -868,7 +811,7 @@ def klein(a=None,b=None,c=None,phi=None,n_states=None):
 
         with x(t) = [s(t); u(t)] where s(t) is a vector of predetermined (state) variables and u(t) is
         a vector of nonpredetermined costate variables. z(t) is a vector of exogenous forcing variables with 
-        autocorrelation matrix phi. The solution to the model is a set of matrices f,n,p,l such that:
+        autocorrelation matrix phi. The solution to the model is a set of matrices f, n, p, l such that:
 
                 u(t)   = f*s(t) + n*z(t)
                 s(t+1) = p*s(t) + l*z(t).

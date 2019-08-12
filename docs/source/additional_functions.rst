@@ -2,22 +2,6 @@
 Additional ``linearsolve`` Functions
 ====================================
 
-
-.. py:function:: linearsolve.ar1(mu=0,rho=0.5)
-
-            Initiates an AR(1) model in linearsolve. Model has the form:
-
-            .. math::
-                  x_{t+1} &= (1-\rho)\mu \rho x_t + \epsilon_{t+1}\\
-
-            Computes the steady state, and solves the model.
-
-            :param mu: Mean of the process
-            :type mu: float
-            :param rho: Autoregressive coeficcient of the process
-            :type rho: float
-            :return: :py:class:`linearsolve.model`
-
 .. py:function:: linearsolve.ir(f,p,eps,s0=None)
 
             Simulates a model in the following form:
@@ -48,7 +32,7 @@ Additional ``linearsolve`` Functions
             .. math::
                 A E_tx_{t+1} = Bx_t + Cz_t
 
-            with :math:`x_t = [s_t; u_t]` where :math:`s_t` is a vector of predetermined (state) variables and :math:`u_t` is a vector of nonpredetermined costate variables. :math:`z_t` is a vector of exogenous forcing variables with autocorrelation matrix :math:`\Phi`. The solution to the model is a set of matrices :math:`f,n,p,l` such that:
+            with :math:`x_t = [s_t; u_t]` where :math:`s_t` is a vector of predetermined (state) variables and :math:`u_t` is a vector of nonpredetermined costate variables. :math:`z_t` is a vector of exogenous forcing variables with autocorrelation matrix :math:`\Phi`. The solution to the model is a set of matrices :math:`f, n, p, l` such that:
 
             .. math::
 

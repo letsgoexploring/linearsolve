@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
   name = 'linearsolve',
   packages = ['linearsolve'],
-  version = '3.4.5',
+  version = '3.4.7',
   description = 'A module for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models',
   author = 'Brian C. Jenkins',
   author_email = 'bcjenkin@uci.edu',
