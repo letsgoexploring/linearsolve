@@ -17,3 +17,5 @@ Example Jupyter Notebooks available in the ``examples`` directory or follow the 
 2. [A Detailed RBC Model Example](https://nbviewer.jupyter.org/github/letsgoexploring/linearsolve/blob/gh-pages/examples/detailed_rbc_model.ipynb.ipynb)
 3. [A New-Keynesian Model](https://nbviewer.jupyter.org/github/letsgoexploring/linearsolve/blob/gh-pages/examples/nk_model.ipynb)
 4. [A Cash-in-Advance Model](https://nbviewer.jupyter.org/github/letsgoexploring/linearsolve/blob/gh-pages/examples/cia_model.ipynb)
+
+_Updated: August 12, 2019_
