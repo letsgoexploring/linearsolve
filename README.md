@@ -6,7 +6,7 @@ Install the module from PyPI with the shell command:
 
 ```pip install linearsolve```
 
-Or download the source here: https://github.com/letsgoexploring/linearsolve/raw/master/dist/linearsolve-3.4.7.tar.gz
+Or download the source here: https://github.com/letsgoexploring/linearsolve/blob/gh-pages/dist/linearsolve-3.4.7.tar.gz
 
 ## Documentation
 Documentation for linearsolve: https://www.briancjenkins.com/linearsolve/docs/build/html/index.html
