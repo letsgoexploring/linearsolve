@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Additional linearsolve Functions &#8212; linearsolve 3.4.5 documentation</title>
+    <title>Additional linearsolve Functions &#8212; linearsolve 3.4.7 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -15,7 +15,6 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Built-in Models" href="built_in_models.html" />
     <link rel="prev" title="linearsolve.model" href="model_class.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -59,7 +58,6 @@
 <li class="toctree-l1"><a class="reference internal" href="how_linear_solve_works.html">How Linear Solve Works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="model_class.html"><code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="built_in_models.html">Built-in Models</a></li>
 </ul>
 </ul>
 </li>
@@ -84,10 +82,6 @@
                 
   <li>
     <a href="model_class.html" title="Previous Chapter: linearsolve.model"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; linearsolve.model</span>
-    </a>
-  </li>
-  <li>
-    <a href="built_in_models.html" title="Next Chapter: Built-in Models"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Built-in Models &raquo;</span>
     </a>
   </li>
               
@@ -124,33 +118,13 @@
   <div class="section" id="additional-linearsolve-functions">
 <h1>Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions<a class="headerlink" href="#additional-linearsolve-functions" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="linearsolve.ar1">
-<code class="sig-prename descclassname">linearsolve.</code><code class="sig-name descname">ar1</code><span class="sig-paren">(</span><em class="sig-param">mu=0</em>, <em class="sig-param">rho=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.ar1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initiates an AR(1) model in linearsolve. Model has the form:</p>
-<div class="math notranslate nohighlight" id="equation-additional-functions-0">
-<span class="eqno">(1)<a class="headerlink" href="#equation-additional-functions-0" title="Permalink to this equation">¶</a></span>\[\begin{split}x_{t+1} &amp;= (1-\rho)\mu \rho x_t + \epsilon_{t+1}\\\end{split}\]</div>
-<p>Computes the steady state, and solves the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mu</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Mean of the process</p></li>
-<li><p><strong>rho</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Autoregressive coeficcient of the process</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><a class="reference internal" href="model_class.html#linearsolve.model" title="linearsolve.model"><code class="xref py py-class docutils literal notranslate"><span class="pre">linearsolve.model</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
 <dt id="linearsolve.ir">
 <code class="sig-prename descclassname">linearsolve.</code><code class="sig-name descname">ir</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">p</em>, <em class="sig-param">eps</em>, <em class="sig-param">s0=None</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.ir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulates a model in the following form:</p>
+<div class="math notranslate nohighlight" id="equation-additional-functions-0">
+<span class="eqno">(1)<a class="headerlink" href="#equation-additional-functions-0" title="Permalink to this equation">¶</a></span>\[\begin{split}u_t   &amp;= fs_t + \epsilon_{t}  \\\end{split}\]</div>
 <div class="math notranslate nohighlight" id="equation-additional-functions-1">
-<span class="eqno">(2)<a class="headerlink" href="#equation-additional-functions-1" title="Permalink to this equation">¶</a></span>\[\begin{split}u_t   &amp;= fs_t + \epsilon_{t}  \\\end{split}\]</div>
-<div class="math notranslate nohighlight" id="equation-additional-functions-2">
-<span class="eqno">(3)<a class="headerlink" href="#equation-additional-functions-2" title="Permalink to this equation">¶</a></span>\[\begin{split}s_{t+1} &amp;= ps_t \\\end{split}\]</div>
+<span class="eqno">(2)<a class="headerlink" href="#equation-additional-functions-1" title="Permalink to this equation">¶</a></span>\[\begin{split}s_{t+1} &amp;= ps_t \\\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(s_t\)</span> is an (n_states x 1) vector of state variables, <span class="math notranslate nohighlight">\(u_t\)</span> is an (n_costates x 1) vector of costate variables, and <span class="math notranslate nohighlight">\(\epsilon_t\)</span> is an (n_states x 1) vector of exogenous shocks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -174,13 +148,13 @@
 <dt id="linearsolve.klein">
 <code class="sig-prename descclassname">linearsolve.</code><code class="sig-name descname">klein</code><span class="sig-paren">(</span><em class="sig-param">a=None</em>, <em class="sig-param">b=None</em>, <em class="sig-param">c=None</em>, <em class="sig-param">phi=None</em>, <em class="sig-param">n_states=None</em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.klein" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solves linear dynamic models with the form of:</p>
+<div class="math notranslate nohighlight" id="equation-additional-functions-2">
+<span class="eqno">(3)<a class="headerlink" href="#equation-additional-functions-2" title="Permalink to this equation">¶</a></span>\[A E_tx_{t+1} = Bx_t + Cz_t\]</div>
+<p>with <span class="math notranslate nohighlight">\(x_t = [s_t; u_t]\)</span> where <span class="math notranslate nohighlight">\(s_t\)</span> is a vector of predetermined (state) variables and <span class="math notranslate nohighlight">\(u_t\)</span> is a vector of nonpredetermined costate variables. <span class="math notranslate nohighlight">\(z_t\)</span> is a vector of exogenous forcing variables with autocorrelation matrix <span class="math notranslate nohighlight">\(\Phi\)</span>. The solution to the model is a set of matrices <span class="math notranslate nohighlight">\(f, n, p, l\)</span> such that:</p>
 <div class="math notranslate nohighlight" id="equation-additional-functions-3">
-<span class="eqno">(4)<a class="headerlink" href="#equation-additional-functions-3" title="Permalink to this equation">¶</a></span>\[A E_tx_{t+1} = Bx_t + Cz_t\]</div>
-<p>with <span class="math notranslate nohighlight">\(x_t = [s_t; u_t]\)</span> where <span class="math notranslate nohighlight">\(s_t\)</span> is a vector of predetermined (state) variables and <span class="math notranslate nohighlight">\(u_t\)</span> is a vector of nonpredetermined costate variables. <span class="math notranslate nohighlight">\(z_t\)</span> is a vector of exogenous forcing variables with autocorrelation matrix <span class="math notranslate nohighlight">\(\Phi\)</span>. The solution to the model is a set of matrices <span class="math notranslate nohighlight">\(f,n,p,l\)</span> such that:</p>
+<span class="eqno">(4)<a class="headerlink" href="#equation-additional-functions-3" title="Permalink to this equation">¶</a></span>\[u_t   = fs_t + nz_t\]</div>
 <div class="math notranslate nohighlight" id="equation-additional-functions-4">
-<span class="eqno">(5)<a class="headerlink" href="#equation-additional-functions-4" title="Permalink to this equation">¶</a></span>\[u_t   = fs_t + nz_t\]</div>
-<div class="math notranslate nohighlight" id="equation-additional-functions-5">
-<span class="eqno">(6)<a class="headerlink" href="#equation-additional-functions-5" title="Permalink to this equation">¶</a></span>\[s_{t+1} = ps_t + lz_t.\]</div>
+<span class="eqno">(5)<a class="headerlink" href="#equation-additional-functions-4" title="Permalink to this equation">¶</a></span>\[s_{t+1} = ps_t + lz_t.\]</div>
 <p>The solution algorithm is based on Klein (2000) and his solab.m Matlab program.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

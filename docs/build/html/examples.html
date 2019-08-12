@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Overview and Examples &#8212; linearsolve 3.4.5 documentation</title>
+    <title>Overview and Examples &#8212; linearsolve 3.4.7 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -59,7 +59,6 @@
 <li class="toctree-l1"><a class="reference internal" href="how_linear_solve_works.html">How Linear Solve Works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="model_class.html"><code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="additional_functions.html">Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="built_in_models.html">Built-in Models</a></li>
 </ul>
 </ul>
 </li>
@@ -75,8 +74,8 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Overview and Examples</a><ul>
 <li><a class="reference internal" href="#What-linearsolve-Does">What <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Does</a></li>
-<li><a class="reference internal" href="#Example-1:-A-Quick-Example.">Example 1: A Quick Example.</a><ul>
-<li><a class="reference internal" href="#Example-2:-A-slightly-more-elaborate-model-with-explanation">Example 2: A slightly more elaborate model with explanation</a><ul>
+<li><a class="reference internal" href="#Example-1:-Quickly-Simulate-an-RBC-Model">Example 1: Quickly Simulate an RBC Model</a></li>
+<li><a class="reference internal" href="#Example-2:-An-RBC-Model-with-More-Details">Example 2: An RBC Model with More Details</a><ul>
 <li><a class="reference internal" href="#Initializing-the-model-in-linearsolve">Initializing the model in <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code></a></li>
 <li><a class="reference internal" href="#Initializing-the-model">Initializing the model</a></li>
 <li><a class="reference internal" href="#Steady-state">Steady state</a></li>
@@ -85,7 +84,10 @@
 <li><a class="reference internal" href="#Stochastic-simulation">Stochastic simulation</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#Example-3:-A-New-Keynesian-business-cycle-model">Example 3: A New-Keynesian business cycle model</a></li>
+<li><a class="reference internal" href="#Example-3:-A-New-Keynesian-Model">Example 3: A New-Keynesian Model</a><ul>
+<li><a class="reference internal" href="#Inintialize-model-and-solve">Inintialize model and solve</a></li>
+<li><a class="reference internal" href="#Compute-impulse-responses-and-plot">Compute impulse responses and plot</a></li>
+<li><a class="reference internal" href="#Construct-a-stochastic-simulation-and-plot">Construct a stochastic simulation and plot</a></li>
 </ul>
 </li>
 </ul>
@@ -337,22 +339,9 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">linearsolve</span> <span class="kn">as</span> <span class="nn">ls</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;classic&#39;</span><span class="p">)</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
-</pre></div>
-</div>
-</div>
 <div class="section" id="Overview-and-Examples">
 <h1>Overview and Examples<a class="headerlink" href="#Overview-and-Examples" title="Permalink to this headline">¶</a></h1>
+<p>A brief description of what <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> is for followed by examples.</p>
 <div class="section" id="What-linearsolve-Does">
 <h2>What <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Does<a class="headerlink" href="#What-linearsolve-Does" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> defines a class - <code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code> - with several functions for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models. The equilibrium conditions for most DSGE models can be expressed as a vector function <span class="math notranslate nohighlight">\(f\)</span>:</p>
@@ -375,12 +364,10 @@ f(E_t X_{t+1}, X_t, \epsilon_{t+1}) = 0, \tag{1}
 <li><p><code class="docutils literal notranslate"><span class="pre">solved(self,round=True,precision=4)</span></code>: Returns a string containing the solution to the approximated model.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">stoch_sim(self,T=51,drop_first=300,cov_mat=None,seed=None,percent=False,diff=True)</span></code>: Computes a stochastic simulation of the model.</p></li>
 </ol>
-<p>How it all works: <a class="reference internal" href="how_linear_solve_works.html"><span class="doc">How Linear Solve Works</span></a></p>
-<p><cite>linearsolve</cite> also has some <a class="reference internal" href="additional_functions.html"><span class="doc">Additional linearsolve Functions</span></a> and <a class="reference internal" href="built_in_models.html"><span class="doc">Built-in Models</span></a> that are described elsewhere in this documentation.</p>
-<p>In this notebook, I demonstrate how to use the module to simulate two basic business cycle models: an real business cycle (RBC) model and a new-Keynesian business cycle model.</p>
+<p>See the documentation of the <a class="reference internal" href="model_class.html"><span class="doc">linearsolve.model</span></a> class to learn more about these methods. <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> also has some <a class="reference internal" href="additional_functions.html"><span class="doc">Additional linearsolve Functions</span></a>. See <a class="reference internal" href="how_linear_solve_works.html"><span class="doc">How Linear Solve Works</span></a> to learn about more about the solution method.</p>
 </div>
-<div class="section" id="Example-1:-A-Quick-Example.">
-<h2>Example 1: A Quick Example.<a class="headerlink" href="#Example-1:-A-Quick-Example." title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Example-1:-Quickly-Simulate-an-RBC-Model">
+<h2>Example 1: Quickly Simulate an RBC Model<a class="headerlink" href="#Example-1:-Quickly-Simulate-an-RBC-Model" title="Permalink to this headline">¶</a></h2>
 <p>Here I demonstrate how how relatively straightforward it is to appoximate, solve, and simulate a DSGE model using <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code>. In the example that follows, I describe the procedure more carefully.</p>
 <p><span class="math">\begin{align}
 C_t^{-\sigma} & = \beta E_t \left[C_{t+1}^{-\sigma}(\alpha A_{t+1} K_{t+1}^{\alpha-1} + 1 - \delta)\right]\\
@@ -389,11 +376,19 @@ C_t + K_{t+1} & = A_t K_t^{\alpha} + (1-\delta)K_t\\
 \end{align}</span></p>
 <p>In the block of code that immediately follows, I input the model, solve for the steady state, compute the log-linear approximation of the equilibirum conditions, and compute some impulse responses following a shock to technology <span class="math notranslate nohighlight">\(A_t\)</span>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Input model parameters</span>
+<span></span><span class="c1"># Import numpy, pandas, linearsolve, matplotlib.pyplot</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">linearsolve</span> <span class="kn">as</span> <span class="nn">ls</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;classic&#39;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="c1"># Input model parameters</span>
 <span class="n">parameters</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">()</span>
 <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="o">.</span><span class="mi">35</span>
 <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="mf">0.99</span>
@@ -419,7 +414,6 @@ C_t + K_{t+1} & = A_t K_t^{\alpha} + (1-\delta)K_t\\
     <span class="n">market_clearing</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">c</span> <span class="o">+</span> <span class="n">fwd</span><span class="o">.</span><span class="n">k</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">k</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">a</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">k</span><span class="o">**</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span>
 
     <span class="c1"># Exogenous technology</span>
-<span class="c1">#     technology_proc = cur.a**p.rhoa - fwd.a</span>
     <span class="n">technology_proc</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">rhoa</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">fwd</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
 
     <span class="c1"># Stack equilibrium conditions into a numpy array</span>
@@ -440,8 +434,6 @@ C_t + K_{t+1} & = A_t K_t^{\alpha} + (1-\delta)K_t\\
 <span class="n">guess</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">model</span><span class="o">.</span><span class="n">compute_ss</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
 
-<span class="c1"># model.ss</span>
-
 <span class="c1"># Find the log-linear approximation around the non-stochastic steady state and solve</span>
 <span class="n">model</span><span class="o">.</span><span class="n">approximate_and_solve</span><span class="p">()</span>
 
@@ -457,11 +449,11 @@ C_t + K_{t+1} & = A_t K_t^{\alpha} + (1-\delta)K_t\\
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.legend.Legend at 0x1017b70f98&gt;
+<span></span>&lt;matplotlib.legend.Legend at 0x102107b710&gt;
 </pre></div>
 </div>
 </div>
@@ -469,11 +461,12 @@ C_t + K_{t+1} & = A_t K_t^{\alpha} + (1-\delta)K_t\\
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/examples_4_1.png" src="_images/examples_4_1.png" />
+<img alt="_images/examples_3_1.png" src="_images/examples_3_1.png" />
 </div>
 </div>
-<div class="section" id="Example-2:-A-slightly-more-elaborate-model-with-explanation">
-<h3>Example 2: A slightly more elaborate model with explanation<a class="headerlink" href="#Example-2:-A-slightly-more-elaborate-model-with-explanation" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="Example-2:-An-RBC-Model-with-More-Details">
+<h2>Example 2: An RBC Model with More Details<a class="headerlink" href="#Example-2:-An-RBC-Model-with-More-Details" title="Permalink to this headline">¶</a></h2>
 <p>Consider the equilibrium conditions for a basic RBC model without labor:</p>
 <p><span class="math">\begin{align}
 C_t^{-\sigma} & = \beta E_t \left[C_{t+1}^{-\sigma}(\alpha A_{t+1} K_{t+1}^{\alpha-1} + 1 - \delta)\right]\\
@@ -491,10 +484,10 @@ C & = Y - I
 \end{align}</span></p>
 <p>Given values for the parameters <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\sigma\)</span>, <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\delta\)</span>, and <span class="math notranslate nohighlight">\(A\)</span>, steady state values of capital, output, investment, and consumption are easily computed.</p>
 <div class="section" id="Initializing-the-model-in-linearsolve">
-<h4>Initializing the model in <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code><a class="headerlink" href="#Initializing-the-model-in-linearsolve" title="Permalink to this headline">¶</a></h4>
+<h3>Initializing the model in <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code><a class="headerlink" href="#Initializing-the-model-in-linearsolve" title="Permalink to this headline">¶</a></h3>
 <p>To initialize the model, we need to first set the model’s parameters. We do this by creating a Pandas Series variable called <code class="docutils literal notranslate"><span class="pre">parameters</span></code>:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -527,7 +520,7 @@ A_{t+1} & =  A_{t}^{\rho_a}e^{\epsilon_{t+1}}
 \end{align}</span></p>
 <p>Now let’s define the function that returns the equilibrium conditions:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -569,10 +562,10 @@ A_{t+1} & =  A_{t}^{\rho_a}e^{\epsilon_{t+1}}
 <p>Notice that inside the function we have to define the variables of the model form the elements of the input vectors <code class="docutils literal notranslate"><span class="pre">variables_forward</span></code> and <code class="docutils literal notranslate"><span class="pre">variables_current</span></code>. It is <em>essential</em> that the predetermined or state variables are ordered first.</p>
 </div>
 <div class="section" id="Initializing-the-model">
-<h4>Initializing the model<a class="headerlink" href="#Initializing-the-model" title="Permalink to this headline">¶</a></h4>
+<h3>Initializing the model<a class="headerlink" href="#Initializing-the-model" title="Permalink to this headline">¶</a></h3>
 <p>To initialize the model, we need to specify the number of state variables in the model, the names of the endogenous varaibles in the same order used in the <code class="docutils literal notranslate"><span class="pre">equilibrium_equations</span></code> function, and the names of the exogenous shocks to the model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -588,11 +581,11 @@ A_{t+1} & =  A_{t}^{\rho_a}e^{\epsilon_{t+1}}
 <p>The solution routine solves the model as if there were a separate exogenous shock for each state variable and that’s why I initialized the model with two exogenous shocks <code class="docutils literal notranslate"><span class="pre">e_a</span></code> and <code class="docutils literal notranslate"><span class="pre">e_k</span></code> even though the RBC model only has one exogenous shock.</p>
 </div>
 <div class="section" id="Steady-state">
-<h4>Steady state<a class="headerlink" href="#Steady-state" title="Permalink to this headline">¶</a></h4>
-<p>Next, we need to compute the nonstochastic steady state of the model. The <code class="docutils literal notranslate"><span class="pre">.compute_ss</span></code> method can be used to compute the steady state numerically. The method’s default is to use scipy’s <code class="docutils literal notranslate"><span class="pre">fsolve</span></code> function, but other scipy root-finding functions can be used: <code class="docutils literal notranslate"><span class="pre">root</span></code>, <code class="docutils literal notranslate"><span class="pre">broyden1</span></code>, and <code class="docutils literal notranslate"><span class="pre">broyden2</span></code>. The optional argument <code class="docutils literal notranslate"><span class="pre">options</span></code> lets the user pass keywords directly to the optimization function. Check out the documentation for Scipy’s nonlinear solvers here:
+<h3>Steady state<a class="headerlink" href="#Steady-state" title="Permalink to this headline">¶</a></h3>
+<p>Next, we need to compute the nonstochastic steady state of the model. The <code class="docutils literal notranslate"><span class="pre">.compute_ss()</span></code> method can be used to compute the steady state numerically. The method’s default is to use scipy’s <code class="docutils literal notranslate"><span class="pre">fsolve()</span></code> function, but other scipy root-finding functions can be used: <code class="docutils literal notranslate"><span class="pre">root</span></code>, <code class="docutils literal notranslate"><span class="pre">broyden1</span></code>, and <code class="docutils literal notranslate"><span class="pre">broyden2</span></code>. The optional argument <code class="docutils literal notranslate"><span class="pre">options</span></code> lets the user pass keywords directly to the optimization function. Check out the documentation for Scipy’s nonlinear solvers here:
 <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/optimize.html">http://docs.scipy.org/doc/scipy/reference/optimize.html</a></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -618,7 +611,7 @@ dtype: float64
 </div>
 <p>Note that the steady state is returned as a Pandas Series. Alternatively, you could compute the steady state directly and then sent the <code class="docutils literal notranslate"><span class="pre">rbc.ss</span></code> attribute:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -649,14 +642,14 @@ dtype: float64
 </div>
 </div>
 <div class="section" id="Log-linearization-and-solution">
-<h4>Log-linearization and solution<a class="headerlink" href="#Log-linearization-and-solution" title="Permalink to this headline">¶</a></h4>
-<p>Now we use the <code class="docutils literal notranslate"><span class="pre">.log_linear</span></code> method to find the log-linear appxoximation to the model’s equilibrium conditions. That is, we’ll transform the nonlinear model into a linear model in which all variables are expressed as log-deviations from the steady state. Specifically, we’ll compute the matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> that satisfy:</p>
+<h3>Log-linearization and solution<a class="headerlink" href="#Log-linearization-and-solution" title="Permalink to this headline">¶</a></h3>
+<p>Now we use the <code class="docutils literal notranslate"><span class="pre">.log_linear()</span></code> method to find the log-linear appxoximation to the model’s equilibrium conditions. That is, we’ll transform the nonlinear model into a linear model in which all variables are expressed as log-deviations from the steady state. Specifically, we’ll compute the matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> that satisfy:</p>
 <p><span class="math">\begin{align}
 A E_t\left[ x_{t+1} \right] & = B x_t + \left[ \begin{array}{c} \epsilon_{t+1} \\ 0 \end{array} \right],
 \end{align}</span></p>
 <p>where the vector <span class="math notranslate nohighlight">\(x_{t}\)</span> denotes the log deviation of the endogenous variables from their steady state values.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -700,9 +693,9 @@ The matrix B:
 u_t  &  = Fs_t\\
 s_{t+1} & = Ps_t + \epsilon_{t+1}.
 \end{align}</span></p>
-<p>We use the <code class="docutils literal notranslate"><span class="pre">.klein</span></code> method to find the solution.</p>
+<p>We use the <code class="docutils literal notranslate"><span class="pre">.klein()</span></code> method to find the solution.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -735,10 +728,10 @@ The matrix P:
 </div>
 </div>
 <div class="section" id="Impulse-responses">
-<h4>Impulse responses<a class="headerlink" href="#Impulse-responses" title="Permalink to this headline">¶</a></h4>
-<p>One the model is solved, use the <code class="docutils literal notranslate"><span class="pre">.impulse</span></code> method to compute impulse responses to exogenous shocks to the state. The method creates the <code class="docutils literal notranslate"><span class="pre">.irs</span></code> attribute which is a dictionary with keys equal to the names of the exogenous shocks and the values are Pandas DataFrames with the computed impulse respones. You can supply your own values for the shocks, but the default is 0.01 for each exogenous shock.</p>
+<h3>Impulse responses<a class="headerlink" href="#Impulse-responses" title="Permalink to this headline">¶</a></h3>
+<p>One the model is solved, use the <code class="docutils literal notranslate"><span class="pre">.impulse()</span></code> method to compute impulse responses to exogenous shocks to the state. The method creates the <code class="docutils literal notranslate"><span class="pre">.irs</span></code> attribute which is a dictionary with keys equal to the names of the exogenous shocks and the values are Pandas DataFrames with the computed impulse respones. You can supply your own values for the shocks, but the default is 0.01 for each exogenous shock.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -766,7 +759,7 @@ Impulse responses to a 0.01 unit shock to A:
 </div>
 <p>Plotting is easy.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -776,11 +769,11 @@ Impulse responses to a 0.01 unit shock to A:
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.legend.Legend at 0x1017ed15c0&gt;
+<span></span>&lt;matplotlib.legend.Legend at 0x102133b470&gt;
 </pre></div>
 </div>
 </div>
@@ -788,22 +781,22 @@ Impulse responses to a 0.01 unit shock to A:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/examples_22_1.png" src="_images/examples_22_1.png" />
+<img alt="_images/examples_21_1.png" src="_images/examples_21_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/examples_22_2.png" src="_images/examples_22_2.png" />
+<img alt="_images/examples_21_2.png" src="_images/examples_21_2.png" />
 </div>
 </div>
 </div>
 <div class="section" id="Stochastic-simulation">
-<h4>Stochastic simulation<a class="headerlink" href="#Stochastic-simulation" title="Permalink to this headline">¶</a></h4>
-<p>Creating a stochastic simulation of the model is straightforward with the <code class="docutils literal notranslate"><span class="pre">.stoch_sim</span></code> method. In the following example, I create a 151 period (including t=0) simulation by first siumlating the model for 251 periods and then dropping the first 100 values. The variance of the shock to <span class="math notranslate nohighlight">\(A_t\)</span> is set to 0.001 and the variance of the shock to <span class="math notranslate nohighlight">\(K_t\)</span> is set to zero because there is not capital shock in the model. The seed for the numpy random number generator is set to 0.</p>
+<h3>Stochastic simulation<a class="headerlink" href="#Stochastic-simulation" title="Permalink to this headline">¶</a></h3>
+<p>Creating a stochastic simulation of the model is straightforward with the <code class="docutils literal notranslate"><span class="pre">.stoch_sim()</span></code> method. In the following example, I create a 151 period (including t=0) simulation by first simulating the model for 251 periods and then dropping the first 100 values. The variance of the shock to <span class="math notranslate nohighlight">\(A_t\)</span> is set to 0.001 and the variance of the shock to <span class="math notranslate nohighlight">\(K_t\)</span> is set to zero because there is not capital shock in the model. The seed for the numpy random number generator is set to 0.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -815,11 +808,11 @@ Impulse responses to a 0.01 unit shock to A:
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.legend.Legend at 0x10180ff898&gt;
+<span></span>&lt;matplotlib.legend.Legend at 0x10215633c8&gt;
 </pre></div>
 </div>
 </div>
@@ -827,28 +820,28 @@ Impulse responses to a 0.01 unit shock to A:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/examples_24_1.png" src="_images/examples_24_1.png" />
+<img alt="_images/examples_23_1.png" src="_images/examples_23_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/examples_24_2.png" src="_images/examples_24_2.png" />
+<img alt="_images/examples_23_2.png" src="_images/examples_23_2.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/examples_24_3.png" src="_images/examples_24_3.png" />
+<img alt="_images/examples_23_3.png" src="_images/examples_23_3.png" />
 </div>
 </div>
 </div>
 </div>
-<div class="section" id="Example-3:-A-New-Keynesian-business-cycle-model">
-<h3>Example 3: A New-Keynesian business cycle model<a class="headerlink" href="#Example-3:-A-New-Keynesian-business-cycle-model" title="Permalink to this headline">¶</a></h3>
-<p>Consider the new-Keynesian model from Walsh (2010), chapter 8 expressed in log-linear terms:</p>
+<div class="section" id="Example-3:-A-New-Keynesian-Model">
+<h2>Example 3: A New-Keynesian Model<a class="headerlink" href="#Example-3:-A-New-Keynesian-Model" title="Permalink to this headline">¶</a></h2>
+<p>Consider the new-Keynesian business cycle model from Walsh (2017), chapter 8 expressed in log-linear terms:</p>
 <p><span class="math">\begin{align}
 y_t & = E_ty_{t+1} - \sigma^{-1} (i_t - E_t\pi_{t+1}) + g_t\\
 \pi_t & = \beta  E_t\pi_{t+1} + \kappa  y_t + u_t\\
@@ -860,8 +853,10 @@ v_{t+1} & = \rho_v v_{t} + \epsilon_{t+1}^v
 \end{align}</span></p>
 <p>where <span class="math notranslate nohighlight">\(y_t\)</span> is the output gap (log-deviation of output from the natural rate), <span class="math notranslate nohighlight">\(\pi_t\)</span> is the quarterly rate of inflation between <span class="math notranslate nohighlight">\(t-1\)</span> and <span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\(i_t\)</span> is the nominal interest rate on funds moving between period <span class="math notranslate nohighlight">\(t\)</span> and <span class="math notranslate nohighlight">\(t+1\)</span>, <span class="math notranslate nohighlight">\(r_t\)</span> is the real interest rate, <span class="math notranslate nohighlight">\(g_t\)</span> is the exogenous component of demand, <span class="math notranslate nohighlight">\(u_t\)</span> is an exogenous component of inflation, and <span class="math notranslate nohighlight">\(v_t\)</span> is the exogenous component of monetary policy.</p>
 <p>Since the model is already log-linear, there is no need to approximate the equilibrium conditions. We’ll still use the <code class="docutils literal notranslate"><span class="pre">.log_linear</span></code> method to find the matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span>, but we’ll have to set the <code class="docutils literal notranslate"><span class="pre">islinear</span></code> option to <code class="docutils literal notranslate"><span class="pre">True</span></code> to avoid generating an error.</p>
+<div class="section" id="Inintialize-model-and-solve">
+<h3>Inintialize model and solve<a class="headerlink" href="#Inintialize-model-and-solve" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -931,7 +926,7 @@ v_{t+1} & = \rho_v v_{t} + \epsilon_{t+1}^v
             <span class="n">fisher_eqn</span>
         <span class="p">])</span>
 
-<span class="c1"># Initialize the nk</span>
+<span class="c1"># Initialize the nk model</span>
 <span class="n">nk</span> <span class="o">=</span> <span class="n">ls</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">equilibrium_equations</span><span class="p">,</span>
               <span class="n">n_states</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
               <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;v&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;pi&#39;</span><span class="p">],</span>
@@ -939,23 +934,27 @@ v_{t+1} & = \rho_v v_{t} + \epsilon_{t+1}^v
               <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
               <span class="n">parameter_names</span><span class="o">=</span><span class="n">parameter_names</span><span class="p">)</span>
 
-<span class="c1"># Set the steady state of the nk</span>
+<span class="c1"># Set the steady state of the nk model</span>
 <span class="n">nk</span><span class="o">.</span><span class="n">set_ss</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 
 <span class="c1"># Find the log-linear approximation around the non-stochastic steady state</span>
 <span class="n">nk</span><span class="o">.</span><span class="n">linear_approximation</span><span class="p">()</span>
 
-<span class="c1"># Solve the nk</span>
+<span class="c1"># Solve the nk model</span>
 <span class="n">nk</span><span class="o">.</span><span class="n">solve_klein</span><span class="p">(</span><span class="n">nk</span><span class="o">.</span><span class="n">a</span><span class="p">,</span><span class="n">nk</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</div>
+<div class="section" id="Compute-impulse-responses-and-plot">
+<h3>Compute impulse responses and plot<a class="headerlink" href="#Compute-impulse-responses-and-plot" title="Permalink to this headline">¶</a></h3>
+<p>Compute impulse responses of the endogenous variables to a one percent shock to each exogenous variable.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Compute impulse responses and plot</span>
+<span></span><span class="c1"># Compute impulse responses</span>
 <span class="n">nk</span><span class="o">.</span><span class="n">impulse</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span><span class="n">t0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">shocks</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
 
 <span class="c1"># Create the figure and axes</span>
@@ -972,11 +971,11 @@ v_{t+1} & = \rho_v v_{t} + \epsilon_{t+1}^v
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.legend.Legend at 0x10185667f0&gt;
+<span></span>&lt;matplotlib.legend.Legend at 0x10219ec518&gt;
 </pre></div>
 </div>
 </div>
@@ -984,15 +983,20 @@ v_{t+1} & = \rho_v v_{t} + \epsilon_{t+1}^v
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/examples_27_1.png" src="_images/examples_27_1.png" />
+<img alt="_images/examples_28_1.png" src="_images/examples_28_1.png" />
 </div>
 </div>
+</div>
+<div class="section" id="Construct-a-stochastic-simulation-and-plot">
+<h3>Construct a stochastic simulation and plot<a class="headerlink" href="#Construct-a-stochastic-simulation-and-plot" title="Permalink to this headline">¶</a></h3>
+<p>Contruct a 151 period stochastic simulation by first siumlating the model for 251 periods and then dropping the first 100 values. The seed for the numpy random number generator is set to 0.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">nk</span><span class="o">.</span><span class="n">stoch_sim</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">151</span><span class="p">,</span><span class="n">drop_first</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">cov_mat</span><span class="o">=</span><span class="n">Sigma</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span></span><span class="c1"># Compute stochastic simulation</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">stoch_sim</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">151</span><span class="p">,</span><span class="n">drop_first</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">cov_mat</span><span class="o">=</span><span class="n">Sigma</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Create the figure and axes</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
@@ -1006,11 +1010,11 @@ v_{t+1} & = \rho_v v_{t} + \epsilon_{t+1}^v
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.legend.Legend at 0x1018b4dac8&gt;
+<span></span>&lt;matplotlib.legend.Legend at 0x1021fce160&gt;
 </pre></div>
 </div>
 </div>
@@ -1018,26 +1022,27 @@ v_{t+1} & = \rho_v v_{t} + \epsilon_{t+1}^v
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/examples_28_1.png" src="_images/examples_28_1.png" />
+<img alt="_images/examples_30_1.png" src="_images/examples_30_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">nk</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;e_g&#39;</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span></span><span class="c1"># Plot simulated exogenous shocks</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;e_g&#39;</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">nk</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;e_u&#39;</span><span class="p">,</span><span class="s1">&#39;u&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">nk</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;e_v&#39;</span><span class="p">,</span><span class="s1">&#39;v&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.legend.Legend at 0x1018e14780&gt;
+<span></span>&lt;matplotlib.legend.Legend at 0x10222ae518&gt;
 </pre></div>
 </div>
 </div>
@@ -1045,21 +1050,21 @@ v_{t+1} & = \rho_v v_{t} + \epsilon_{t+1}^v
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/examples_29_1.png" src="_images/examples_29_1.png" />
+<img alt="_images/examples_31_1.png" src="_images/examples_31_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/examples_29_2.png" src="_images/examples_29_2.png" />
+<img alt="_images/examples_31_2.png" src="_images/examples_31_2.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/examples_29_3.png" src="_images/examples_29_3.png" />
+<img alt="_images/examples_31_3.png" src="_images/examples_31_3.png" />
 </div>
 </div>
 </div>

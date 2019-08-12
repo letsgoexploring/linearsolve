@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>linearsolve.model &#8212; linearsolve 3.4.5 documentation</title>
+    <title>linearsolve.model &#8212; linearsolve 3.4.7 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -59,7 +59,6 @@
 <li class="toctree-l1"><a class="reference internal" href="how_linear_solve_works.html">How Linear Solve Works</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="additional_functions.html">Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="built_in_models.html">Built-in Models</a></li>
 </ul>
 </ul>
 </li>
@@ -141,7 +140,7 @@
 <li><p><strong>var_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – A list of strings with the names of the endogenous variables. The state variables must be ordered first.</p></li>
 <li><p><strong>shock_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – A list of strings with the names of the exogenous shocks to each state variable. The order of names must agree with var_names.</p></li>
 <li><p><strong>parameters</strong> (<em>Pandas.Series</em><em> or </em><em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – Either a Pandas Series object with parameter name strings as the index OR a list or an array of parameter values.</p></li>
-<li><p><strong>parameter_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – (Optional) If parameters is given as a list,then this list of strings will be used to save the parameters with names as a Pandas Series object.</p></li>
+<li><p><strong>parameter_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – (Optional) If parameters is given as a list, then this list of strings will be used to save the parameters with names as a Pandas Series object.</p></li>
 </ul>
 </dd>
 </dl>
@@ -161,10 +160,10 @@
 <dd class="field-even"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>) – Number of control or costate variables.</p>
 </dd>
 <dt class="field-odd">names</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>) – A dictionary with keys ‘variables’,’shocks’,and ‘param’ that stores the names of the model’s variables, shocks, and parameters.</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>) – A dictionary with keys ‘variables’, ‘shocks’, and ‘param’ that stores the names of the model’s variables, shocks, and parameters.</p>
 </dd>
 <dt class="field-even">parameters</dt>
-<dd class="field-even"><p>(<code class="xref py py-obj docutils literal notranslate"><span class="pre">Pandas.Series</span></code>) – A Pandas Series with parameter name strings as the index. If <strong>parameter_names</strong> wasn’t supplied,then parameters are labeled ‘parameter 1’,parameter2’,etc.</p>
+<dd class="field-even"><p>(<code class="xref py py-obj docutils literal notranslate"><span class="pre">Pandas.Series</span></code>) – A Pandas Series with parameter name strings as the index. If <strong>parameter_names</strong> wasn’t supplied, then parameters are labeled ‘parameter 1’, ‘parameter2’, etc.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -232,7 +231,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>guess</strong> (<em>Pandas.Series</em><em> or </em><em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – An initial guess for the steady state solution. The result is highly sensisitve to the intial guess chosen,so be careful. If the guess is a Numpy ndarray or a list then the elements must be ordered to conform with self.names[‘variables’].</p></li>
+<li><p><strong>guess</strong> (<em>Pandas.Series</em><em> or </em><em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – An initial guess for the steady state solution. The result is highly sensisitve to the intial guess chosen, so be careful. If the guess is a Numpy ndarray or a list then the elements must be ordered to conform with self.names[‘variables’].</p></li>
 <li><p><strong>method</strong> (<em>string</em>) – The function from the Scipy library to use. Your choices are: ‘root’, ‘fsolve’ (default), broyden1, broyden2.</p></li>
 <li><p><strong>options</strong> (<em>dictionary</em>) – A dictionary of optional arguments to pass to the numerical solver. Check out the Scipy documentation to see the options available for each routine: <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/optimize.html">http://docs.scipy.org/doc/scipy/reference/optimize.html</a></p></li>
 </ul>
@@ -252,7 +251,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>T</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of periods to simulate. Default: 1</p></li>
 <li><p><strong>t0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Period in which the shocks are to be realized. Must be greater than or equal to 0. default: 1</p></li>
-<li><p><strong>shocks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em> or </em><em>Numpy.ndaray</em>) – An array of shock values with length equal to the number of shocks. If shocks=None,shocks and log_linear=True, is set to a vector of 0.01s. If shocks=None,shocks and log_linear=False, is set to a vector of 1s. Default: None</p></li>
+<li><p><strong>shocks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em> or </em><em>Numpy.ndaray</em>) – An array of shock values with length equal to the number of shocks. If shocks=None and log_linear=True, shocks is set to a vector of 0.01s. If shocks=None and log_linear=False, shocks is set to a vector of 1s. Default: None</p></li>
 <li><p><strong>percent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False</p></li>
 <li><p><strong>diff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Subtract steady state for linear approximations (or log steady state for log-linear approximations). Default: True</p></li>
 </ul>
