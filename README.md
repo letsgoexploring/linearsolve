@@ -1,4 +1,4 @@
-# linearsolve
+# ``linearsolve``
 A module for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models.
 
 ## Installation
