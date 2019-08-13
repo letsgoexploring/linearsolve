@@ -1,7 +1,7 @@
 # ``linearsolve``
 A module for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models.
 
-Free use of this software is welcome and subject to the terms of the [license](https://github.com/letsgoexploring/fredpy/blob/gh-pages/LICENSE). Please send me comments, feedback, suggestions, etc. at bcjenkin@uci.edu.
+Free use of this software is welcome and subject to the terms of the [license](https://github.com/letsgoexploring/linearsolve/blob/gh-pages/LICENSE). Please send me comments, feedback, suggestions, etc. at bcjenkin@uci.edu.
 
 ## Installation
 Install the module from PyPI with the shell command:
