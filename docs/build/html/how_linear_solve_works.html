@@ -72,10 +72,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">How Linear Solve Works</a><ul>
-<li><a class="reference internal" href="#The-linearsolve.model-class">The <code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code> class</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">How Linear Solve Works</a></li>
 </ul>
 </ul>
 </li>
@@ -125,9 +122,7 @@
       
   <div class="section" id="How-Linear-Solve-Works">
 <h1>How Linear Solve Works<a class="headerlink" href="#How-Linear-Solve-Works" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="The-linearsolve.model-class">
-<h2>The <code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code> class<a class="headerlink" href="#The-linearsolve.model-class" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code> is a class with several functions for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models. The equilibrium conditions for most DSGE models can be expressed as a vector function <span class="math notranslate nohighlight">\(F\)</span>:</p>
+<p>The equilibrium conditions for most DSGE models can be expressed as a vector function <span class="math notranslate nohighlight">\(F\)</span>:</p>
 <p><span class="math">\begin{align}
 f(E_t X_{t+1}, X_t, \epsilon_{t+1}) = 0,
 \end{align}</span></p>
@@ -151,9 +146,8 @@ of matrices <span class="math notranslate nohighlight">\(F\)</span> and <span cl
 u_t  &  = Fs_t\\
 s_{t+1} & = Ps_t + \epsilon_{t+1}.
 \end{align}</span></p>
-<p>The matrices <span class="math notranslate nohighlight">\(F\)</span> and <span class="math notranslate nohighlight">\(P\)</span> are obtained using the <a class="reference external" href="http://www.sciencedirect.com/science/article/pii/S0165188999000457">Klein (2000)</a> solution method which is based on the generalized Schur factorization of the marices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span>. The solution routine incorporates many aspects of his program for Matlab <code class="docutils literal notranslate"><span class="pre">`solab.m</span></code> &lt;<a class="reference external" href="http://paulklein.ca/newsite/codes/codes.php">http://paulklein.ca/newsite/codes/codes.php</a>&gt;`__. See Chapters 2 and 4 of <a class="reference external" href="https://press.princeton.edu/titles/9622.html">Structural Macroeconometrics</a> by
-DeJong and Dave for a deeper descriptions of log-linearization and Klein’s solution method.</p>
-</div>
+<p><code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> computes the matrices <span class="math notranslate nohighlight">\(F\)</span> and <span class="math notranslate nohighlight">\(P\)</span> are using the <a class="reference external" href="http://www.sciencedirect.com/science/article/pii/S0165188999000457">Klein (2000)</a> solution method which is based on the generalized Schur factorization of the marices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span>. The solution routine incorporates many aspects of his program for Matlab <code class="docutils literal notranslate"><span class="pre">`solab.m</span></code> &lt;<a class="reference external" href="http://paulklein.ca/newsite/codes/codes.php">http://paulklein.ca/newsite/codes/codes.php</a>&gt;`__. See Chapters 2 and 4 of <a class="reference external" href="https://press.princeton.edu/titles/9622.html">Structural
+Macroeconometrics</a> by DeJong and Dave for a deeper descriptions of log-linearization and Klein’s solution method.</p>
 </div>
 
 
