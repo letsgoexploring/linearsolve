@@ -15,7 +15,7 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="How Linear Solve Works" href="how_linear_solve_works.html" />
+    <link rel="next" title="How linearsolve Works" href="how_linear_solve_works.html" />
     <link rel="prev" title="About linearsolve" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -56,7 +56,7 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Overview and Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how_linear_solve_works.html">How Linear Solve Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_linear_solve_works.html">How <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Works</a></li>
 <li class="toctree-l1"><a class="reference internal" href="model_class.html"><code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="additional_functions.html">Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions</a></li>
 </ul>
@@ -73,7 +73,7 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Overview and Examples</a><ul>
-<li><a class="reference internal" href="#What-linearsolve-Does">What <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Does</a></li>
+<li><a class="reference internal" href="#What-linearsolve-Does">What linearsolve Does</a></li>
 <li><a class="reference internal" href="#Example-1:-Quickly-Simulate-an-RBC-Model">Example 1: Quickly Simulate an RBC Model</a></li>
 <li><a class="reference internal" href="#Example-2:-An-RBC-Model-with-More-Details">Example 2: An RBC Model with More Details</a><ul>
 <li><a class="reference internal" href="#Initializing-the-model-in-linearsolve">Initializing the model in <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code></a></li>
@@ -105,7 +105,7 @@
     </a>
   </li>
   <li>
-    <a href="how_linear_solve_works.html" title="Next Chapter: How Linear Solve Works"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">How Linear So... &raquo;</span>
+    <a href="how_linear_solve_works.html" title="Next Chapter: How linearsolve Works"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">How linearsolve Works &raquo;</span>
     </a>
   </li>
               
@@ -341,30 +341,16 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="Overview-and-Examples">
 <h1>Overview and Examples<a class="headerlink" href="#Overview-and-Examples" title="Permalink to this headline">¶</a></h1>
-<p>A brief description of what <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> is for followed by examples.</p>
+<p>A brief description of what linearsolve is for followed by examples.</p>
 <div class="section" id="What-linearsolve-Does">
-<h2>What <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Does<a class="headerlink" href="#What-linearsolve-Does" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> defines a class - <code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code> - with several functions for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models. The equilibrium conditions for most DSGE models can be expressed as a vector function <span class="math notranslate nohighlight">\(f\)</span>:</p>
+<h2>What linearsolve Does<a class="headerlink" href="#What-linearsolve-Does" title="Permalink to this headline">¶</a></h2>
+<p>linearsolve defines a class - linearsolve.model - with several functions for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models. The equilibrium conditions for most DSGE models can be expressed as a vector function <span class="math notranslate nohighlight">\(f\)</span>:</p>
 <p><span class="math">\begin{align}
 f(E_t X_{t+1}, X_t, \epsilon_{t+1}) = 0, \tag{1}
 \end{align}</span></p>
 <p>where 0 is an <span class="math notranslate nohighlight">\(n\times 1\)</span> vector of zeros, <span class="math notranslate nohighlight">\(X_t\)</span> is an <span class="math notranslate nohighlight">\(n\times 1\)</span> vector of endogenous variables, and <span class="math notranslate nohighlight">\(\epsilon_{t+1}\)</span> is an <span class="math notranslate nohighlight">\(m\times 1\)</span> vector of exogenous structural shocks to the model. <span class="math notranslate nohighlight">\(E_tX_{t+1}\)</span> denotes the expecation of the <span class="math notranslate nohighlight">\(t+1\)</span> endogenous variables based on the information available to agents in the model as of time period <span class="math notranslate nohighlight">\(t\)</span>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code> has methods for computing linear and log-linear approximations of the model in equation (1) and methods for solving and simulating the linear model.</p>
-<p>This package defines a <code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code> class. An instance of the <code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code> has the following methods:</p>
-<ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">approximate_and_solve(log_linear=True)</span></code>: Approximates and solves the model by combining the previous two methods.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">approximated(self,round=True,precision=4)</span></code>: Returns a string containing the approximation to the equilibrium conditions of the model.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">check_ss()</span></code>: Test whether the computed steady state satisfies the model’s equilbrium conditions.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">compute_ss(,guess=None,method='fsolve',options={})</span></code>: Computes the steady state of the nonlinear model.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">impulse(self,T=51,t0=1,shocks=None,percent=False,diff=True)</span></code>: Computes impulse responses for shocks to each endogenous state variable.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">linear_approximation(self,steady_state=None)</span></code>: Computes a linear approximation of the model.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">log_linear_approximation(self,steady_state=None)</span></code>: Computes a log-linear approximation of the model.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">set_ss(self,steady_state)</span></code>: Sets the steady state <code class="docutils literal notranslate"><span class="pre">.ss</span></code> attribute of the instance.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">solve_klein(self,a=None,b=None)</span></code>: Solves the linear model using Klein’s solution method.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">solved(self,round=True,precision=4)</span></code>: Returns a string containing the solution to the approximated model.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">stoch_sim(self,T=51,drop_first=300,cov_mat=None,seed=None,percent=False,diff=True)</span></code>: Computes a stochastic simulation of the model.</p></li>
-</ol>
-<p>See the documentation of the <a class="reference internal" href="model_class.html"><span class="doc">linearsolve.model</span></a> class to learn more about these methods. <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> also has some <a class="reference internal" href="additional_functions.html"><span class="doc">Additional linearsolve Functions</span></a>. See <a class="reference internal" href="how_linear_solve_works.html"><span class="doc">How Linear Solve Works</span></a> to learn about more about the solution method.</p>
+<p>linearsolve.model has methods for computing linear and log-linear approximations of the model in equation (1) and methods for solving and simulating the linear model.</p>
+<p>See the documentation of the <a class="reference internal" href="model_class.html"><span class="doc">linearsolve.model</span></a> class to learn more about these methods. <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> also has some <a class="reference internal" href="additional_functions.html"><span class="doc">Additional linearsolve Functions</span></a>. See <a class="reference internal" href="how_linear_solve_works.html"><span class="doc">How linearsolve Works</span></a> to learn about more about the solution method.</p>
 </div>
 <div class="section" id="Example-1:-Quickly-Simulate-an-RBC-Model">
 <h2>Example 1: Quickly Simulate an RBC Model<a class="headerlink" href="#Example-1:-Quickly-Simulate-an-RBC-Model" title="Permalink to this headline">¶</a></h2>

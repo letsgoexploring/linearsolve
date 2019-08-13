@@ -124,7 +124,7 @@
    			:type t0: int
 
    			:param shocks: An array of shock values with length equal to the number of shocks. If shocks=None and log_linear=True, shocks is set to a vector of 0.01s. If shocks=None and log_linear=False, shocks is set to a vector of 1s. Default: None
-   			:type shocks: list or Numpy.ndaray
+   			:type shocks: list or Numpy.ndarray
 
 			:param percent: Whether to multiply simulated values by 100. Only works for log-linear approximations. Default: False
    			:type percent: bool
@@ -156,10 +156,10 @@
    			:type steady_state: Pandas.Series
 
 			:var a: Coefficient matrix on forward-dated variables.
-   			:vartype a: Numpy.ndaray
+   			:vartype a: Numpy.ndarray
 
 			:var b: Coefficient matrix on current-dated variables.
-   			:vartype b: Numpy.ndaray
+   			:vartype b: Numpy.ndarray
 
 			:var log_linear: Whether the model is log-linear. Sets to False.
 			:vartype ss: bool
@@ -184,10 +184,10 @@
    			:type steady_state: Pandas.Series
 
    			:var a: Coefficient matrix on forward-dated variables.
-   			:vartype a: Numpy.ndaray
+   			:vartype a: Numpy.ndarray
 
 			:var b: Coefficient matrix on current-dated variables.
-   			:vartype b: Numpy.ndaray
+   			:vartype b: Numpy.ndarray
 
 			:var log_linear: Whether the model is log-linear. Sets to True.
 			:vartype ss: bool
@@ -229,10 +229,10 @@
 
 	        
 			:param a: Coefficient matrix on forward-dated variables.
-   			:type a: Numpy.ndaray
+   			:type a: Numpy.ndarray
 
 			:param b: Coefficient matrix on current-dated variables.
-   			:type b: Numpy.ndaray
+   			:type b: Numpy.ndarray
 
    			:var f: coeficient matrix.
 			:vartype f: Numpy.ndarray
