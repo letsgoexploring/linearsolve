@@ -20,4 +20,4 @@ Example Jupyter Notebooks available in the ``examples`` directory or follow the 
 3. [A New-Keynesian Model](https://nbviewer.jupyter.org/github/letsgoexploring/linearsolve/blob/gh-pages/examples/nk_model.ipynb)
 4. [A Cash-in-Advance Model](https://nbviewer.jupyter.org/github/letsgoexploring/linearsolve/blob/gh-pages/examples/cia_model.ipynb)
 
-_Updated: August 12, 2019_
+_Updated: October 25, 2019_
