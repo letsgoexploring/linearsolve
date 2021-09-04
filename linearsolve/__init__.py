@@ -839,14 +839,6 @@ def klein(a=None,b=None,c=None,phi=None,n_states=None):
     '''
 
     s,t,alpha,beta,q,z = la.ordqz(A=a,B=b,sort='ouc')
-    
-    q=np.mat(q)
-    z=np.mat(z)
-    s=np.mat(s)
-    t=np.mat(t)
-    a=np.mat(a)
-    b=np.mat(b)
-    
 
     forcingVars = False
     if len(np.shape(c))== 0:

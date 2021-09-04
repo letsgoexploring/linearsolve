@@ -14,13 +14,13 @@
     "linearsolve defines a class - linearsolve.model - with several functions for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models. The equilibrium conditions for most DSGE models can be expressed as a vector function $f$:\n",
     "\n",
     "\\begin{align}\n",
-    "f(E_t X_{t+1}, X_t, \\epsilon_{t+1}) = 0, \\tag{1}\n",
+    "f(E_t X_{t+1}, X_t, \\epsilon_{t+1}) = 0,\n",
     "\\end{align}\n",
     "\n",
     "where 0 is an $n\\times 1$ vector of zeros, $X_t$ is an $n\\times 1$ vector of endogenous variables, and $\\epsilon_{t+1}$ is an $m\\times 1$ vector of exogenous structural shocks to the model. $E_tX_{t+1}$ denotes the expecation of the $t+1$ endogenous variables based on the information available to agents in the model as of time period $t$. \n",
     "\n",
     "\n",
-    "linearsolve.model has methods for computing linear and log-linear approximations of the model in equation (1) and methods for solving and simulating the linear model."
+    "linearsolve.model has methods for computing linear and log-linear approximations of the model given above and methods for solving and simulating the linear model."
    ]
   },
   {
@@ -87,7 +87,7 @@
     "%matplotlib inline\n",
     "\n",
     "# Input model parameters\n",
-    "parameters = pd.Series()\n",
+    "parameters = pd.series(dtype=float)\n",
     "parameters['alpha']  = .35\n",
     "parameters['beta']  = 0.99\n",
     "parameters['delta']   = 0.025\n",
@@ -184,7 +184,7 @@
    "outputs": [],
    "source": [
     "# Input model parameters\n",
-    "parameters = pd.Series()\n",
+    "parameters = pd.series(dtype=float)\n",
     "parameters['alpha']  = .35\n",
     "parameters['beta']  = 0.99\n",
     "parameters['delta']   = 0.025\n",
@@ -922,7 +922,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.7.3"
+   "version": "3.8.5"
   }
  },
  "nbformat": 4,

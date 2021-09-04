@@ -8,7 +8,7 @@ Install the module from PyPI with the shell command:
 
 ```pip install linearsolve```
 
-Or download the source here: https://github.com/letsgoexploring/linearsolve/blob/gh-pages/dist/linearsolve-3.4.7.tar.gz
+Or download the source here: https://github.com/letsgoexploring/linearsolve/blob/gh-pages/dist/linearsolve-3.4.87.tar.gz
 
 ## Documentation
 Documentation for linearsolve: https://www.briancjenkins.com/linearsolve/docs/build/html/index.html
@@ -20,4 +20,4 @@ Example Jupyter Notebooks available in the ``examples`` directory or follow the 
 3. [A New-Keynesian Model](https://nbviewer.jupyter.org/github/letsgoexploring/linearsolve/blob/gh-pages/examples/nk_model.ipynb)
 4. [A Cash-in-Advance Model](https://nbviewer.jupyter.org/github/letsgoexploring/linearsolve/blob/gh-pages/examples/cia_model.ipynb)
 
-_Updated: October 25, 2019_
+_Updated: September 03, 2021_
