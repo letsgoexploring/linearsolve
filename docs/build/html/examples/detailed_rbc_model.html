@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>A Detailed RBC Model Example &#8212; linearsolve 3.4.9 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          linearsolve</a>
+        <span class="navbar-text navbar-version pull-left"><b>3.4</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Overview and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_linear_solve_works.html">How <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model_class.html"><code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_functions.html">Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">A Detailed RBC Model Example</a><ul>
+<li><a class="reference internal" href="#Import-requisite-modules">Import requisite modules</a></li>
+<li><a class="reference internal" href="#Initializing-the-model-in-linearsolve">Initializing the model in <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code></a></li>
+<li><a class="reference internal" href="#Initializing-the-model">Initializing the model</a></li>
+<li><a class="reference internal" href="#Steady-state">Steady state</a></li>
+<li><a class="reference internal" href="#Log-linearization-and-solution">Log-linearization and solution</a></li>
+<li><a class="reference internal" href="#Impulse-responses">Impulse responses</a></li>
+<li><a class="reference internal" href="#Stochastic-simulation">Stochastic simulation</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/examples/detailed_rbc_model.ipynb.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<section id="A-Detailed-RBC-Model-Example">
+<h1>A Detailed RBC Model Example<a class="headerlink" href="#A-Detailed-RBC-Model-Example" title="Permalink to this headline">¶</a></h1>
+<p>Consider the equilibrium conditions for a basic RBC model without labor:</p>
+<p><span class="math">\begin{align}
+C_t^{-\sigma} & = \beta E_t \left[C_{t+1}^{-\sigma}(\alpha A_{t+1} K_{t+1}^{\alpha-1} + 1 - \delta)\right]\\
+Y_t & = A_t K_t^{\alpha}\\
+I_t & = K_{t+1} - (1-\delta)K_t\\
+Y_t & = C_t + I_t\\
+\log A_t & = \rho_a \log A_{t-1} + \epsilon_t
+\end{align}</span></p>
+<p>In the nonstochastic steady state, we have:</p>
+<p><span class="math">\begin{align}
+K & = \left(\frac{\alpha A}{1/\beta+\delta-1}\right)^{\frac{1}{1-\alpha}}\\
+Y & = AK^{\alpha}\\
+I & = \delta K\\
+C & = Y - I
+\end{align}</span></p>
+<p>Given values for the parameters <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\sigma\)</span>, <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\delta\)</span>, and <span class="math notranslate nohighlight">\(A\)</span>, steady state values of capital, output, investment, and consumption are easily computed.</p>
+<section id="Import-requisite-modules">
+<h2>Import requisite modules<a class="headerlink" href="#Import-requisite-modules" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Import numpy, pandas, linearsolve, matplotlib.pyplot</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">linearsolve</span> <span class="k">as</span> <span class="nn">ls</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;classic&#39;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Initializing-the-model-in-linearsolve">
+<h2>Initializing the model in <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code><a class="headerlink" href="#Initializing-the-model-in-linearsolve" title="Permalink to this headline">¶</a></h2>
+<p>To initialize the model, we need to first set the model’s parameters. We do this by creating a Pandas Series variable called <code class="docutils literal notranslate"><span class="pre">parameters</span></code>:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Input model parameters</span>
+<span class="n">parameters</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="mf">.35</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="mf">0.99</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="mf">0.025</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;rhoa&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">.9</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<p>Next, we need to define a function that returns the equilibrium conditions of the model. The function will take as inputs two vectors: one vector of “current” variables and another of “forward-looking” or one-period-ahead variables. The function will return an array that represents the equilibirum conditions of the model. We’ll enter each equation with all variables moved to one side of the equals sign. For example, here’s how we’ll enter the produciton fucntion:</p>
+<p><code class="docutils literal notranslate"><span class="pre">production_function</span> <span class="pre">=</span> <span class="pre">technology_current*capital_current**alpha</span> <span class="pre">-</span> <span class="pre">output_curent</span></code></p>
+<p>Here the variable <code class="docutils literal notranslate"><span class="pre">production_function</span></code> stores the production function equation set equal to zero. We can enter the equations in almost any way we want. For example, we could also have entered the production function this way:</p>
+<p><code class="docutils literal notranslate"><span class="pre">production_function</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">-</span> <span class="pre">output_curent/technology_current/capital_current**alpha</span></code></p>
+<p>One more thing to consider: the natural log in the equation describing the evolution of total factor productivity will create problems for the solution routine later on. So rewrite the equation as:</p>
+<p><span class="math">\begin{align}
+A_{t+1} & =  A_{t}^{\rho_a}e^{\epsilon_{t+1}}\\
+\end{align}</span></p>
+<p>So the complete system of equations that we enter into the program looks like:</p>
+<p><span class="math">\begin{align}
+C_t^{-\sigma} & = \beta E_t \left[C_{t+1}^{-\sigma}(\alpha Y_{t+1} /K_{t+1}+ 1 - \delta)\right]\\
+Y_t & = A_t K_t^{\alpha}\\
+I_t & = K_{t+1} - (1-\delta)K_t\\
+Y_t & = C_t + I_t\\
+A_{t+1} & =  A_{t}^{\rho_a}e^{\epsilon_{t+1}}
+\end{align}</span></p>
+<p>Now let’s define the function that returns the equilibrium conditions:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define function to compute equilibrium conditions</span>
+<span class="k">def</span> <span class="nf">equations</span><span class="p">(</span><span class="n">variables_forward</span><span class="p">,</span><span class="n">variables_current</span><span class="p">,</span><span class="n">parameters</span><span class="p">):</span>
+
+    <span class="c1"># Parameters</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">parameters</span>
+
+    <span class="c1"># Variables</span>
+    <span class="n">fwd</span> <span class="o">=</span> <span class="n">variables_forward</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">variables_current</span>
+
+    <span class="c1"># Household Euler equation</span>
+    <span class="n">euler_eqn</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">beta</span><span class="o">*</span><span class="n">fwd</span><span class="o">.</span><span class="n">c</span><span class="o">**-</span><span class="n">p</span><span class="o">.</span><span class="n">sigma</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span><span class="o">*</span><span class="n">fwd</span><span class="o">.</span><span class="n">y</span><span class="o">/</span><span class="n">fwd</span><span class="o">.</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">c</span><span class="o">**-</span><span class="n">p</span><span class="o">.</span><span class="n">sigma</span>
+
+    <span class="c1"># Production function</span>
+    <span class="n">production_fuction</span> <span class="o">=</span>  <span class="n">cur</span><span class="o">.</span><span class="n">a</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">k</span><span class="o">**</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="c1"># Capital evolution</span>
+    <span class="n">capital_evolution</span> <span class="o">=</span> <span class="n">fwd</span><span class="o">.</span><span class="n">k</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">k</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">i</span>
+
+    <span class="c1"># Goods market clearing</span>
+    <span class="n">market_clearing</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">c</span> <span class="o">+</span> <span class="n">cur</span><span class="o">.</span><span class="n">i</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="c1"># Exogenous technology</span>
+    <span class="n">technology_proc</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">a</span><span class="o">**</span><span class="n">p</span><span class="o">.</span><span class="n">rhoa</span><span class="o">-</span> <span class="n">fwd</span><span class="o">.</span><span class="n">a</span>
+
+    <span class="c1"># Stack equilibrium conditions into a numpy array</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="n">euler_eqn</span><span class="p">,</span>
+            <span class="n">production_fuction</span><span class="p">,</span>
+            <span class="n">capital_evolution</span><span class="p">,</span>
+            <span class="n">market_clearing</span><span class="p">,</span>
+            <span class="n">technology_proc</span>
+        <span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<p>Notice that inside the function we have to define the variables of the model form the elements of the input vectors <code class="docutils literal notranslate"><span class="pre">variables_forward</span></code> and <code class="docutils literal notranslate"><span class="pre">variables_current</span></code>.</p>
+</section>
+<section id="Initializing-the-model">
+<h2>Initializing the model<a class="headerlink" href="#Initializing-the-model" title="Permalink to this headline">¶</a></h2>
+<p>To initialize the model, we need to specify the total number of state variables in the model, the number of state variables with exogenous shocks, the names of the endogenous variables, and the parameters of the model.</p>
+<p>It is <em>essential</em> that the variable names are ordered in the following way: First the names of the endogenous variables with the state variables with exogenous shocks, then the state variables without shocks, and finally the control variables. Ordering within the groups doesn’t matter.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Initialize the model</span>
+<span class="n">rbc</span> <span class="o">=</span> <span class="n">ls</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">equations</span> <span class="o">=</span> <span class="n">equations</span><span class="p">,</span>
+               <span class="n">n_states</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+               <span class="n">n_exo_states</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">],</span>
+               <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Steady-state">
+<h2>Steady state<a class="headerlink" href="#Steady-state" title="Permalink to this headline">¶</a></h2>
+<p>Next, we need to compute the nonstochastic steady state of the model. The <code class="docutils literal notranslate"><span class="pre">.compute_ss()</span></code> method can be used to compute the steady state numerically. The method’s default is to use scipy’s <code class="docutils literal notranslate"><span class="pre">fsolve()</span></code> function, but other scipy root-finding functions can be used: <code class="docutils literal notranslate"><span class="pre">root</span></code>, <code class="docutils literal notranslate"><span class="pre">broyden1</span></code>, and <code class="docutils literal notranslate"><span class="pre">broyden2</span></code>. The optional argument <code class="docutils literal notranslate"><span class="pre">options</span></code> lets the user pass keywords directly to the optimization function. Check out the documentation for Scipy’s nonlinear solvers here:
+<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/optimize.html">http://docs.scipy.org/doc/scipy/reference/optimize.html</a></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Compute the steady state numerically</span>
+<span class="n">guess</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">compute_ss</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">ss</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+a     1.000000
+k    34.398226
+c     2.589794
+y     3.449750
+i     0.859956
+dtype: float64
+</pre></div></div>
+</div>
+<p>Note that the steady state is returned as a Pandas Series. Alternatively, you could compute the steady state directly and then sent the <code class="docutils literal notranslate"><span class="pre">rbc.ss</span></code> attribute:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Steady state solution</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">parameters</span>
+<span class="n">K</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">A</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">p</span><span class="o">.</span><span class="n">beta</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span><span class="p">))</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="n">K</span><span class="o">**</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="o">*</span><span class="n">K</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="n">K</span><span class="o">**</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span>
+<span class="n">I</span> <span class="o">=</span> <span class="n">Y</span> <span class="o">-</span> <span class="n">C</span>
+
+<span class="n">rbc</span><span class="o">.</span><span class="n">set_ss</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">A</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">I</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">ss</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+a     1.000000
+k    34.398226
+c     2.589794
+y     3.449750
+i     0.859956
+dtype: float64
+</pre></div></div>
+</div>
+</section>
+<section id="Log-linearization-and-solution">
+<h2>Log-linearization and solution<a class="headerlink" href="#Log-linearization-and-solution" title="Permalink to this headline">¶</a></h2>
+<p>Now we use the <code class="docutils literal notranslate"><span class="pre">.log_linear()</span></code> method to find the log-linear appxoximation to the model’s equilibrium conditions. That is, we’ll transform the nonlinear model into a linear model in which all variables are expressed as log-deviations from the steady state. Specifically, we’ll compute the matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> that satisfy:</p>
+<p><span class="math">\begin{align}
+A E_t\left[ x_{t+1} \right] & = B x_t + \left[ \begin{array}{c} \epsilon_{t+1} \\ 0 \end{array} \right],
+\end{align}</span></p>
+<p>where the vector <span class="math notranslate nohighlight">\(x_{t}\)</span> denotes the log deviation of the endogenous variables from their steady state values.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Find the log-linear approximation around the non-stochastic steady state</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">log_linear_approximation</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The matrix A:</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">a</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The matrix B:</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">b</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The matrix A:
+
+ [[ 0.00000e+00 -8.30000e-03 -3.59900e-01  8.30000e-03  0.00000e+00]
+ [ 0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00]
+ [ 0.00000e+00  3.43982e+01  0.00000e+00  0.00000e+00  0.00000e+00]
+ [ 0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00]
+ [-1.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00]]
+
+
+The matrix B:
+
+ [[-0.     -0.     -0.3599 -0.     -0.    ]
+ [-3.4497 -1.2074 -0.      3.4497 -0.    ]
+ [-0.     33.5383 -0.     -0.      0.86  ]
+ [-0.     -0.     -2.5898  3.4497 -0.86  ]
+ [-0.9    -0.     -0.     -0.     -0.    ]]
+</pre></div></div>
+</div>
+<p>Finally, we need to obtain the <em>solution</em> to the log-linearized model. The solution is a pair of matrices <span class="math notranslate nohighlight">\(F\)</span> and <span class="math notranslate nohighlight">\(P\)</span> that specify:</p>
+<ol class="arabic simple">
+<li><p>The current values of the non-state variables <span class="math notranslate nohighlight">\(u_{t}\)</span> as a linear function of the previous values of the state variables <span class="math notranslate nohighlight">\(s_t\)</span>.</p></li>
+<li><p>The future values of the state variables <span class="math notranslate nohighlight">\(s_{t+1}\)</span> as a linear function of the previous values of the state variables <span class="math notranslate nohighlight">\(s_t\)</span> and the future realisation of the exogenous shock process <span class="math notranslate nohighlight">\(\epsilon_{t+1}\)</span>.</p></li>
+</ol>
+<p><span class="math">\begin{align}
+u_t  &  = Fs_t\\
+s_{t+1} & = Ps_t + \epsilon_{t+1}.
+\end{align}</span></p>
+<p>We use the <code class="docutils literal notranslate"><span class="pre">.klein()</span></code> method to find the solution.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Solve the model</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">solve_klein</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">a</span><span class="p">,</span><span class="n">rbc</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+
+<span class="c1"># Display the output</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The matrix F:</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">f</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The matrix P:</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The matrix F:
+
+ [[ 0.2297  0.513 ]
+ [ 1.      0.35  ]
+ [ 3.3197 -0.1408]]
+
+
+The matrix P:
+
+ [[0.9    0.    ]
+ [0.083  0.9715]]
+</pre></div></div>
+</div>
+</section>
+<section id="Impulse-responses">
+<h2>Impulse responses<a class="headerlink" href="#Impulse-responses" title="Permalink to this headline">¶</a></h2>
+<p>One the model is solved, use the <code class="docutils literal notranslate"><span class="pre">.impulse()</span></code> method to compute impulse responses to exogenous shocks to the state. The method creates the <code class="docutils literal notranslate"><span class="pre">.irs</span></code> attribute which is a dictionary with keys equal to the names of the exogenous shocks and the values are Pandas DataFrames with the computed impulse respones. You can supply your own values for the shocks, but the default is 0.01 for each exogenous shock.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Compute impulse responses and plot</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">impulse</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">41</span><span class="p">,</span><span class="n">t0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">shocks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">percent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Impulse responses to a 0.01 unit shock to A:</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">rbc</span><span class="o">.</span><span class="n">irs</span><span class="p">[</span><span class="s1">&#39;e_a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Impulse responses to a 0.01 unit shock to A:
+
+    e_a      a         k         c         y         i
+0  0.0  0.000  0.000000  0.000000  0.000000  0.000000
+1  1.0  1.000  0.000000  0.229718  1.000000  3.319739
+2  0.0  0.900  0.082993  0.249318  0.929048  2.976083
+3  0.0  0.810  0.155321  0.265744  0.864362  2.667127
+4  0.0  0.729  0.218116  0.279348  0.805341  2.389390
+</pre></div></div>
+</div>
+<p>Plotting is easy.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">rbc</span><span class="o">.</span><span class="n">irs</span><span class="p">[</span><span class="s1">&#39;e_a&#39;</span><span class="p">][[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">irs</span><span class="p">[</span><span class="s1">&#39;e_a&#39;</span><span class="p">][[</span><span class="s1">&#39;e_a&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7fe197b9db80&gt;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_detailed_rbc_model_19_1.png" src="../_images/examples_detailed_rbc_model_19_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_detailed_rbc_model_19_2.png" src="../_images/examples_detailed_rbc_model_19_2.png" />
+</div>
+</div>
+</section>
+<section id="Stochastic-simulation">
+<h2>Stochastic simulation<a class="headerlink" href="#Stochastic-simulation" title="Permalink to this headline">¶</a></h2>
+<p>Creating a stochastic simulation of the model is straightforward with the <code class="docutils literal notranslate"><span class="pre">.stoch_sim()</span></code> method. In the following example, I create a 151 period (including t=0) simulation by first simulating the model for 251 periods and then dropping the first 100 values. The standard deviation of the shock to <span class="math notranslate nohighlight">\(A_t\)</span> is set to 0.00763. The seed for the numpy random number generator is set to 0.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">rbc</span><span class="o">.</span><span class="n">stoch_sim</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">121</span><span class="p">,</span><span class="n">drop_first</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">cov_mat</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.00763</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">percent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;a&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">simulated</span><span class="p">[</span><span class="s1">&#39;e_a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7fe197fb7790&gt;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_detailed_rbc_model_21_1.png" src="../_images/examples_detailed_rbc_model_21_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_detailed_rbc_model_21_2.png" src="../_images/examples_detailed_rbc_model_21_2.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021, Brian C. Jenkins.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

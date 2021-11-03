@@ -9,7 +9,7 @@
 
 
 
-.. py:class:: linearsolve.model(equations=None,n_states=None,var_names=None,shock_names=None,parameters=None,parameter_names=None)
+.. py:class:: linearsolve.model(equations=None,n_states=None,n_exo_states=None,var_names=None,shock_names=None,parameters=None,parameter_names=None)
 	
 	Creates an instance of :py:class:`linearsolve.model` that stores equilibrium conditions for a DSGE model.
 
@@ -21,11 +21,11 @@
 
 
 	:param int n_states: The number of state variables in the model.
-	:param list var_names: A list of strings with the names of the endogenous variables. The state variables must be ordered first.
-	:param list shock_names: A list of strings with the names of the exogenous shocks to each state variable. The order of names must agree with var_names.
-	:param parameters: Either a Pandas Series object with parameter name strings as the index OR a list or an array of parameter values.
-	:type parameters: Pandas.Series or Numpy.ndarray or list
-	:param list parameter_names: (Optional) If parameters is given as a list, then this list of strings will be used to save the parameters with names as a Pandas Series object.
+	:param int n_exo_states: The number of state variables with exogenous shocks.
+	:param list var_names: A list of strings with the names of the endogenous variables. The state variables with exogenous shocks must be ordered first, followed by state variables without exogenous shocks, followed by control variables. E.g., for a 3-variables RBC model, `var_names = ['a','k','c']`.
+	:param list shock_names: A list of strings with the names of the exogenous shocks to each state variable. The order of names must agree with the relevant elements of var_names.
+	:param parameters: Pandas Series object with parameter name strings as the index OR a list or an array of parameter values.
+	:type parameters: Pandas.Series
 
 
 	**Attributes:**
@@ -33,10 +33,12 @@
 
 		:equilibrium_fun: (:py:obj:`function`) -- Function input with the **equations** parameter.
 		:n_vars: (:py:obj:`int`) -- Number of endogenous variables.
-		:n_states: (:py:obj:`Numpy.ndarray`) -- Number of state variables.
+		:n_states: (:py:obj:`int`) -- Number of state variables.
+		:n_exo_states: (:py:obj:`int`) -- The number of exogenous state variables.
+		:n_endo_states: (:py:obj:`int`) -- The number of endogenous state variables.
 		:n_costates: (:py:obj:`int`) -- Number of control or costate variables.
 		:names: (:py:obj:`dict`) -- A dictionary with keys 'variables', 'shocks', and 'param' that stores the names of the model's variables, shocks, and parameters.
-		:parameters: (:py:obj:`Pandas.Series`) -- A Pandas Series with parameter name strings as the index. If **parameter_names** wasn't supplied, then parameters are labeled 'parameter 1', 'parameter2', etc.
+		:parameters: (:py:obj:`Pandas.Series`) -- A Pandas Series with parameter name strings as the index.
 
 		
 	**Methods:**

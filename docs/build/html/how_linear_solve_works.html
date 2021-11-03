@@ -3,18 +3,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>How linearsolve Works &#8212; linearsolve 3.4.8 documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>How linearsolve Works &#8212; linearsolve 3.4.9 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="linearsolve.model" href="model_class.html" />
@@ -122,7 +122,7 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="How-linearsolve-Works">
+  <section id="How-linearsolve-Works">
 <h1>How <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Works<a class="headerlink" href="#How-linearsolve-Works" title="Permalink to this headline">¶</a></h1>
 <p>The equilibrium conditions for most DSGE models can be expressed as a vector function <span class="math notranslate nohighlight">\(F\)</span>:</p>
 <p><span class="math">\begin{align}
@@ -150,7 +150,7 @@ s_{t+1} & = Ps_t + \epsilon_{t+1}.
 \end{align}</span></p>
 <p><code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> computes the matrices <span class="math notranslate nohighlight">\(F\)</span> and <span class="math notranslate nohighlight">\(P\)</span> are using the <a class="reference external" href="http://www.sciencedirect.com/science/article/pii/S0165188999000457">Klein (2000)</a> solution method which is based on the generalized Schur factorization of the marices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span>. The solution routine incorporates many aspects of his Klein’s Matlab program <a class="reference external" href="http://paulklein.ca/newsite/codes/codes.php">solab.m</a>. See Chapters 2 and 4 of <a class="reference external" href="https://press.princeton.edu/titles/9622.html">Structural
 Macroeconometrics</a> by DeJong and Dave for a deeper descriptions of log-linearization and Klein’s solution method.</p>
-</div>
+</section>
 
 
     </div>
@@ -165,7 +165,7 @@ Macroeconometrics</a> by DeJong and Dave for a deeper descriptions of log-linear
     </p>
     <p>
         &copy; Copyright 2021, Brian C. Jenkins.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
 </footer>

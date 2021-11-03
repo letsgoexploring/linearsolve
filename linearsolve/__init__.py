@@ -11,7 +11,7 @@ class model:
     '''Defines a class -- linearsolve.model -- with associated methods for solving and simulating dynamic 
     stochastic general equilibrium (DSGE) models.'''
 
-    def __init__(self,equations=None,n_states=None,var_names=None,shock_names=None,parameters=None,parameter_names=None):
+    def __init__(self,equations=None,n_states=None,n_exo_states=None,var_names=None,shock_names=None,parameters=None):
         
         '''Initializing an instance linearsolve.model requires values for the following variables:
 
@@ -25,14 +25,15 @@ class model:
                                     the returned array being equaling an equilibrium condition of the model 
                                     solved for zero. 
             n_states:           (int) The number of state variables in the model.
+            n_exo_states:       (int) The number of state variables with exogenous shocks. If None, then it's assumed
+                                    that all state variables have exogenous shocks. Default: None
             var_names:          (list) A list of strings with the names of the endogenous variables. The 
-                                    state variables must be ordered first.
+                                    state variables with exogenous shocks must be ordered first, followed by state
+                                    variables without exogenous shocks, followed by control variables. E.g., for a 
+                                    3-variables RBC model, var_names = ['a','k','c']
             shock_names:        (list) A list of strings with the names of the exogenous shocks to each state
-                                    variable. The order of names must agree with var_names.
-            parameters:         (list or Pandas Series) Either a list of parameter values OR a Pandas Series 
-                                    object with parameter name strings as the index.
-            parameter_names:    (list) Optional. If parameters is given as a list, then this list of strings 
-                                    will be used to save the parameters with names as a Pandas Series object.
+                                    variable. The order of names must agree with the relevant elements of var_names.
+            parameters:         (Pandas Series) Pandas Series object with parameter name strings as the index.
 
         Returns:
             None
@@ -41,51 +42,34 @@ class model:
             equilibrium_fun:    (fun) Function that returns the equilibrium comditions of the model.
             n_vars:             (int) The number of variables in the model.
             n_states:           (int) The number of state variables in the model.
+            n_exo_states:       (int) The number of exogenous state variables.
+            n_endo_states:      (int) The number of endogenous state variables.
             n_costates:         (int) The number of costate or control variables in the model.
             names:              (dict) A dictionary with keys 'variables', 'shocks', and 'param' that
                                     stores the names of the model's variables, shocks, and parameters.
             parameters:         (Pandas Series) A Pandas Series with parameter name strings as the 
-                                    index. If parameter_names wasn't supplied, then parameters are labeled 
-                                    'parameter 1', 'parameter2', etc.
+                                    index.
         '''
         
         self.equilibrium_fun= equations
         self.n_vars = len(var_names)
         self.n_states = n_states
+        self.n_exo_states = n_exo_states or n_states
+        self.n_endo_states = n_states - n_exo_states
         self.n_costates=self.n_vars-n_states
+        self.parameters = parameters
 
         names = {}
 
         names['variables'] = var_names
-
-        if shock_names is not None:
-            if len(shock_names)<self.n_states:
-                shock_names_temp = []
-                for i in range(self.n_states):
-                    try:
-                        shock_names_temp.append(shock_names[i])
-                    except:
-                        shock_names_temp.append('e_'+var_names[i])
-                shock_names = shock_names_temp
-
         
-        else:
-            shock_names = []
-            for i in range(self.n_states):
-                shock_names.append('e_'+var_names[i])
-
-        names['shocks'] = shock_names
-
-        if isinstance(parameters,pd.Series):
-            self.parameters = parameters
-
-        else:
-            if parameter_names is None:
-                parameter_names = ['parameter '+str(i+1) for i in range(len(parameters))]
-
-            self.parameters = pd.Series(parameters,index=parameter_names)
-
-        names['param'] = parameter_names
+        names['shocks'] = shock_names or ['e_'+var_names[i] for i in range(self.n_exo_states)]
+        
+        if len(names['shocks']) != self.n_exo_states:
+            raise Exception('Length of shock_names doesn\'t match number of exogenous states')
+        
+        names['param'] = list(self.parameters.index)
+        
         self.names = names
 
     # Methods
@@ -697,8 +681,7 @@ class model:
                 T:          (int) Number of periods to simulate. Default: 51
                 drop_first: (int) Number of periods to simulate before generating the simulated periods. 
                                 Default: 300
-                cov_mat:    (list or Numpy.ndarray) Covariance matrix shocks. If cov_mat is None, it's set to 
-                                Numpy.eye(n_states). Default: None
+                cov_mat:    (list or Numpy.ndarray) Covariance matrix shocks.
                 seed:       (int) Sets the seed for the Numpy random number generator. Default: None
                 percent:    (bool) Whether to multiply simulated values by 100. Only works for log-linear 
                                 approximations. Default: False
@@ -721,8 +704,12 @@ class model:
         s0 = np.zeros([1,n_states])
 
         # Set cov_mat if not given
-        if cov_mat is None:
-            cov_mat = np.eye(n_states)
+        cov_mat = np.array(cov_mat)
+        if cov_mat.ndim==1:
+            cov_mat = np.array([cov_mat])
+            
+            if len(cov_mat) != self.n_exo_states:
+                raise Exception('Length of cov_mat doesn\'t match number of exogenous states')
 
         # Set seed for the Numpy random number generator
         if seed is not None and type(seed)==int:

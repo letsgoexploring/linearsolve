@@ -3,18 +3,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Additional linearsolve Functions &#8212; linearsolve 3.4.8 documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Additional linearsolve Functions &#8212; linearsolve 3.4.9 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="linearsolve.model" href="model_class.html" />
@@ -117,11 +117,11 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="additional-linearsolve-functions">
+  <section id="additional-linearsolve-functions">
 <h1>Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions<a class="headerlink" href="#additional-linearsolve-functions" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="linearsolve.ir">
-<code class="sig-prename descclassname">linearsolve.</code><code class="sig-name descname">ir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">eps</span></em>, <em class="sig-param"><span class="n">s0</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.ir" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="linearsolve.ir">
+<span class="sig-prename descclassname"><span class="pre">linearsolve.</span></span><span class="sig-name descname"><span class="pre">ir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.ir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simulates a model in the following form:</p>
 <div class="math notranslate nohighlight" id="equation-additional-functions-0">
 <span class="eqno">(1)<a class="headerlink" href="#equation-additional-functions-0" title="Permalink to this equation">¶</a></span>\[\begin{split}u_t   &amp;= fs_t + \epsilon_{t}  \\\end{split}\]</div>
@@ -133,8 +133,8 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<em>Numpy.ndarray</em>) – Coefficnent matrix of appropriate size</p></li>
 <li><p><strong>p</strong> (<em>Numpy.ndarray</em>) – Coefficnent matrix of appropriate size</p></li>
-<li><p><strong>eps</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – T x n_states array of exogenous shocks.</p></li>
-<li><p><strong>s0</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – 1 x n_states array of zeros of initial state value. Optional; Default: 0.</p></li>
+<li><p><strong>eps</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – T x n_states array of exogenous shocks.</p></li>
+<li><p><strong>s0</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – 1 x n_states array of zeros of initial state value. Optional; Default: 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -147,8 +147,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="linearsolve.klein">
-<code class="sig-prename descclassname">linearsolve.</code><code class="sig-name descname">klein</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">b</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">c</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">phi</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_states</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.klein" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="linearsolve.klein">
+<span class="sig-prename descclassname"><span class="pre">linearsolve.</span></span><span class="sig-name descname"><span class="pre">klein</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.klein" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solves linear dynamic models with the form of:</p>
 <div class="math notranslate nohighlight" id="equation-additional-functions-2">
 <span class="eqno">(3)<a class="headerlink" href="#equation-additional-functions-2" title="Permalink to this equation">¶</a></span>\[A E_tx_{t+1} = Bx_t + Cz_t\]</div>
@@ -164,8 +164,8 @@
 <li><p><strong>a</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on future-dated variables</p></li>
 <li><p><strong>b</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on current-dated variables</p></li>
 <li><p><strong>p</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on exogenous forcing variables</p></li>
-<li><p><strong>phi</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – Autocorrelation of exogenous forcing variables</p></li>
-<li><p><strong>n_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – number of state variables</p></li>
+<li><p><strong>phi</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Autocorrelation of exogenous forcing variables</p></li>
+<li><p><strong>n_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – number of state variables</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -174,7 +174,7 @@
 <li><p><strong>p</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Coefficient matrix on state vector in state equation</p></li>
 <li><p><strong>n</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Coefficient matrix on forcing vector in control equation</p></li>
 <li><p><strong>l</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Coefficient matrix on forcing vector in state equation</p></li>
-<li><p><strong>stab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) - Indicates solution stability and uniqueness. stab =1: too many stable eigenvalues, stab = -1: too few stable eigenvalues, stab = 0: just enough stable eigenvalues</p></li>
+<li><p><strong>stab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) - Indicates solution stability and uniqueness. stab =1: too many stable eigenvalues, stab = -1: too few stable eigenvalues, stab = 0: just enough stable eigenvalues</p></li>
 <li><p><strong>eig</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Generalized eigenvalues from the Schur decomposition</p></li>
 </ul>
 </p>
@@ -182,7 +182,7 @@
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
     </div>
@@ -197,7 +197,7 @@
     </p>
     <p>
         &copy; Copyright 2021, Brian C. Jenkins.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
 </footer>
