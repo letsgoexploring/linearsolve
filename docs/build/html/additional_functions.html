@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Additional linearsolve Functions &#8212; linearsolve 3.4.9 documentation</title>
+    <title>Additional linearsolve Functions &#8212; linearsolve 3.4.10 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -148,7 +148,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linearsolve.klein">
-<span class="sig-prename descclassname"><span class="pre">linearsolve.</span></span><span class="sig-name descname"><span class="pre">klein</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.klein" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">linearsolve.</span></span><span class="sig-name descname"><span class="pre">klein</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eigenvalue_warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.klein" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solves linear dynamic models with the form of:</p>
 <div class="math notranslate nohighlight" id="equation-additional-functions-2">
 <span class="eqno">(3)<a class="headerlink" href="#equation-additional-functions-2" title="Permalink to this equation">¶</a></span>\[A E_tx_{t+1} = Bx_t + Cz_t\]</div>
@@ -166,6 +166,7 @@
 <li><p><strong>p</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on exogenous forcing variables</p></li>
 <li><p><strong>phi</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Autocorrelation of exogenous forcing variables</p></li>
 <li><p><strong>n_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – number of state variables</p></li>
+<li><p><strong>eigenvalue_warnings</strong> – Whether to print warnings that there are too many or few eigenvalues. Default: True</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

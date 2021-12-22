@@ -1,7 +1,7 @@
 from __future__ import division,print_function
 import numpy as np
 import scipy.linalg as la
-from statsmodels.tools.numdiff import approx_fprime_cs
+from statsmodels.tools.numdiff import approx_fprime_cs, approx_fprime
 from scipy.optimize import root,fsolve,broyden1,broyden2
 import pandas as pd
 import sys
@@ -74,14 +74,15 @@ class model:
 
     # Methods
 
-    def approximate_and_solve(self,log_linear=True):
+    def approximate_and_solve(self,log_linear=True,eigenvalue_warnings=True):
 
         '''Method approximates and solves a dynamic stochastic general equilibrium (DSGE) model by 
         constructing the log-linear approximation (if the model isn't log-linear) and solving the model
         using Klein's (2000) method.
 
         Args:
-            log_linear:  (bool) Whether to compute log-linear or linear approximation. Default: True
+            log_linear:             (bool) Whether to compute log-linear or linear approximation. Default: True
+            eigenvalue_warnings:    (bool) Whether to print warnings that there are too many or few eigenvalues. Default: True
 
         Returns:
             None
@@ -110,7 +111,7 @@ class model:
             self.linear_approximation()
 
         # Solve the model
-        self.solve_klein(self.a,self.b)
+        self.solve_klein(self.a,self.b,eigenvalue_warnings=eigenvalue_warnings)
 
     def approximated(self,round=True,precision=4):
 
@@ -239,7 +240,7 @@ class model:
             None
 
         Returns:
-            bool
+            Numpy ndarray
 
         Attributes:
             None
@@ -281,8 +282,8 @@ class model:
         if guess is None:
             guess = np.ones(self.n_vars)
         else:
-            if isinstance(guess, pd.Series):
-                guess = guess[self.names['variables']]
+            if isinstance(guess, list):
+                guess = np.array(guess)
 
 
         # Create function for nonlinear solver
@@ -291,18 +292,47 @@ class model:
             variables = pd.Series(variables,index = self.names['variables'])
 
             return self.equilibrium_fun(variables,variables,self.parameters)
+        
+        def real_ss_fun(variables_transformed):
 
-        if method == 'fsolve':
-            steady_state =fsolve(ss_fun,guess,**options)
+            z_vals = [a + b*1j for a,b in zip(variables_transformed[:int(len(variables_transformed)/2)],variables_transformed[int(len(variables_transformed)/2):])]
+            actual_ss_fun = ss_fun(z_vals)
+            retval = np.r_[np.real(actual_ss_fun),np.imag(actual_ss_fun)]
+            return retval
+        
+        complex_types=[np.complex64,np.complex128,np.complex256]
 
-        elif method == 'root':
-            steady_state =root(ss_fun,guess,**options)['x']
+        if self.parameters.dtype not in complex_types and guess.dtype not in complex_types:
+            
+            if method == 'fsolve':
+                steady_state =fsolve(ss_fun,guess,**options)
 
-        elif method == 'broyden1':
-            steady_state =broyden1(ss_fun,guess,**options)
+            elif method == 'root':
+                steady_state =root(ss_fun,guess,**options)['x']
 
-        elif method == 'broyden2':
-            steady_state =broyden2(ss_fun,guess,**options)
+            elif method == 'broyden1':
+                steady_state =broyden1(ss_fun,guess,**options)
+
+            elif method == 'broyden2':
+                steady_state =broyden2(ss_fun,guess,**options)
+            
+            
+        else:
+            
+            if method == 'fsolve':
+                steady_state =fsolve(real_ss_fun,np.r_[np.real(guess),np.imag(guess)],**options)
+
+            elif method == 'root':
+                steady_state =root(real_ss_fun,np.r_[np.real(guess),np.imag(guess)],**options)['x']
+
+            elif method == 'broyden1':
+                steady_state =broyden1(real_ss_fun,np.r_[np.real(guess),np.imag(guess)],**options)
+
+            elif method == 'broyden2':
+                steady_state =broyden2(real_ss_fun,np.r_[np.real(guess),np.imag(guess)],**options)
+                
+            steady_state = [a + b*1j for a,b in zip(steady_state[:int(len(steady_state)/2)],steady_state[int(len(steady_state)/2):])]
+
 
         # Add ss attribute
         self.ss = pd.Series(steady_state,index=self.names['variables'])
@@ -437,9 +467,20 @@ class model:
         equilibrium_fwd = lambda fwd: equilibrium(fwd,steady_state)
         equilibrium_cur = lambda cur: equilibrium(steady_state,cur)
 
-        # Assign attributes
-        self.a= approx_fprime_cs(steady_state.ravel(),equilibrium_fwd)
-        self.b= -approx_fprime_cs(steady_state.ravel(),equilibrium_cur)
+        complex_types=[np.complex64,np.complex128,np.complex256]
+
+        if self.parameters.dtype not in complex_types:
+            
+            # Assign attributes
+            self.a= approx_fprime_cs(steady_state.ravel(),equilibrium_fwd)
+            self.b= -approx_fprime_cs(steady_state.ravel(),equilibrium_cur)
+
+        else:
+            print('fuck you')
+
+            # Assign attributes
+            self.a= approx_fprime(steady_state.ravel(),equilibrium_fwd)
+            self.b= -approx_fprime(steady_state.ravel(),equilibrium_cur)
 
 
     def log_linear_approximation(self,steady_state=None):
@@ -489,12 +530,24 @@ class model:
 
             return np.log(equilibrium_left) - np.log(equilibrium_right)
 
-        log_equilibrium_fwd = lambda log_fwd: log_equilibrium(log_fwd,np.log(steady_state))
-        log_equilibrium_cur = lambda log_cur: log_equilibrium(np.log(steady_state),log_cur)
+        log_equilibrium_fwd = lambda log_fwd: log_equilibrium(log_fwd,np.log(self.ss))
+        log_equilibrium_cur = lambda log_cur: log_equilibrium(np.log(self.ss),log_cur)
+        
+        complex_types=[np.complex64,np.complex128,np.complex256]
 
-        # Assign attributes
-        self.a= approx_fprime_cs(np.log(steady_state).ravel(),log_equilibrium_fwd)
-        self.b= -approx_fprime_cs(np.log(steady_state).ravel(),log_equilibrium_cur)
+        if self.parameters.dtype not in complex_types:
+
+            # Assign attributes
+            self.a= approx_fprime_cs(np.log(self.ss).ravel(),log_equilibrium_fwd)
+            self.b= -approx_fprime_cs(np.log(self.ss).ravel(),log_equilibrium_cur)
+
+        else:
+
+            # Assign attributes
+            self.a= approx_fprime(np.log(self.ss).ravel(),log_equilibrium_fwd,centered=True)
+            self.b= -approx_fprime(np.log(self.ss).ravel(),log_equilibrium_cur,centered=True)
+            
+            
 
 
     def set_ss(self,steady_state):
@@ -519,7 +572,7 @@ class model:
             self.ss = pd.Series(steady_state,index=self.names['variables'])
 
 
-    def solve_klein(self,a=None,b=None):
+    def solve_klein(self,a=None,b=None,eigenvalue_warnings=True):
 
         '''Solves a linear rational expectations model of the form:
 
@@ -531,8 +584,9 @@ class model:
                 s(t+1) = p*s(t)
 
         Args:
-            a:  (Numpy ndarray) coefficient matrix
-            b:  (Numpy ndarray) coefficient matrix
+            a:                      (Numpy ndarray) coefficient matrix
+            b:                      (Numpy ndarray) coefficient matrix
+            eigenvalue_warnings:    (bool) Whether to print warnings that there are too many or few eigenvalues. Default: True
 
         Returns:
             None
@@ -553,7 +607,24 @@ class model:
             a = self.a
             b = self.b
 
-        self.f,n,self.p,l,self.stab,self.eig = klein(a=a,b=b,c=None,phi=None,n_states=self.n_states)
+        self.f,n,self.p,l,self.stab,self.eig = klein(a=a,b=b,c=None,phi=None,n_states=self.n_states,eigenvalue_warnings=eigenvalue_warnings)
+        
+        complex_types=[np.complex64,np.complex128,np.complex256]
+
+        if self.parameters.dtype not in complex_types:
+
+            self.f = np.real(self.f)
+            self.p = np.real(self.p)
+            l = np.real(l)
+            n = np.real(n)
+
+            # self.f = np.abs(self.f)
+            # self.p = np.abs(self.p)
+            # l = np.abs(l)
+            # n = np.abs(n)
+
+            
+
 
 
     def solved(self,round=True,precision=4):
@@ -612,7 +683,8 @@ class model:
 
                             else:
                                 right += str(p[i][j])+'·'+self.names['variables'][j]+'[t]'
-                right+='+'+self.names['shocks'][i]+'[t+1]'  
+                if i <self.n_exo_states:
+                    right+='+'+self.names['shocks'][i]+'[t+1]'
             leftsides.append(left)
             rightsides.append(right)
                             
@@ -790,7 +862,7 @@ def ir(f,p,eps,s0=None):
     return np.concatenate((s.T,u.T))
 
 
-def klein(a=None,b=None,c=None,phi=None,n_states=None):
+def klein(a=None,b=None,c=None,phi=None,n_states=None,eigenvalue_warnings=True):
 
     '''Solves linear dynamic models with the form of:
     
@@ -806,17 +878,18 @@ def klein(a=None,b=None,c=None,phi=None,n_states=None):
         The solution algorithm is based on Klein (2000) and his solab.m Matlab program.
 
     Args:
-        a:          (Numpy ndarray) Coefficient matrix on future-dated variables
-        b:          (Numpy ndarray) Coefficient matrix on current-dated variables
-        c:          (Numpy ndarray) Coefficient matrix on exogenous forcing variables
-        phi:        (Numpy ndarray) Autocorrelation of exogenous forcing variables
-        n_states:   (int) Number of state variables
+        a:                      (Numpy ndarray) Coefficient matrix on future-dated variables
+        b:                      (Numpy ndarray) Coefficient matrix on current-dated variables
+        c:                      (Numpy ndarray) Coefficient matrix on exogenous forcing variables
+        phi:                    (Numpy ndarray) Autocorrelation of exogenous forcing variables
+        n_states:               (int) Number of state variables
+        eigenvalue_warnings:    (bool) Whether to print warnings that there are too many or few eigenvalues. Default: True
 
     Returns:
-        f:          (Numpy ndarray) Solution matrix coeffients on s(t)
-        p:          (Numpy ndarray) Solution matrix coeffients on s(t)
-        n:          (Numpy ndarray) Solution matrix coeffients on z(t)
-        l:          (Numpy ndarray) Solution matrix coeffients on z(t)
+        f:          (Numpy ndarray) Solution matrix coeffients on s(t) for u(t)
+        n:          (Numpy ndarray) Solution matrix coeffients on z(t) for u(t)
+        p:          (Numpy ndarray) Solution matrix coeffients on s(t) for s(t+1)
+        l:          (Numpy ndarray) Solution matrix coeffients on z(t) for s(t+1)
         stab:       (int) Indicates solution stability and uniqueness
                         stab == 1: too many stable eigenvalues
                         stab == -1: too few stable eigenvalues
@@ -825,7 +898,10 @@ def klein(a=None,b=None,c=None,phi=None,n_states=None):
 
     '''
 
-    s,t,alpha,beta,q,z = la.ordqz(A=a,B=b,sort='ouc')
+    s,t,alpha,beta,q,z = la.ordqz(A=a,B=b,sort='ouc',output='complex')
+
+    # print('type of s,',s.dtype)
+    # print('type of t,',t.dtype)
 
     forcingVars = False
     if len(np.shape(c))== 0:
@@ -871,25 +947,28 @@ def klein(a=None,b=None,c=None,phi=None,n_states=None):
 
     if n_states>0:
         if np.abs(t[n_states-1,n_states-1])>np.abs(s[n_states-1,n_states-1]):
-            print('Warning: Too few stable eigenvalues.')
+            if eigenvalue_warnings:
+                print('Warning: Too few stable eigenvalues.')
             stab = -1
 
     if n_states<n_states+n_costates:
         if np.abs(t[n_states,n_states])<np.abs(s[n_states,n_states]):
-            print('Warning: Too many stable eigenvalues.')
+            if eigenvalue_warnings:
+                print('Warning: Too many stable eigenvalues.')
             stab = 1
 
     # Compute the generalized eigenvalues
     tii = np.diag(t)
     sii = np.diag(s)
-    eig = np.zeros(np.shape(tii))
+    eig = np.zeros(np.shape(tii),dtype=np.complex128)
+    # eig = np.zeros(np.shape(tii))
 
     for k in range(len(tii)):
         if np.abs(sii[k])>0:
-            eig[k] = np.abs(tii[k])/np.abs(sii[k])
+            # eig[k] = np.abs(tii[k])/np.abs(sii[k])
+            eig[k] = tii[k]/sii[k]    
         else:
             eig[k] = np.inf
-
 
     # Solution matrix coefficients on the endogenous state
     if n_states>0:
@@ -897,8 +976,9 @@ def klein(a=None,b=None,c=None,phi=None,n_states=None):
     else:
         dyn = np.array([])
 
-    f = np.real(z21.dot(z11i))
-    p = np.real(z11.dot(dyn).dot(z11i))
+
+    f = z21.dot(z11i)
+    p = z11.dot(dyn).dot(z11i)
 
     # Solution matrix coefficients on the exogenous state
     if not forcingVars:
@@ -912,10 +992,7 @@ def klein(a=None,b=None,c=None,phi=None,n_states=None):
         vecm = mat1i.dot(vecq2c)
         m = np.transpose(np.reshape(np.transpose(vecm),(nz,n_costates)))
         
-        n = np.real((z22 - z21.dot(z11i).dot(z12)).dot(m))
-        l = np.real(-z11.dot(s11i).dot(t11).dot(z11i).dot(z12).dot(m) + z11.dot(s11i).dot(t12.dot(m) - s12.dot(m).dot(phi)+q1.dot(c)) + z12.dot(m).dot(phi))
-
+        n = (z22 - z21.dot(z11i).dot(z12)).dot(m)
+        l = -z11.dot(s11i).dot(t11).dot(z11i).dot(z12).dot(m) + z11.dot(s11i).dot(t12.dot(m) - s12.dot(m).dot(phi)+q1.dot(c)) + z12.dot(m).dot(phi)
 
     return f,n,p,l,stab,eig
-
-

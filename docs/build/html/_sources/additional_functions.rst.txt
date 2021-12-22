@@ -25,7 +25,7 @@ Additional ``linearsolve`` Functions
             :returns: Array containing two arrays: one corresponding to simulated :math:`u_t` values and the other to simulated :math:`s_t` values.
             :rtype: Numpy.ndarray
 
-.. py:function:: linearsolve.klein(a=None,b=None,c=None,phi=None,n_states=None)
+.. py:function:: linearsolve.klein(a=None,b=None,c=None,phi=None,n_states=None,eigenvalue_warnings=True)
 
             Solves linear dynamic models with the form of:
     
@@ -54,6 +54,8 @@ Additional ``linearsolve`` Functions
             :type phi: Numpy.ndarray or list
             :param n_states: number of state variables
             :type n_states: int
+            :param eigenvalue_warnings: Whether to print warnings that there are too many or few eigenvalues. Default: True
+            :type log_linear: bool
 
 
             :returns:

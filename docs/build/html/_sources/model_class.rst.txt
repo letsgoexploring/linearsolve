@@ -44,12 +44,15 @@
 	**Methods:**
 
 
-		.. py:function:: approximate_and_solve(log_linear=True)
+		.. py:function:: approximate_and_solve(log_linear=True,eigenvalue_warnings=True)
 
 			Method approximates and solves a dynamic stochastic general equilibrium (DSGE) model by constructing the log-linear approximation (if the model isn't log-linear) and solving the model using Klein's (2000) method.
 
 
 			:param log_linear: Whether to compute log-linear or linear approximation. Default: True
+   			:type log_linear: bool
+
+   			:param eigenvalue_warnings: Whether to print warnings that there are too many or few eigenvalues. Default: True
    			:type log_linear: bool
 
    			:var a: Coefficient matrix on forward-dated variables.
@@ -209,7 +212,7 @@
 		
 
 
-		.. py:function:: solve_klein(a=None,b=None)
+		.. py:function:: solve_klein(a=None,b=None,eigenvalue_warnings=True)
 
 			Solves a linear rational expectations model of the form:
 			
@@ -235,6 +238,9 @@
 
 			:param b: Coefficient matrix on current-dated variables.
    			:type b: Numpy.ndarray
+
+   			:param eigenvalue_warnings: Whether to print warnings that there are too many or few eigenvalues. Default: True
+   			:type log_linear: bool
 
    			:var f: coeficient matrix.
 			:vartype f: Numpy.ndarray
