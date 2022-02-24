@@ -299,10 +299,8 @@ class model:
             actual_ss_fun = ss_fun(z_vals)
             retval = np.r_[np.real(actual_ss_fun),np.imag(actual_ss_fun)]
             return retval
-        
-        complex_types=[np.complex64,np.complex128,np.complex256]
 
-        if self.parameters.dtype not in complex_types and guess.dtype not in complex_types:
+        if not np.iscomplexobj(self.parameters) and not np.iscomplexobj(guess):
             
             if method == 'fsolve':
                 steady_state =fsolve(ss_fun,guess,**options)
@@ -467,16 +465,13 @@ class model:
         equilibrium_fwd = lambda fwd: equilibrium(fwd,steady_state)
         equilibrium_cur = lambda cur: equilibrium(steady_state,cur)
 
-        complex_types=[np.complex64,np.complex128,np.complex256]
-
-        if self.parameters.dtype not in complex_types:
+        if not np.iscomplexobj(self.parameters):
             
             # Assign attributes
             self.a= approx_fprime_cs(steady_state.ravel(),equilibrium_fwd)
             self.b= -approx_fprime_cs(steady_state.ravel(),equilibrium_cur)
 
         else:
-            print('fuck you')
 
             # Assign attributes
             self.a= approx_fprime(steady_state.ravel(),equilibrium_fwd)
@@ -533,9 +528,8 @@ class model:
         log_equilibrium_fwd = lambda log_fwd: log_equilibrium(log_fwd,np.log(self.ss))
         log_equilibrium_cur = lambda log_cur: log_equilibrium(np.log(self.ss),log_cur)
         
-        complex_types=[np.complex64,np.complex128,np.complex256]
 
-        if self.parameters.dtype not in complex_types:
+        if not np.iscomplexobj(self.parameters):
 
             # Assign attributes
             self.a= approx_fprime_cs(np.log(self.ss).ravel(),log_equilibrium_fwd)
@@ -567,9 +561,12 @@ class model:
 
         try:
             self.ss = steady_state[self.names['variables']]
-        except:
+            self.ss = self.ss.astype(np.promote_types(float,np.promote_types(self.parameters.dtype,steady_state.dtype)))
 
-            self.ss = pd.Series(steady_state,index=self.names['variables'])
+        except:
+            self.ss = pd.Series(steady_state,index=self.names['variables'],dtype=np.promote_types(float,np.promote_types(self.parameters.dtype,np.array(steady_state).dtype)))
+            
+        self.parameters = self.parameters.astype(np.promote_types(self.ss.dtype,self.parameters.dtype))
 
 
     def solve_klein(self,a=None,b=None,eigenvalue_warnings=True):
@@ -608,10 +605,8 @@ class model:
             b = self.b
 
         self.f,n,self.p,l,self.stab,self.eig = klein(a=a,b=b,c=None,phi=None,n_states=self.n_states,eigenvalue_warnings=eigenvalue_warnings)
-        
-        complex_types=[np.complex64,np.complex128,np.complex256]
 
-        if self.parameters.dtype not in complex_types:
+        if not np.iscomplexobj(self.parameters):
 
             self.f = np.real(self.f)
             self.p = np.real(self.p)
@@ -847,9 +842,9 @@ def ir(f,p,eps,s0=None):
     if s0 is None:
 
         s0 = np.zeros([1,n_states])
-
-    s = np.array(np.zeros([T+1,n_states]))
-    u = np.array(np.zeros([T,n_costates]))
+    
+    s = np.zeros([T+1,n_states],dtype=np.promote_types(f.dtype,p.dtype))
+    u = np.zeros([T,n_costates],dtype=np.promote_types(f.dtype,p.dtype))
 
     s[0]=s0
 
