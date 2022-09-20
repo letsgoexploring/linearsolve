@@ -748,7 +748,8 @@ class model:
                 T:          (int) Number of periods to simulate. Default: 51
                 drop_first: (int) Number of periods to simulate before generating the simulated periods. 
                                 Default: 300
-                cov_mat:    (list or Numpy.ndarray) Covariance matrix shocks.
+                cov_mat:    (list or Numpy.ndarray) Covariance matrix shocks. If not given, exogenous shock
+                                standard deviations are set to 0.01.
                 seed:       (int) Sets the seed for the Numpy random number generator. Default: None
                 percent:    (bool) Whether to multiply simulated values by 100. Only works for log-linear 
                                 approximations. Default: False
@@ -771,7 +772,11 @@ class model:
         s0 = np.zeros([1,n_states])
 
         # Set cov_mat if not given
+        if cov_mat is None:
+            cov_mat = np.array(self.n_exo_states*[0.01**2])
         cov_mat = np.array(cov_mat)
+
+
         if cov_mat.ndim==1:
             cov_mat = np.array([cov_mat])
             

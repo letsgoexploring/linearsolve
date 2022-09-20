@@ -284,7 +284,7 @@
    			:param drop_first: Number of periods to simulate before generating the simulated periods. Default: 300
    			:type drop_first: int
 
-   			:param cov_mat: Covariance matrix shocks. If cov_mat is None, it's set to Numpy.eye(n_states). Default: None
+   			:param cov_mat: Covariance matrix shocks. If cov_mat is None, it's set to Numpy.eye(n_states). Default: None. If None, then exogenous shock standard deviations are set to 0.01.
    			:type cov_mat: list or Numpy.ndarray
 
    			:param seed: Sets the seed for the Numpy random number generator. Default: None
