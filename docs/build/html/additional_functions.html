@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Additional linearsolve Functions &#8212; linearsolve 3.4.13 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -11,6 +11,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -22,10 +23,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
-<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -118,7 +119,7 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="additional-linearsolve-functions">
-<h1>Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions<a class="headerlink" href="#additional-linearsolve-functions" title="Permalink to this headline">¶</a></h1>
+<h1>Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions<a class="headerlink" href="#additional-linearsolve-functions" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="linearsolve.ir">
 <span class="sig-prename descclassname"><span class="pre">linearsolve.</span></span><span class="sig-name descname"><span class="pre">ir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#linearsolve.ir" title="Permalink to this definition">¶</a></dt>
@@ -129,18 +130,18 @@
 <span class="eqno">(2)<a class="headerlink" href="#equation-additional-functions-1" title="Permalink to this equation">¶</a></span>\[\begin{split}s_{t+1} &amp;= ps_t \\\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(s_t\)</span> is an (n_states x 1) vector of state variables, <span class="math notranslate nohighlight">\(u_t\)</span> is an (n_costates x 1) vector of costate variables, and <span class="math notranslate nohighlight">\(\epsilon_t\)</span> is an (n_states x 1) vector of exogenous shocks.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<em>Numpy.ndarray</em>) – Coefficnent matrix of appropriate size</p></li>
 <li><p><strong>p</strong> (<em>Numpy.ndarray</em>) – Coefficnent matrix of appropriate size</p></li>
-<li><p><strong>eps</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – T x n_states array of exogenous shocks.</p></li>
-<li><p><strong>s0</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – 1 x n_states array of zeros of initial state value. Optional; Default: 0.</p></li>
+<li><p><strong>eps</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – T x n_states array of exogenous shocks.</p></li>
+<li><p><strong>s0</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – 1 x n_states array of zeros of initial state value. Optional; Default: 0.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Array containing two arrays: one corresponding to simulated <span class="math notranslate nohighlight">\(u_t\)</span> values and the other to simulated <span class="math notranslate nohighlight">\(s_t\)</span> values.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Numpy.ndarray</p>
 </dd>
 </dl>
@@ -159,23 +160,23 @@
 <span class="eqno">(5)<a class="headerlink" href="#equation-additional-functions-4" title="Permalink to this equation">¶</a></span>\[s_{t+1} = ps_t + lz_t.\]</div>
 <p>The solution algorithm is based on Klein (2000) and his solab.m Matlab program.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>a</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on future-dated variables</p></li>
 <li><p><strong>b</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on current-dated variables</p></li>
 <li><p><strong>p</strong> (<em>Numpy.ndarray</em>) – Coefficient matrix on exogenous forcing variables</p></li>
-<li><p><strong>phi</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Autocorrelation of exogenous forcing variables</p></li>
-<li><p><strong>n_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – number of state variables</p></li>
+<li><p><strong>phi</strong> (<em>Numpy.ndarray</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Autocorrelation of exogenous forcing variables</p></li>
+<li><p><strong>n_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – number of state variables</p></li>
 <li><p><strong>eigenvalue_warnings</strong> – Whether to print warnings that there are too many or few eigenvalues. Default: True</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>f</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Coefficient matrix on state vector in control equation</p></li>
 <li><p><strong>p</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Coefficient matrix on state vector in state equation</p></li>
 <li><p><strong>n</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Coefficient matrix on forcing vector in control equation</p></li>
 <li><p><strong>l</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Coefficient matrix on forcing vector in state equation</p></li>
-<li><p><strong>stab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) - Indicates solution stability and uniqueness. stab =1: too many stable eigenvalues, stab = -1: too few stable eigenvalues, stab = 0: just enough stable eigenvalues</p></li>
+<li><p><strong>stab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) - Indicates solution stability and uniqueness. stab =1: too many stable eigenvalues, stab = -1: too few stable eigenvalues, stab = 0: just enough stable eigenvalues</p></li>
 <li><p><strong>eig</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Numpy.ndarray</span></code>) - Generalized eigenvalues from the Schur decomposition</p></li>
 </ul>
 </p>
@@ -198,7 +199,7 @@
     </p>
     <p>
         &copy; Copyright 2022, Brian C. Jenkins.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.0.2.<br/>
     </p>
   </div>
 </footer>
