@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Overview and Examples &#8212; linearsolve 3.6.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How linearsolve Works" href="how_linear_solve_works.html" />
+    <link rel="prev" title="About linearsolve" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          linearsolve</a>
+        <span class="navbar-text navbar-version pull-left"><b>3.6</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_linear_solve_works.html">How <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_class.html"><code class="docutils literal notranslate"><span class="pre">linearsolve.model</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="additional_functions.html">Additional <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> Functions</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Overview and Examples</a><ul>
+<li><a class="reference internal" href="#What-linearsolve-Does">What linearsolve Does</a></li>
+<li><a class="reference internal" href="#Example-1:-Quickly-Simulate-an-RBC-Model">Example 1: Quickly Simulate an RBC Model</a></li>
+<li><a class="reference internal" href="#Example-2:-An-RBC-Model-with-More-Details">Example 2: An RBC Model with More Details</a><ul>
+<li><a class="reference internal" href="#Initializing-the-model-in-linearsolve">Initializing the model in <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Initializing-the-model">Initializing the model</a><ul>
+<li><a class="reference internal" href="#Steady-state">Steady state</a></li>
+<li><a class="reference internal" href="#Log-linearization-and-solution">Log-linearization and solution</a></li>
+<li><a class="reference internal" href="#Impulse-responses">Impulse responses</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Stochastic-simulation">Stochastic simulation</a></li>
+<li><a class="reference internal" href="#Example-3:-A-New-Keynesian-Model">Example 3: A New-Keynesian Model</a><ul>
+<li><a class="reference internal" href="#Inintialize-model-and-solve">Inintialize model and solve</a></li>
+<li><a class="reference internal" href="#Compute-impulse-responses-and-plot">Compute impulse responses and plot</a></li>
+<li><a class="reference internal" href="#Construct-a-stochastic-simulation-and-plot">Construct a stochastic simulation and plot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="index.html" title="Previous Chapter: About linearsolve"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; About linearsolve</span>
+    </a>
+  </li>
+  <li>
+    <a href="how_linear_solve_works.html" title="Next Chapter: How linearsolve Works"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">How linearsolve Works &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/examples.ipynb.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="Overview-and-Examples">
+<h1>Overview and Examples<a class="headerlink" href="#Overview-and-Examples" title="Permalink to this heading">¶</a></h1>
+<p>A brief description of what linearsolve is for followed by examples.</p>
+<section id="What-linearsolve-Does">
+<h2>What linearsolve Does<a class="headerlink" href="#What-linearsolve-Does" title="Permalink to this heading">¶</a></h2>
+<p>linearsolve defines a class - linearsolve.model - with several functions for approximating, solving, and simulating dynamic stochastic general equilibrium (DSGE) models. The equilibrium conditions for most DSGE models can be expressed as a vector function <span class="math notranslate nohighlight">\(f\)</span>:</p>
+<p><span class="math">\begin{align}
+f(E_t X_{t+1}, X_t, \epsilon_{t+1}) = 0,
+\end{align}</span></p>
+<p>where 0 is an <span class="math notranslate nohighlight">\(n\times 1\)</span> vector of zeros, <span class="math notranslate nohighlight">\(X_t\)</span> is an <span class="math notranslate nohighlight">\(n\times 1\)</span> vector of endogenous variables, and <span class="math notranslate nohighlight">\(\epsilon_{t+1}\)</span> is an <span class="math notranslate nohighlight">\(m\times 1\)</span> vector of exogenous structural shocks to the model. <span class="math notranslate nohighlight">\(E_tX_{t+1}\)</span> denotes the expecation of the <span class="math notranslate nohighlight">\(t+1\)</span> endogenous variables based on the information available to agents in the model as of time period <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<p>linearsolve.model has methods for computing linear and log-linear approximations of the model given above and methods for solving and simulating the linear model.</p>
+<p>See the documentation of the <a class="reference internal" href="model_class.html"><span class="doc">linearsolve.model</span></a> class to learn more about these methods. <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code> also has some <a class="reference internal" href="additional_functions.html"><span class="doc">Additional linearsolve Functions</span></a>. See <a class="reference internal" href="how_linear_solve_works.html"><span class="doc">How linearsolve Works</span></a> to learn about more about the solution method.</p>
+</section>
+<section id="Example-1:-Quickly-Simulate-an-RBC-Model">
+<h2>Example 1: Quickly Simulate an RBC Model<a class="headerlink" href="#Example-1:-Quickly-Simulate-an-RBC-Model" title="Permalink to this heading">¶</a></h2>
+<p>Here I demonstrate how how relatively straightforward it is to appoximate, solve, and simulate a DSGE model using <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code>. In the example that follows, I describe the procedure more carefully.</p>
+<p><span class="math">\begin{align}
+C_t^{-\sigma} & = \beta E_t \left[C_{t+1}^{-\sigma}(\alpha A_{t+1} K_{t+1}^{\alpha-1} + 1 - \delta)\right]\\
+C_t + K_{t+1} & = A_t K_t^{\alpha} + (1-\delta)K_t\\
+\log A_{t+1} & = \rho_a \log A_{t} + \epsilon_{t+1}
+\end{align}</span></p>
+<p>In the block of code that immediately follows, I input the model, solve for the steady state, compute the log-linear approximation of the equilibirum conditions, and compute some impulse responses following a shock to technology <span class="math notranslate nohighlight">\(A_t\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import numpy, pandas, linearsolve, matplotlib.pyplot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">linearsolve</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ls</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;classic&#39;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="c1"># Input model parameters</span>
+<span class="n">parameters</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="mf">.35</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="mf">0.99</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="mf">0.025</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;rhoa&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">.9</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># Funtion that evaluates the equilibrium conditions</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">equations</span><span class="p">(</span><span class="n">variables_forward</span><span class="p">,</span><span class="n">variables_current</span><span class="p">,</span><span class="n">parameters</span><span class="p">):</span>
+
+    <span class="c1"># Parameters</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">parameters</span>
+
+    <span class="c1"># Variables</span>
+    <span class="n">fwd</span> <span class="o">=</span> <span class="n">variables_forward</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">variables_current</span>
+
+    <span class="c1"># Household Euler equation</span>
+    <span class="n">euler_eqn</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">beta</span><span class="o">*</span><span class="n">fwd</span><span class="o">.</span><span class="n">c</span><span class="o">**-</span><span class="n">p</span><span class="o">.</span><span class="n">sigma</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span><span class="o">*</span><span class="n">fwd</span><span class="o">.</span><span class="n">a</span><span class="o">*</span><span class="n">fwd</span><span class="o">.</span><span class="n">k</span><span class="o">**</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">c</span><span class="o">**-</span><span class="n">p</span><span class="o">.</span><span class="n">sigma</span>
+
+    <span class="c1"># Goods market clearing</span>
+    <span class="n">market_clearing</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">c</span> <span class="o">+</span> <span class="n">fwd</span><span class="o">.</span><span class="n">k</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">k</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">a</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">k</span><span class="o">**</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span>
+
+    <span class="c1"># Exogenous technology</span>
+    <span class="n">technology_proc</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">rhoa</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">fwd</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
+
+    <span class="c1"># Stack equilibrium conditions into a numpy array</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="n">euler_eqn</span><span class="p">,</span>
+            <span class="n">market_clearing</span><span class="p">,</span>
+            <span class="n">technology_proc</span>
+        <span class="p">])</span>
+
+<span class="c1"># Initialize the model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ls</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">equations</span> <span class="o">=</span> <span class="n">equations</span><span class="p">,</span>
+                 <span class="n">n_states</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">n_exo_states</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">],</span>
+                 <span class="n">parameters</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">)</span>
+
+<span class="c1"># Compute the steady state numerically</span>
+<span class="n">guess</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compute_ss</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
+
+<span class="c1"># Find the log-linear approximation around the non-stochastic steady state and solve</span>
+<span class="n">model</span><span class="o">.</span><span class="n">approximate_and_solve</span><span class="p">()</span>
+
+<span class="c1"># Compute impulse responses and plot</span>
+<span class="n">model</span><span class="o">.</span><span class="n">impulse</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">41</span><span class="p">,</span><span class="n">t0</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">shocks</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">irs</span><span class="p">[</span><span class="s1">&#39;e_a&#39;</span><span class="p">][[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">irs</span><span class="p">[</span><span class="s1">&#39;e_a&#39;</span><span class="p">][[</span><span class="s1">&#39;e_a&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7fc04c1f8220&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/examples_3_1.png" src="_images/examples_3_1.png" />
+</div>
+</div>
+</section>
+<section id="Example-2:-An-RBC-Model-with-More-Details">
+<h2>Example 2: An RBC Model with More Details<a class="headerlink" href="#Example-2:-An-RBC-Model-with-More-Details" title="Permalink to this heading">¶</a></h2>
+<p>Consider the equilibrium conditions for a basic RBC model without labor:</p>
+<p><span class="math">\begin{align}
+C_t^{-\sigma} & = \beta E_t \left[C_{t+1}^{-\sigma}(\alpha A_{t+1} K_{t+1}^{\alpha-1} + 1 - \delta)\right]\\
+Y_t & = A_t K_t^{\alpha}\\
+I_t & = K_{t+1} - (1-\delta)K_t\\
+Y_t & = C_t + I_t\\
+\log A_t & = \rho_a \log A_{t-1} + \epsilon_t
+\end{align}</span></p>
+<p>In the nonstochastic steady state, we have:</p>
+<p><span class="math">\begin{align}
+K & = \left(\frac{\alpha A}{1/\beta+\delta-1}\right)^{\frac{1}{1-\alpha}}\\
+Y & = AK^{\alpha}\\
+I & = \delta K\\
+C & = Y - I
+\end{align}</span></p>
+<p>Given values for the parameters <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\sigma\)</span>, <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\delta\)</span>, and <span class="math notranslate nohighlight">\(A\)</span>, steady state values of capital, output, investment, and consumption are easily computed.</p>
+<section id="Initializing-the-model-in-linearsolve">
+<h3>Initializing the model in <code class="docutils literal notranslate"><span class="pre">linearsolve</span></code><a class="headerlink" href="#Initializing-the-model-in-linearsolve" title="Permalink to this heading">¶</a></h3>
+<p>To initialize the model, we need to first set the model’s parameters. We do this by creating a Pandas Series variable called <code class="docutils literal notranslate"><span class="pre">parameters</span></code>:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Input model parameters</span>
+<span class="n">parameters</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="mf">.35</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="mf">0.99</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="mf">0.025</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;rhoa&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">.9</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span>
+<span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<p>Next, we need to define a function that returns the equilibrium conditions of the model. The function will take as inputs two vectors: one vector of “current” variables and another of “forward-looking” or one-period-ahead variables. The function will return an array that represents the equilibirum conditions of the model. We’ll enter each equation with all variables moved to one side of the equals sign. For example, here’s how we’ll enter the produciton fucntion:</p>
+<p><code class="docutils literal notranslate"><span class="pre">production_function</span> <span class="pre">=</span> <span class="pre">technology_current*capital_current**alpha</span> <span class="pre">-</span> <span class="pre">output_curent</span></code></p>
+<p>Here the variable <code class="docutils literal notranslate"><span class="pre">production_function</span></code> stores the production function equation set equal to zero. We can enter the equations in almost any way we want. For example, we could also have entered the production function this way:</p>
+<p><code class="docutils literal notranslate"><span class="pre">production_function</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">-</span> <span class="pre">output_curent/technology_current/capital_current**alpha</span></code></p>
+<p>One more thing to consider: the natural log in the equation describing the evolution of total factor productivity will create problems for the solution routine later on. So rewrite the equation as:</p>
+<p><span class="math">\begin{align}
+A_{t+1} & =  A_{t}^{\rho_a}e^{\epsilon_{t+1}}\\
+\end{align}</span></p>
+<p>So the complete system of equations that we enter into the program looks like:</p>
+<p><span class="math">\begin{align}
+C_t^{-\sigma} & = \beta E_t \left[C_{t+1}^{-\sigma}(\alpha Y_{t+1} /K_{t+1}+ 1 - \delta)\right]\\
+Y_t & = A_t K_t^{\alpha}\\
+I_t & = K_{t+1} - (1-\delta)K_t\\
+Y_t & = C_t + I_t\\
+A_{t+1} & =  A_{t}^{\rho_a}e^{\epsilon_{t+1}}
+\end{align}</span></p>
+<p>Now let’s define the function that returns the equilibrium conditions:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define function to compute equilibrium conditions</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">equations</span><span class="p">(</span><span class="n">variables_forward</span><span class="p">,</span><span class="n">variables_current</span><span class="p">,</span><span class="n">parameters</span><span class="p">):</span>
+
+    <span class="c1"># Parameters</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">parameters</span>
+
+    <span class="c1"># Variables</span>
+    <span class="n">fwd</span> <span class="o">=</span> <span class="n">variables_forward</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">variables_current</span>
+
+    <span class="c1"># Household Euler equation</span>
+    <span class="n">euler_eqn</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">beta</span><span class="o">*</span><span class="n">fwd</span><span class="o">.</span><span class="n">c</span><span class="o">**-</span><span class="n">p</span><span class="o">.</span><span class="n">sigma</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span><span class="o">*</span><span class="n">fwd</span><span class="o">.</span><span class="n">y</span><span class="o">/</span><span class="n">fwd</span><span class="o">.</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">c</span><span class="o">**-</span><span class="n">p</span><span class="o">.</span><span class="n">sigma</span>
+
+    <span class="c1"># Production function</span>
+    <span class="n">production_fuction</span> <span class="o">=</span>  <span class="n">cur</span><span class="o">.</span><span class="n">a</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">k</span><span class="o">**</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="c1"># Capital evolution</span>
+    <span class="n">capital_evolution</span> <span class="o">=</span> <span class="n">fwd</span><span class="o">.</span><span class="n">k</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">k</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">i</span>
+
+    <span class="c1"># Goods market clearing</span>
+    <span class="n">market_clearing</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">c</span> <span class="o">+</span> <span class="n">cur</span><span class="o">.</span><span class="n">i</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="c1"># Exogenous technology</span>
+    <span class="n">technology_proc</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">a</span><span class="o">**</span><span class="n">p</span><span class="o">.</span><span class="n">rhoa</span><span class="o">-</span> <span class="n">fwd</span><span class="o">.</span><span class="n">a</span>
+
+    <span class="c1"># Stack equilibrium conditions into a numpy array</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="n">euler_eqn</span><span class="p">,</span>
+            <span class="n">production_fuction</span><span class="p">,</span>
+            <span class="n">capital_evolution</span><span class="p">,</span>
+            <span class="n">market_clearing</span><span class="p">,</span>
+            <span class="n">technology_proc</span>
+        <span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<p>Notice that inside the function we have to define the variables of the model form the elements of the input vectors <code class="docutils literal notranslate"><span class="pre">variables_forward</span></code> and <code class="docutils literal notranslate"><span class="pre">variables_current</span></code>.</p>
+</section>
+</section>
+<section id="Initializing-the-model">
+<h2>Initializing the model<a class="headerlink" href="#Initializing-the-model" title="Permalink to this heading">¶</a></h2>
+<p>To initialize the model, we need to specify the total number of state variables in the model, the number of state variables with exogenous shocks, the names of the endogenous variables, and the parameters of the model.</p>
+<p>It is <em>essential</em> that the variable names are ordered in the following way: First the names of the endogenous variables with the state variables with exogenous shocks, then the state variables without shocks, and finally the control variables. Ordering within the groups doesn’t matter.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize the model</span>
+<span class="n">rbc</span> <span class="o">=</span> <span class="n">ls</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">equations</span> <span class="o">=</span> <span class="n">equations</span><span class="p">,</span>
+               <span class="n">n_states</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+               <span class="n">n_exo_states</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">],</span>
+               <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Steady-state">
+<h3>Steady state<a class="headerlink" href="#Steady-state" title="Permalink to this heading">¶</a></h3>
+<p>Next, we need to compute the nonstochastic steady state of the model. The <code class="docutils literal notranslate"><span class="pre">.compute_ss()</span></code> method can be used to compute the steady state numerically. The method’s default is to use scipy’s <code class="docutils literal notranslate"><span class="pre">fsolve()</span></code> function, but other scipy root-finding functions can be used: <code class="docutils literal notranslate"><span class="pre">root</span></code>, <code class="docutils literal notranslate"><span class="pre">broyden1</span></code>, and <code class="docutils literal notranslate"><span class="pre">broyden2</span></code>. The optional argument <code class="docutils literal notranslate"><span class="pre">options</span></code> lets the user pass keywords directly to the optimization function. Check out the documentation for Scipy’s nonlinear solvers here:
+<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/optimize.html">http://docs.scipy.org/doc/scipy/reference/optimize.html</a></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the steady state numerically</span>
+<span class="n">guess</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">compute_ss</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">ss</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+a     1.000000
+k    34.398226
+c     2.589794
+y     3.449750
+i     0.859956
+dtype: float64
+</pre></div></div>
+</div>
+<p>Note that the steady state is returned as a Pandas Series. Alternatively, you could compute the steady state directly and then sent the <code class="docutils literal notranslate"><span class="pre">rbc.ss</span></code> attribute:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Steady state solution</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">parameters</span>
+<span class="n">K</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span><span class="o">*</span><span class="n">p</span><span class="o">.</span><span class="n">A</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">p</span><span class="o">.</span><span class="n">beta</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span><span class="p">))</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="n">K</span><span class="o">**</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="n">p</span><span class="o">.</span><span class="n">delta</span><span class="o">*</span><span class="n">K</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">A</span><span class="o">*</span><span class="n">K</span><span class="o">**</span><span class="n">p</span><span class="o">.</span><span class="n">alpha</span>
+<span class="n">I</span> <span class="o">=</span> <span class="n">Y</span> <span class="o">-</span> <span class="n">C</span>
+
+<span class="n">rbc</span><span class="o">.</span><span class="n">set_ss</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">A</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">I</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">ss</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+a     1.000000
+k    34.398226
+c     2.589794
+y     3.449750
+i     0.859956
+dtype: float64
+</pre></div></div>
+</div>
+</section>
+<section id="Log-linearization-and-solution">
+<h3>Log-linearization and solution<a class="headerlink" href="#Log-linearization-and-solution" title="Permalink to this heading">¶</a></h3>
+<p>Now we use the <code class="docutils literal notranslate"><span class="pre">.log_linear()</span></code> method to find the log-linear appxoximation to the model’s equilibrium conditions. That is, we’ll transform the nonlinear model into a linear model in which all variables are expressed as log-deviations from the steady state. Specifically, we’ll compute the matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> that satisfy:</p>
+<p><span class="math">\begin{align}
+A E_t\left[ x_{t+1} \right] & = B x_t + \left[ \begin{array}{c} \epsilon_{t+1} \\ 0 \end{array} \right],
+\end{align}</span></p>
+<p>where the vector <span class="math notranslate nohighlight">\(x_{t}\)</span> denotes the log deviation of the endogenous variables from their steady state values.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find the log-linear approximation around the non-stochastic steady state</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">log_linear_approximation</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The matrix A:</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">a</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The matrix B:</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">b</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The matrix A:
+
+ [[ 0.00000e+00 -8.30000e-03 -3.59900e-01  8.30000e-03  0.00000e+00]
+ [ 0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00]
+ [ 0.00000e+00  3.43982e+01  0.00000e+00  0.00000e+00  0.00000e+00]
+ [ 0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00]
+ [-1.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00]]
+
+
+The matrix B:
+
+ [[-0.     -0.     -0.3599 -0.     -0.    ]
+ [-3.4497 -1.2074 -0.      3.4497 -0.    ]
+ [-0.     33.5383 -0.     -0.      0.86  ]
+ [-0.     -0.     -2.5898  3.4497 -0.86  ]
+ [-0.9    -0.     -0.     -0.     -0.    ]]
+</pre></div></div>
+</div>
+<p>Finally, we need to obtain the <em>solution</em> to the log-linearized model. The solution is a pair of matrices <span class="math notranslate nohighlight">\(F\)</span> and <span class="math notranslate nohighlight">\(P\)</span> that specify:</p>
+<ol class="arabic simple">
+<li><p>The current values of the non-state variables <span class="math notranslate nohighlight">\(u_{t}\)</span> as a linear function of the previous values of the state variables <span class="math notranslate nohighlight">\(s_t\)</span>.</p></li>
+<li><p>The future values of the state variables <span class="math notranslate nohighlight">\(s_{t+1}\)</span> as a linear function of the previous values of the state variables <span class="math notranslate nohighlight">\(s_t\)</span> and the future realisation of the exogenous shock process <span class="math notranslate nohighlight">\(\epsilon_{t+1}\)</span>.</p></li>
+</ol>
+<p><span class="math">\begin{align}
+u_t  &  = Fs_t\\
+s_{t+1} & = Ps_t + \epsilon_{t+1}.
+\end{align}</span></p>
+<p>We use the <code class="docutils literal notranslate"><span class="pre">.klein()</span></code> method to find the solution.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Solve the model</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">solve_klein</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">a</span><span class="p">,</span><span class="n">rbc</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+
+<span class="c1"># Display the output</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The matrix F:</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">f</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The matrix P:</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">rbc</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The matrix F:
+
+ [[ 0.2297  0.513 ]
+ [ 1.      0.35  ]
+ [ 3.3197 -0.1408]]
+
+
+The matrix P:
+
+ [[0.9    0.    ]
+ [0.083  0.9715]]
+</pre></div></div>
+</div>
+</section>
+<section id="Impulse-responses">
+<h3>Impulse responses<a class="headerlink" href="#Impulse-responses" title="Permalink to this heading">¶</a></h3>
+<p>One the model is solved, use the <code class="docutils literal notranslate"><span class="pre">.impulse()</span></code> method to compute impulse responses to exogenous shocks to the state. The method creates the <code class="docutils literal notranslate"><span class="pre">.irs</span></code> attribute which is a dictionary with keys equal to the names of the exogenous shocks and the values are Pandas DataFrames with the computed impulse respones. You can supply your own values for the shocks, but the default is 0.01 for each exogenous shock.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute impulse responses and plot</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">impulse</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">41</span><span class="p">,</span><span class="n">t0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">shocks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">percent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Impulse responses to a 0.01 unit shock to A:</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">rbc</span><span class="o">.</span><span class="n">irs</span><span class="p">[</span><span class="s1">&#39;e_a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Impulse responses to a 0.01 unit shock to A:
+
+    e_a      a         k         c         y         i
+0  0.0  0.000  0.000000  0.000000  0.000000  0.000000
+1  1.0  1.000  0.000000  0.229718  1.000000  3.319739
+2  0.0  0.900  0.082993  0.249318  0.929048  2.976083
+3  0.0  0.810  0.155321  0.265744  0.864362  2.667127
+4  0.0  0.729  0.218116  0.279348  0.805341  2.389390
+</pre></div></div>
+</div>
+<p>Plotting is easy.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rbc</span><span class="o">.</span><span class="n">irs</span><span class="p">[</span><span class="s1">&#39;e_a&#39;</span><span class="p">][[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">irs</span><span class="p">[</span><span class="s1">&#39;e_a&#39;</span><span class="p">][[</span><span class="s1">&#39;e_a&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7fc04c621a60&gt;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/examples_21_1.png" src="_images/examples_21_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/examples_21_2.png" src="_images/examples_21_2.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Stochastic-simulation">
+<h2>Stochastic simulation<a class="headerlink" href="#Stochastic-simulation" title="Permalink to this heading">¶</a></h2>
+<p>Creating a stochastic simulation of the model is straightforward with the <code class="docutils literal notranslate"><span class="pre">.stoch_sim()</span></code> method. In the following example, I create a 151 period (including t=0) simulation by first simulating the model for 251 periods and then dropping the first 100 values. The standard deviation of the shock to <span class="math notranslate nohighlight">\(A_t\)</span> is set to 0.00763. The seed for the numpy random number generator is set to 0.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rbc</span><span class="o">.</span><span class="n">stoch_sim</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">121</span><span class="p">,</span><span class="n">drop_first</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">cov_mat</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.00763</span><span class="o">**</span><span class="mi">2</span><span class="p">]),</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">percent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;a&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">rbc</span><span class="o">.</span><span class="n">simulated</span><span class="p">[</span><span class="s1">&#39;e_a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7fc04c7e64f0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/examples_23_1.png" src="_images/examples_23_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/examples_23_2.png" src="_images/examples_23_2.png" />
+</div>
+</div>
+</section>
+<section id="Example-3:-A-New-Keynesian-Model">
+<h2>Example 3: A New-Keynesian Model<a class="headerlink" href="#Example-3:-A-New-Keynesian-Model" title="Permalink to this heading">¶</a></h2>
+<p>Consider the new-Keynesian business cycle model from Walsh (2017), chapter 8 expressed in log-linear terms:</p>
+<p><span class="math">\begin{align}
+y_t & = E_ty_{t+1} - \sigma^{-1} (i_t - E_t\pi_{t+1}) + g_t\\
+\pi_t & = \beta  E_t\pi_{t+1} + \kappa  y_t + u_t\\
+i_t & = \phi_x  y_t + \phi_{\pi}  \pi_t + v_t\\
+r_t & = i_t - E_t\pi_{t+1}\\
+g_{t+1} & = \rho_g g_{t} + \epsilon_{t+1}^g\\
+u_{t+1} & = \rho_u u_{t} + \epsilon_{t+1}^u\\
+v_{t+1} & = \rho_v v_{t} + \epsilon_{t+1}^v
+\end{align}</span></p>
+<p>where <span class="math notranslate nohighlight">\(y_t\)</span> is the output gap (log-deviation of output from the natural rate), <span class="math notranslate nohighlight">\(\pi_t\)</span> is the quarterly rate of inflation between <span class="math notranslate nohighlight">\(t-1\)</span> and <span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\(i_t\)</span> is the nominal interest rate on funds moving between period <span class="math notranslate nohighlight">\(t\)</span> and <span class="math notranslate nohighlight">\(t+1\)</span>, <span class="math notranslate nohighlight">\(r_t\)</span> is the real interest rate, <span class="math notranslate nohighlight">\(g_t\)</span> is the exogenous component of demand, <span class="math notranslate nohighlight">\(u_t\)</span> is an exogenous component of inflation, and <span class="math notranslate nohighlight">\(v_t\)</span> is the exogenous component of monetary policy.</p>
+<p>Since the model is already log-linear, there is no need to approximate the equilibrium conditions. We’ll still use the <code class="docutils literal notranslate"><span class="pre">.log_linear</span></code> method to find the matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span>, but we’ll have to set the <code class="docutils literal notranslate"><span class="pre">islinear</span></code> option to <code class="docutils literal notranslate"><span class="pre">True</span></code> to avoid generating an error.</p>
+<section id="Inintialize-model-and-solve">
+<h3>Inintialize model and solve<a class="headerlink" href="#Inintialize-model-and-solve" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Input model parameters</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">0.99</span>
+<span class="n">sigma</span><span class="o">=</span> <span class="mi">1</span>
+<span class="n">eta</span>  <span class="o">=</span> <span class="mi">1</span>
+<span class="n">omega</span><span class="o">=</span> <span class="mf">0.8</span>
+<span class="n">kappa</span><span class="o">=</span> <span class="p">(</span><span class="n">sigma</span><span class="o">+</span><span class="n">eta</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">omega</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">beta</span><span class="o">*</span><span class="n">omega</span><span class="p">)</span><span class="o">/</span><span class="n">omega</span>
+
+<span class="n">rhor</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">phipi</span><span class="o">=</span> <span class="mf">1.5</span>
+<span class="n">phiy</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">rhog</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">rhou</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">rhov</span> <span class="o">=</span> <span class="mf">0.9</span>
+
+<span class="n">Sigma</span> <span class="o">=</span> <span class="mf">0.001</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Store parameters</span>
+<span class="n">parameters</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span>
+    <span class="s1">&#39;beta&#39;</span><span class="p">:</span><span class="n">beta</span><span class="p">,</span>
+    <span class="s1">&#39;sigma&#39;</span><span class="p">:</span><span class="n">sigma</span><span class="p">,</span>
+    <span class="s1">&#39;eta&#39;</span><span class="p">:</span><span class="n">eta</span><span class="p">,</span>
+    <span class="s1">&#39;omega&#39;</span><span class="p">:</span><span class="n">omega</span><span class="p">,</span>
+    <span class="s1">&#39;kappa&#39;</span><span class="p">:</span><span class="n">kappa</span><span class="p">,</span>
+    <span class="s1">&#39;rhor&#39;</span><span class="p">:</span><span class="n">rhor</span><span class="p">,</span>
+    <span class="s1">&#39;phipi&#39;</span><span class="p">:</span><span class="n">phipi</span><span class="p">,</span>
+    <span class="s1">&#39;phiy&#39;</span><span class="p">:</span><span class="n">phiy</span><span class="p">,</span>
+    <span class="s1">&#39;rhog&#39;</span><span class="p">:</span><span class="n">rhog</span><span class="p">,</span>
+    <span class="s1">&#39;rhou&#39;</span><span class="p">:</span><span class="n">rhou</span><span class="p">,</span>
+    <span class="s1">&#39;rhov&#39;</span><span class="p">:</span><span class="n">rhov</span>
+<span class="p">})</span>
+
+
+<span class="c1"># Define function that computes equilibrium conditions</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">equations</span><span class="p">(</span><span class="n">variables_forward</span><span class="p">,</span><span class="n">variables_current</span><span class="p">,</span><span class="n">parameters</span><span class="p">):</span>
+
+    <span class="c1"># Parameters</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">parameters</span>
+
+    <span class="c1"># Variables</span>
+    <span class="n">fwd</span> <span class="o">=</span> <span class="n">variables_forward</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">variables_current</span>
+
+    <span class="c1"># Exogenous demand</span>
+    <span class="n">g_proc</span> <span class="o">=</span>  <span class="n">p</span><span class="o">.</span><span class="n">rhog</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">g</span> <span class="o">-</span> <span class="n">fwd</span><span class="o">.</span><span class="n">g</span>
+
+    <span class="c1"># Exogenous inflation</span>
+    <span class="n">u_proc</span> <span class="o">=</span>  <span class="n">p</span><span class="o">.</span><span class="n">rhou</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">u</span> <span class="o">-</span> <span class="n">fwd</span><span class="o">.</span><span class="n">u</span>
+
+    <span class="c1"># Exogenous monetary policy</span>
+    <span class="n">v_proc</span> <span class="o">=</span>  <span class="n">p</span><span class="o">.</span><span class="n">rhov</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">v</span> <span class="o">-</span> <span class="n">fwd</span><span class="o">.</span><span class="n">v</span>
+
+    <span class="c1"># Euler equation</span>
+    <span class="n">euler_eqn</span> <span class="o">=</span> <span class="n">fwd</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="n">p</span><span class="o">.</span><span class="n">sigma</span><span class="o">*</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">i</span><span class="o">-</span><span class="n">fwd</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">+</span> <span class="n">fwd</span><span class="o">.</span><span class="n">g</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="c1"># NK Phillips curve evolution</span>
+    <span class="n">phillips_curve</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">beta</span><span class="o">*</span><span class="n">fwd</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">kappa</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">fwd</span><span class="o">.</span><span class="n">u</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">pi</span>
+
+    <span class="c1"># interest rate rule</span>
+    <span class="n">interest_rule</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">phiy</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">p</span><span class="o">.</span><span class="n">phipi</span><span class="o">*</span><span class="n">cur</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">fwd</span><span class="o">.</span><span class="n">v</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">i</span>
+
+    <span class="c1"># Fisher equation</span>
+    <span class="n">fisher_eqn</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">i</span> <span class="o">-</span> <span class="n">fwd</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">cur</span><span class="o">.</span><span class="n">r</span>
+
+
+    <span class="c1"># Stack equilibrium conditions into a numpy array</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="n">g_proc</span><span class="p">,</span>
+            <span class="n">u_proc</span><span class="p">,</span>
+            <span class="n">v_proc</span><span class="p">,</span>
+            <span class="n">euler_eqn</span><span class="p">,</span>
+            <span class="n">phillips_curve</span><span class="p">,</span>
+            <span class="n">interest_rule</span><span class="p">,</span>
+            <span class="n">fisher_eqn</span>
+        <span class="p">])</span>
+
+<span class="c1"># Initialize the nk model</span>
+<span class="n">nk</span> <span class="o">=</span> <span class="n">ls</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">equations</span><span class="o">=</span><span class="n">equations</span><span class="p">,</span>
+              <span class="n">n_states</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+              <span class="n">n_exo_states</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+              <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;v&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;pi&#39;</span><span class="p">],</span>
+              <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">)</span>
+
+<span class="c1"># Set the steady state of the nk model</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">set_ss</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Find the log-linear approximation around the non-stochastic steady state</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">linear_approximation</span><span class="p">()</span>
+
+<span class="c1"># Solve the nk model</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">solve_klein</span><span class="p">(</span><span class="n">nk</span><span class="o">.</span><span class="n">a</span><span class="p">,</span><span class="n">nk</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Compute-impulse-responses-and-plot">
+<h3>Compute impulse responses and plot<a class="headerlink" href="#Compute-impulse-responses-and-plot" title="Permalink to this heading">¶</a></h3>
+<p>Compute impulse responses of the endogenous variables to a one percent shock to each exogenous variable.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute impulse responses</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">impulse</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span><span class="n">t0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">shocks</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># Create the figure and axes</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Plot commands</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">irs</span><span class="p">[</span><span class="s1">&#39;e_g&#39;</span><span class="p">][[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">,</span><span class="s1">&#39;pi&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Demand shock&#39;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">irs</span><span class="p">[</span><span class="s1">&#39;e_u&#39;</span><span class="p">][[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">,</span><span class="s1">&#39;pi&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Inflation shock&#39;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">irs</span><span class="p">[</span><span class="s1">&#39;e_v&#39;</span><span class="p">][[</span><span class="s1">&#39;v&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">,</span><span class="s1">&#39;pi&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Interest rate shock&#39;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span><span class="n">ncol</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7fc04ca4d190&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/examples_28_1.png" src="_images/examples_28_1.png" />
+</div>
+</div>
+</section>
+<section id="Construct-a-stochastic-simulation-and-plot">
+<h3>Construct a stochastic simulation and plot<a class="headerlink" href="#Construct-a-stochastic-simulation-and-plot" title="Permalink to this heading">¶</a></h3>
+<p>Contruct a 151 period stochastic simulation by first siumlating the model for 251 periods and then dropping the first 100 values. The seed for the numpy random number generator is set to 0.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute stochastic simulation</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">stoch_sim</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="mi">151</span><span class="p">,</span><span class="n">drop_first</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">cov_mat</span><span class="o">=</span><span class="n">Sigma</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Create the figure and axes</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Plot commands</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">,</span><span class="s1">&#39;pi&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Output, inflation, and interest rates&#39;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;v&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Exogenous demand, inflation, and policy&#39;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7fc04d298e20&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/examples_30_1.png" src="_images/examples_30_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot simulated exogenous shocks</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;e_g&#39;</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;e_u&#39;</span><span class="p">,</span><span class="s1">&#39;u&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">nk</span><span class="o">.</span><span class="n">simulated</span><span class="p">[[</span><span class="s1">&#39;e_v&#39;</span><span class="p">,</span><span class="s1">&#39;v&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7fc04d753490&gt;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/examples_31_1.png" src="_images/examples_31_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/examples_31_2.png" src="_images/examples_31_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/examples_31_3.png" src="_images/examples_31_3.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2024, Brian C. Jenkins.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

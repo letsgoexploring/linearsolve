@@ -1,0 +1,10 @@
+LICENSE
+MANIFEST.in
+README.md
+setup.cfg
+setup.py
+linearsolve/__init__.py
+linearsolve.egg-info/PKG-INFO
+linearsolve.egg-info/SOURCES.txt
+linearsolve.egg-info/dependency_links.txt
+linearsolve.egg-info/top_level.txt
